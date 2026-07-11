@@ -1,5 +1,4 @@
-from .cli import main
+from .compat import main
 
 
 raise SystemExit(main())
-

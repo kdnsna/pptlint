@@ -160,8 +160,8 @@ def load_audit_report(path: Path) -> dict[str, object]:
         raise ComparisonError(f"Invalid audit report JSON: {path.name}") from exc
     if not isinstance(payload, dict):
         raise ComparisonError("Audit report root must be a JSON object")
-    if payload.get("schemaVersion") != "decklint-report/v1":
-        raise ComparisonError("Audit report must use decklint-report/v1")
+    if payload.get("schemaVersion") not in {"decklint-report/v1", "pptlint-report/v2"}:
+        raise ComparisonError("Audit report must use decklint-report/v1 or pptlint-report/v2")
     for key in (
         "file",
         "scores",

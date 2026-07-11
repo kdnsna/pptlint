@@ -1,0 +1,177 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kdnsna/pptlint/blob/main/schema/pptlint-report-v2.schema.json",
+  "title": "PPTLint Report v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "toolVersion", "profile", "file", "renderer", "readiness", "priorityActions", "metrics", "scores", "summary", "findings", "slides"],
+  "properties": {
+    "schemaVersion": { "const": "pptlint-report/v2" },
+    "toolVersion": { "type": "string" },
+    "profile": { "enum": ["baseline", "ai-generated"] },
+    "file": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "sha256", "slides"],
+      "properties": {
+        "name": { "type": "string" },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "slides": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "renderer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requested", "used", "status", "detail"],
+      "properties": {
+        "requested": { "enum": ["auto", "wireframe", "libreoffice"] },
+        "used": { "enum": ["wireframe", "libreoffice"] },
+        "status": { "enum": ["ok", "degraded"] },
+        "detail": { "type": "string" }
+      }
+    },
+    "readiness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "reasons"],
+      "properties": {
+        "status": { "enum": ["ready", "review", "blocked"] },
+        "reasons": { "type": "array", "items": { "$ref": "#/$defs/reason" } }
+      }
+    },
+    "priorityActions": {
+      "type": "array",
+      "maxItems": 3,
+      "items": { "$ref": "#/$defs/action" }
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["editability"],
+      "properties": {
+        "editability": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["nativeTextShapes", "pictures", "graphicFrames", "nativeObjectRatio", "flattenedSlides"],
+          "properties": {
+            "nativeTextShapes": { "type": "integer", "minimum": 0 },
+            "pictures": { "type": "integer", "minimum": 0 },
+            "graphicFrames": { "type": "integer", "minimum": 0 },
+            "nativeObjectRatio": { "type": "number", "minimum": 0, "maximum": 1 },
+            "flattenedSlides": { "type": "integer", "minimum": 0 }
+          }
+        }
+      }
+    },
+    "scores": { "$ref": "#/$defs/scores" },
+    "summary": { "$ref": "#/$defs/summary" },
+    "findings": { "type": "array", "items": { "$ref": "#/$defs/finding" } },
+    "slides": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["index", "title", "titleSource", "preview"],
+        "properties": {
+          "index": { "type": "integer", "minimum": 1 },
+          "title": { "type": "string" },
+          "titleSource": { "enum": ["placeholder", "inferred", "none"] },
+          "preview": { "type": "string", "pattern": "^(data:image/png;base64,|$)" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "reason": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ruleId", "slideIndex", "evidence", "impact"],
+      "properties": {
+        "ruleId": { "type": "string" },
+        "slideIndex": { "type": ["integer", "null"], "minimum": 1 },
+        "evidence": { "type": "string" },
+        "impact": { "type": "string" }
+      }
+    },
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ruleId", "slideIndex", "disposition", "impact", "fixSteps"],
+      "properties": {
+        "ruleId": { "type": "string" },
+        "slideIndex": { "type": ["integer", "null"], "minimum": 1 },
+        "disposition": { "enum": ["blocker", "review", "advisory"] },
+        "impact": { "type": "string" },
+        "fixSteps": { "type": "array", "minItems": 1, "items": { "type": "string" } }
+      }
+    },
+    "score": { "type": "integer", "minimum": 0, "maximum": 100 },
+    "scores": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["overall", "categories", "weights", "policy", "deductions", "calculation"],
+      "properties": {
+        "overall": { "$ref": "#/$defs/score" },
+        "categories": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["integrity", "readability", "editability", "consistency", "accessibility"],
+          "properties": {
+            "integrity": { "$ref": "#/$defs/score" },
+            "readability": { "$ref": "#/$defs/score" },
+            "editability": { "$ref": "#/$defs/score" },
+            "consistency": { "$ref": "#/$defs/score" },
+            "accessibility": { "$ref": "#/$defs/score" }
+          }
+        },
+        "weights": { "type": "object", "additionalProperties": { "type": "number" } },
+        "policy": { "type": "object" },
+        "deductions": { "type": "array", "items": { "type": "object" } },
+        "calculation": { "type": "object" }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["critical", "high", "medium", "low"],
+      "properties": {
+        "critical": { "type": "integer", "minimum": 0 },
+        "high": { "type": "integer", "minimum": 0 },
+        "medium": { "type": "integer", "minimum": 0 },
+        "low": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "bbox": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["x", "y", "w", "h"],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "w": { "type": "number", "minimum": 0 },
+        "h": { "type": "number", "minimum": 0 }
+      }
+    },
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "rule_id", "category", "severity", "confidence", "message", "evidence", "remediation", "slide_index", "shape_id", "bbox", "disposition", "impact", "fixSteps"],
+      "properties": {
+        "id": { "type": "string" },
+        "rule_id": { "type": "string" },
+        "category": { "enum": ["integrity", "readability", "editability", "consistency", "accessibility", "privacy"] },
+        "severity": { "enum": ["low", "medium", "high", "critical"] },
+        "confidence": { "enum": ["low", "high"] },
+        "message": { "type": "string" },
+        "evidence": { "type": "string" },
+        "remediation": { "type": "string" },
+        "slide_index": { "type": ["integer", "null"], "minimum": 1 },
+        "shape_id": { "type": ["string", "null"] },
+        "bbox": { "$ref": "#/$defs/bbox" },
+        "disposition": { "enum": ["blocker", "review", "advisory"] },
+        "impact": { "type": "string" },
+        "fixSteps": { "type": "array", "minItems": 1, "items": { "type": "string" } }
+      }
+    }
+  }
+}

@@ -31,7 +31,7 @@ def test_report_matches_published_json_schema(tmp_path: Path) -> None:
         render_deck(deck, source=source, renderer="wireframe"),
         profile="baseline",
     )
-    schema = json.loads((ROOT / "schema/decklint-report-v1.schema.json").read_text(encoding="utf-8"))
+    schema = json.loads((ROOT / "schema/pptlint-report-v2.schema.json").read_text(encoding="utf-8"))
 
     jsonschema.validate(report, schema)
 
@@ -58,7 +58,7 @@ def test_report_schema_accepts_category_floor_deductions(tmp_path: Path) -> None
         render_deck(deck, source=source, renderer="wireframe"),
         profile="baseline",
     )
-    schema = json.loads((ROOT / "schema/decklint-report-v1.schema.json").read_text(encoding="utf-8"))
+    schema = json.loads((ROOT / "schema/pptlint-report-v2.schema.json").read_text(encoding="utf-8"))
 
     jsonschema.validate(report, schema)
 
@@ -146,8 +146,8 @@ def test_proof_loop_case_is_schema_valid_and_matches_public_claims() -> None:
     assert "http://" not in site and "https://" in site
 
 
-def test_version_is_020() -> None:
-    assert decklint.__version__ == "0.2.0"
+def test_version_is_030() -> None:
+    assert decklint.__version__ == "0.3.0"
 
 
 def test_corpus_contains_thirty_public_synthetic_pptx_files() -> None:

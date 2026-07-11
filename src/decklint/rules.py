@@ -6,6 +6,25 @@ from .model import DeckModel, Shape, Slide
 from .schema import Finding
 
 
+PORTABLE_FONTS = {
+    "aptos",
+    "arial",
+    "calibri",
+    "courier new",
+    "georgia",
+    "microsoft yahei",
+    "noto sans",
+    "noto serif",
+    "pingfang sc",
+    "simsun",
+    "simhei",
+    "tahoma",
+    "times new roman",
+    "trebuchet ms",
+    "verdana",
+}
+
+
 def _finding(
     rule_id: str,
     category: str,
@@ -75,6 +94,18 @@ def _semantic_title_shape(slide: Slide, width: int, height: int) -> Shape | None
     )
 
 
+def _overlap_ratio(first: Shape, second: Shape) -> float:
+    left = max(first.bbox.x, second.bbox.x)
+    top = max(first.bbox.y, second.bbox.y)
+    right = min(first.bbox.x + first.bbox.w, second.bbox.x + second.bbox.w)
+    bottom = min(first.bbox.y + first.bbox.h, second.bbox.y + second.bbox.h)
+    if right <= left or bottom <= top:
+        return 0.0
+    intersection = (right - left) * (bottom - top)
+    smaller = min(first.bbox.w * first.bbox.h, second.bbox.w * second.bbox.h)
+    return intersection / max(1, smaller)
+
+
 def audit_deck(deck: DeckModel, *, profile: str = "baseline") -> list[Finding]:
     if profile not in {"baseline", "ai-generated"}:
         raise ValueError(f"Unsupported profile: {profile}")
@@ -116,10 +147,49 @@ def audit_deck(deck: DeckModel, *, profile: str = "baseline") -> list[Finding]:
                 "Restore the missing media or remove the dangling relationship.",
             )
         )
+    for part_name in deck.missing_content_types:
+        findings.append(
+            _finding(
+                "integrity.missing-content-type",
+                "integrity",
+                "critical",
+                "high",
+                "A package part has no declared OOXML content type.",
+                part_name,
+                "Declare the part in [Content_Types].xml or recreate the affected media in PowerPoint.",
+            )
+        )
+
+    aspect_ratio = max(deck.width, deck.height) / min(deck.width, deck.height)
+    if aspect_ratio > 2.0 or aspect_ratio < 1.25:
+        findings.append(
+            _finding(
+                "readability.unusual-aspect-ratio",
+                "readability",
+                "medium",
+                "low",
+                "The slide aspect ratio is unusual for a projected presentation.",
+                f"canvas={deck.width}x{deck.height}; ratio={aspect_ratio:.3f}",
+                "Confirm the intended output device and page size before delivery.",
+            )
+        )
 
     small_high = 14 if profile == "ai-generated" else 12
     small_medium = 18 if profile == "ai-generated" else 14
     for slide in deck.slides:
+        if not any(shape.text.strip() or shape.kind in {"picture", "graphic-frame"} for shape in slide.shapes):
+            findings.append(
+                _finding(
+                    "readability.blank-slide",
+                    "readability",
+                    "medium",
+                    "high",
+                    "The slide has no audience-visible content.",
+                    f"Slide {slide.index} contains no text, picture, table, or chart object",
+                    "Remove the slide or restore the missing audience-visible content.",
+                    slide=slide,
+                )
+            )
         title_shapes = [shape for shape in slide.shapes if shape.placeholder_type in {"title", "ctrTitle"} and shape.text]
         semantic_title = (
             _semantic_title_shape(slide, deck.width, deck.height)
@@ -210,6 +280,24 @@ def audit_deck(deck: DeckModel, *, profile: str = "baseline") -> list[Finding]:
                             shape=shape,
                         )
                     )
+                if (
+                    shape.text_vertical_overflow == "clip"
+                    and character_count > 120
+                    and (shape.bbox.w * shape.bbox.h) < deck.width * deck.height * 0.12
+                ):
+                    findings.append(
+                        _finding(
+                            "readability.text-clipping-risk",
+                            "readability",
+                            "high",
+                            "low",
+                            "A dense text box explicitly clips vertical overflow.",
+                            f"{shape.name}: vertOverflow=clip; characters={character_count}",
+                            "Open the slide in PowerPoint, inspect the final line, and resize or split the text box.",
+                            slide=slide,
+                            shape=shape,
+                        )
+                    )
             if shape.kind == "picture" and not shape.alt_text.strip():
                 findings.append(
                     _finding(
@@ -244,6 +332,35 @@ def audit_deck(deck: DeckModel, *, profile: str = "baseline") -> list[Finding]:
                     )
                 )
                 break
+
+        text_shapes = [
+            shape
+            for shape in slide.shapes
+            if shape.text.strip() and shape.bbox.w > 0 and shape.bbox.h > 0
+        ]
+        for first_index, first in enumerate(text_shapes):
+            for second in text_shapes[first_index + 1 :]:
+                if first.placeholder_type in {"title", "ctrTitle"} or second.placeholder_type in {"title", "ctrTitle"}:
+                    continue
+                first_area = first.bbox.w * first.bbox.h
+                second_area = second.bbox.w * second.bbox.h
+                if max(first_area, second_area) > min(first_area, second_area) * 4:
+                    continue
+                ratio = _overlap_ratio(first, second)
+                if ratio >= 0.25:
+                    findings.append(
+                        _finding(
+                            "readability.text-overlap",
+                            "readability",
+                            "high",
+                            "high",
+                            "Two native text boxes substantially overlap.",
+                            f"{first.name} overlaps {second.name}; smaller-box overlap={ratio:.1%}",
+                            "Separate or resize the text boxes, then inspect the slide at presentation size.",
+                            slide=slide,
+                            shape=second,
+                        )
+                    )
 
         visual_order = [shape.shape_id for shape in sorted(slide.shapes, key=lambda item: (item.bbox.y, item.bbox.x))]
         z_order = [shape.shape_id for shape in slide.shapes]
@@ -288,6 +405,19 @@ def audit_deck(deck: DeckModel, *, profile: str = "baseline") -> list[Finding]:
             )
 
     font_counts = Counter(font for slide in deck.slides for shape in slide.shapes for font in shape.font_families)
+    for font in sorted(font_counts):
+        if font.casefold() not in PORTABLE_FONTS:
+            findings.append(
+                _finding(
+                    "readability.font-portability-risk",
+                    "readability",
+                    "medium",
+                    "low",
+                    "A font may be substituted on another computer.",
+                    f"font={font}; explicit declarations={font_counts[font]}",
+                    "Confirm the font on the delivery computer, embed it when licensing permits, or use an approved portable font.",
+                )
+            )
     if len(font_counts) >= 3:
         total = sum(font_counts.values())
         for font, count in sorted(font_counts.items()):

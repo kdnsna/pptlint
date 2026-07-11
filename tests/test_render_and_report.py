@@ -35,7 +35,7 @@ def test_report_is_deterministic_and_redacts_absolute_path(tmp_path: Path) -> No
     second = build_report(deck, findings, score_findings(findings), rendering, profile="baseline")
 
     assert first == second
-    assert first["schemaVersion"] == "decklint-report/v1"
+    assert first["schemaVersion"] == "pptlint-report/v2"
     assert first["file"]["name"] == "private-location.pptx"
     assert str(tmp_path) not in json.dumps(first)
 
@@ -89,6 +89,44 @@ def test_html_report_is_self_contained_and_locates_findings(tmp_path: Path) -> N
     assert "Scoring policy" in html
     assert "points" in html
     assert payload == report
+
+
+def test_html_leads_with_delivery_readiness_and_priority_actions(tmp_path: Path) -> None:
+    source = write_pptx(tmp_path / "broken.pptx", broken_relationship=True)
+    deck = load_deck(source)
+    findings = audit_deck(deck, profile="ai-generated")
+    rendering = render_deck(deck, source=source, renderer="wireframe")
+    report = build_report(deck, findings, score_findings(findings), rendering, profile="ai-generated")
+
+    html_path, _ = write_reports(tmp_path / "pptlint-report", report)
+    html = html_path.read_text(encoding="utf-8")
+
+    assert "Delivery readiness" in html
+    assert "Blocked" in html
+    assert "Priority actions" in html
+    assert "PowerPoint may repair the file" in html
+    assert "Run PPTLint again" in html
+
+
+def test_v2_report_exposes_editability_metrics(tmp_path: Path) -> None:
+    source = write_pptx(
+        tmp_path / "mixed.pptx",
+        include_picture=True,
+        slides=[slide_xml(include_picture=True, picture_alt="Background")],
+    )
+    deck = load_deck(source)
+    findings = audit_deck(deck, profile="ai-generated")
+    report = build_report(
+        deck,
+        findings,
+        score_findings(findings),
+        render_deck(deck, source=source, renderer="wireframe"),
+        profile="ai-generated",
+    )
+
+    assert report["metrics"]["editability"]["nativeTextShapes"] == 2
+    assert report["metrics"]["editability"]["pictures"] == 1
+    assert 0 <= report["metrics"]["editability"]["nativeObjectRatio"] <= 1
 
 
 def test_auto_renderer_degrades_to_wireframe_when_soffice_is_unavailable(tmp_path: Path) -> None:

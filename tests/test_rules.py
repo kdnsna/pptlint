@@ -111,3 +111,83 @@ def test_three_identical_slides_only_create_low_confidence_layout_warning(tmp_pa
 
     repeated = next(finding for finding in findings if finding.rule_id == "consistency.repeated-layout")
     assert repeated.confidence == "low"
+
+
+def test_missing_content_type_is_an_integrity_blocker(tmp_path: Path) -> None:
+    source = write_pptx(
+        tmp_path / "missing-content-type.pptx",
+        include_picture=True,
+        omit_picture_content_type=True,
+    )
+
+    finding = next(
+        item
+        for item in audit_deck(load_deck(source), profile="baseline")
+        if item.rule_id == "integrity.missing-content-type"
+    )
+
+    assert finding.severity == "critical"
+    assert finding.confidence == "high"
+
+
+def test_blank_slide_requires_human_review(tmp_path: Path) -> None:
+    source = write_pptx(
+        tmp_path / "blank.pptx",
+        slides=[slide_xml(title=None, body_text=None)],
+    )
+
+    assert "readability.blank-slide" in rule_ids(source)
+
+
+def test_substantial_text_box_overlap_is_high_confidence(tmp_path: Path) -> None:
+    source = write_pptx(
+        tmp_path / "overlap.pptx",
+        slides=[slide_xml(second_body=True)],
+    )
+
+    finding = next(
+        item
+        for item in audit_deck(load_deck(source), profile="baseline")
+        if item.rule_id == "readability.text-overlap"
+    )
+
+    assert finding.confidence == "high"
+    assert finding.slide_index == 1
+    assert finding.bbox is not None
+
+
+def test_explicit_clipping_and_portability_fonts_are_advisory(tmp_path: Path) -> None:
+    source = write_pptx(
+        tmp_path / "portable.pptx",
+        slides=[
+            slide_xml(
+                body_font="Private Brand Sans",
+                body_overflow="clip",
+                body_text="A" * 700,
+                body_w=1_000_000,
+                body_h=300_000,
+            )
+        ],
+    )
+
+    findings = audit_deck(load_deck(source), profile="baseline")
+    selected = {
+        item.rule_id: item
+        for item in findings
+        if item.rule_id in {"readability.text-clipping-risk", "readability.font-portability-risk"}
+    }
+
+    assert selected.keys() == {"readability.text-clipping-risk", "readability.font-portability-risk"}
+    assert all(item.confidence == "low" for item in selected.values())
+
+
+def test_unusual_slide_aspect_ratio_is_advisory(tmp_path: Path) -> None:
+    source = write_pptx(tmp_path / "wide.pptx", slide_width="20000000", slide_height="6858000")
+
+    finding = next(
+        item
+        for item in audit_deck(load_deck(source), profile="baseline")
+        if item.rule_id == "readability.unusual-aspect-ratio"
+    )
+
+    assert finding.confidence == "low"

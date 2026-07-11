@@ -7,6 +7,7 @@ from pathlib import Path
 from . import __version__
 from .model import DeckModel
 from .render import RenderResult
+from .readiness import assess_readiness, classify_finding
 from .schema import Finding, identified_findings
 from .scoring import ScoreCard
 
@@ -23,20 +24,51 @@ def build_report(
     profile: str,
 ) -> dict[str, object]:
     summary = {severity: sum(1 for finding in findings if finding.severity == severity) for severity in SEVERITIES}
+    readiness = assess_readiness(findings, renderer_status=rendering.status)
+    all_shapes = [shape for slide in deck.slides for shape in slide.shapes]
+    native_text_shapes = sum(1 for shape in all_shapes if shape.text.strip())
+    pictures = sum(1 for shape in all_shapes if shape.kind == "picture")
+    graphic_frames = sum(1 for shape in all_shapes if shape.kind == "graphic-frame")
+    content_objects = native_text_shapes + pictures + graphic_frames
+    native_objects = native_text_shapes + graphic_frames
+    flattened_slides = sum(
+        1
+        for slide in deck.slides
+        if any(
+            shape.kind == "picture"
+            and (shape.bbox.w * shape.bbox.h) / max(1, deck.width * deck.height) >= 0.9
+            for shape in slide.shapes
+        )
+        and sum(1 for shape in slide.shapes if shape.text.strip()) <= 2
+    )
     return {
-        "schemaVersion": "decklint-report/v1",
+        "schemaVersion": "pptlint-report/v2",
         "toolVersion": __version__,
         "profile": profile,
         "file": {"name": deck.filename, "sha256": deck.sha256, "slides": len(deck.slides)},
         "renderer": rendering.metadata(),
         "scores": scores.to_dict(),
         "summary": summary,
+        "readiness": {"status": readiness.status, "reasons": readiness.reasons},
+        "priorityActions": readiness.priority_actions,
+        "metrics": {
+            "editability": {
+                "nativeTextShapes": native_text_shapes,
+                "pictures": pictures,
+                "graphicFrames": graphic_frames,
+                "nativeObjectRatio": round(native_objects / max(1, content_objects), 4),
+                "flattenedSlides": flattened_slides,
+            }
+        },
         "findings": [
-            finding.to_dict(
-                finding_id=finding_id,
-                deck_width=deck.width,
-                deck_height=deck.height,
-            )
+            {
+                **finding.to_dict(
+                    finding_id=finding_id,
+                    deck_width=deck.width,
+                    deck_height=deck.height,
+                ),
+                **classify_finding(finding),
+            }
             for finding_id, finding in identified_findings(findings)
         ],
         "slides": [
@@ -61,8 +93,11 @@ def _render_html(report: dict[str, object]) -> str:
     findings = report["findings"]
     slides = report["slides"]
     renderer = report["renderer"]
+    readiness = report["readiness"]
+    priority_actions = report["priorityActions"]
     assert isinstance(file_info, dict) and isinstance(scores, dict) and isinstance(findings, list)
     assert isinstance(slides, list) and isinstance(renderer, dict)
+    assert isinstance(readiness, dict) and isinstance(priority_actions, list)
     categories = scores["categories"]
     assert isinstance(categories, dict)
     score_cards = "".join(
@@ -88,6 +123,26 @@ def _render_html(report: dict[str, object]) -> str:
         f'per-rule cap {policy["perRuleCap"]}. Weights: '
         + ", ".join(f"{name} {float(weight):.0%}" for name, weight in weights.items())
         + ". Low-confidence and privacy findings deduct 0 points.</p></section>"
+    )
+    status = str(readiness["status"])
+    status_label = {"ready": "Ready", "review": "Needs review", "blocked": "Blocked"}[status]
+    action_items = "".join(
+        "<li>"
+        f'<span>{_escape(action["disposition"])}</span>'
+        f'<strong>{_escape(action["impact"])}</strong>'
+        + "<ol>"
+        + "".join(f"<li>{_escape(step)}</li>" for step in action["fixSteps"])
+        + "</ol></li>"
+        for action in priority_actions
+        if isinstance(action, dict)
+    )
+    readiness_panel = (
+        f'<section class="readiness readiness-{_escape(status)}">'
+        '<div><span class="eyebrow">Delivery readiness</span>'
+        f'<h2>{_escape(status_label)}</h2>'
+        '<p>This verdict leads with delivery consequences. The score below is a secondary trend signal.</p></div>'
+        f'<div class="priority"><h3>Priority actions</h3><ul>{action_items or "<li>No delivery action is required.</li>"}</ul></div>'
+        "</section>"
     )
     finding_groups: dict[int, list[dict[str, object]]] = {}
     for finding in findings:
@@ -119,7 +174,11 @@ def _render_html(report: dict[str, object]) -> str:
                 f'data-severity="{_escape(finding["severity"])}" data-category="{_escape(finding["category"])}">'
                 f'<code>{_escape(finding["rule_id"])}</code><em>{_escape(points)}</em>'
                 f'<strong>{_escape(finding["message"])}</strong>'
-                f'<p>{_escape(finding["evidence"])}</p><small>{_escape(finding["remediation"])}</small></li>'
+                f'<p>{_escape(finding["evidence"])}</p>'
+                f'<p class="impact">Impact: {_escape(finding["impact"])}</p>'
+                '<ol class="fix-steps">'
+                + "".join(f"<li>{_escape(step)}</li>" for step in finding["fixSteps"])
+                + "</ol></li>"
             )
         slide_cards.append(
             f'<article class="slide-card" data-slide="{index}"><header><span>Slide {index:02d}</span>'
@@ -153,13 +212,15 @@ main{{max-width:1240px;margin:auto;padding:48px 24px 80px}}.hero{{display:grid;g
 .eyebrow{{font:700 12px/1.2 ui-monospace,monospace;letter-spacing:.12em;text-transform:uppercase;color:#8a3d22}}h1{{font-size:clamp(34px,6vw,72px);line-height:.95;margin:10px 0 12px;max-width:13ch}}.hero p{{color:var(--muted);margin:0}}
 .overall{{width:150px;height:150px;border:12px solid #d8e6db;border-radius:50%;display:grid;place-items:center;background:var(--panel)}}.overall strong{{font-size:52px}}.overall span{{font-size:11px;text-transform:uppercase;color:var(--muted)}}
 .scores{{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:24px 0 48px}}.score-card{{background:var(--panel);border:1px solid #d6d0c4;padding:16px}}.score-card span{{display:block;color:var(--muted);font-size:12px}}.score-card strong{{font-size:28px}}
+.readiness{{display:grid;grid-template-columns:minmax(260px,.7fr) minmax(360px,1.3fr);gap:28px;margin:28px 0;background:var(--panel);border-left:8px solid #175cd3;padding:24px}}.readiness-blocked{{border-color:var(--critical)}}.readiness-review{{border-color:var(--medium)}}.readiness-ready{{border-color:#18794e}}.readiness h2{{font-size:44px;margin:4px 0}}.readiness p{{color:var(--muted)}}.priority h3{{margin-top:0}}.priority>ul>li{{padding:10px 0;border-top:1px solid #ded8cd}}.priority span{{font:700 11px ui-monospace,monospace;text-transform:uppercase;color:var(--muted)}}.priority strong{{display:block}}.priority ol,.fix-steps{{margin:6px 0 0;padding-left:20px;color:var(--muted)}}.impact{{font-weight:700;color:var(--ink)!important}}
 .notice{{padding:12px 16px;background:#fff3d6;border-left:4px solid var(--medium);margin-bottom:24px}}.slide-grid{{display:grid;gap:28px}}.slide-card{{display:grid;grid-template-columns:minmax(360px,1.1fr) minmax(300px,.9fr);gap:24px;background:var(--panel);border:1px solid #d6d0c4;padding:20px}}
 .slide-card header{{grid-column:1/-1;display:flex;align-items:baseline;gap:14px;border-bottom:1px solid #ded8cd}}.slide-card header h2{{margin:0 0 10px;flex:1}}.slide-card header span,.slide-card header b{{font:700 11px ui-monospace,monospace;color:var(--muted)}}
 .slide-preview{{position:relative;align-self:start;background:#ddd;box-shadow:0 12px 28px #17203320}}.slide-preview img{{width:100%;display:block}}.overlay{{position:absolute;border:3px solid var(--high);background:#d92d2015}}.overlay.severity-critical{{border-color:var(--critical)}}.overlay.severity-medium{{border-color:var(--medium)}}
 ul{{list-style:none;margin:0;padding:0;display:grid;gap:10px}}.finding{{border-left:4px solid var(--low);padding:8px 12px;background:#f7f8fa}}.finding.severity-critical{{border-color:var(--critical)}}.finding.severity-high{{border-color:var(--high)}}.finding.severity-medium{{border-color:var(--medium)}}.finding code{{display:inline-block;color:var(--muted);font-size:11px}}.finding em{{float:right;color:var(--muted);font:700 11px ui-monospace,monospace}}.finding strong{{display:block;clear:both;margin:3px 0}}.finding p,.finding small{{margin:0;color:var(--muted)}}.deck-findings{{margin:0 0 32px}}.scoring-policy{{background:#ebe6dc;border-left:4px solid #8a3d22;padding:12px 18px;margin:-28px 0 36px}}.scoring-policy h2{{font-size:14px;margin:0 0 3px}}.scoring-policy p{{margin:0;color:var(--muted)}}
-@media(max-width:800px){{.hero{{grid-template-columns:1fr}}.overall{{width:110px;height:110px}}.scores{{grid-template-columns:repeat(2,1fr)}}.slide-card{{grid-template-columns:1fr}}}}
+@media(max-width:800px){{.hero,.readiness{{grid-template-columns:1fr}}.overall{{width:110px;height:110px}}.scores{{grid-template-columns:repeat(2,1fr)}}.slide-card{{grid-template-columns:1fr}}}}
 </style></head><body><main>
 <section class="hero"><div><span class="eyebrow">DeckLint · Lighthouse for PowerPoint</span><h1>{_escape(file_info["name"])}</h1><p>{_escape(file_info["slides"])} slides · {_escape(report["profile"])} profile · {_escape(renderer["used"])} renderer</p></div><div class="overall"><div><strong>{_escape(scores["overall"])}</strong><span>overall</span></div></div></section>
+{readiness_panel}
 <section class="scores">{score_cards}</section>
 {scoring_policy}
 {f'<div class="notice">{_escape(renderer["detail"])}</div>' if renderer.get("detail") else ''}

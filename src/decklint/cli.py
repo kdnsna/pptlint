@@ -23,17 +23,23 @@ def _score_value(value: str) -> int:
     return score
 
 
+def _add_check_arguments(command: argparse.ArgumentParser, *, output: str, fail_on: str) -> None:
+    command.add_argument("input", type=Path, help="PPTX file to check")
+    command.add_argument("--output", type=Path, default=Path(output), help="Report filename prefix")
+    command.add_argument("--profile", choices=("baseline", "ai-generated"), default="baseline")
+    command.add_argument("--renderer", choices=("auto", "wireframe", "libreoffice"), default="auto")
+    command.add_argument("--soffice-path", help="Optional path to the LibreOffice soffice executable")
+    command.add_argument("--fail-on", choices=("none", "low", "medium", "high", "critical"), default=fail_on)
+    command.add_argument("--min-score", type=_score_value, default=None)
+
+
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="decklint", description="Lighthouse for PowerPoint.")
+    parser = argparse.ArgumentParser(prog="pptlint", description="Preflight checks for AI-generated PowerPoint files.")
     subcommands = parser.add_subparsers(dest="command", required=True)
+    check = subcommands.add_parser("check", help="Check whether a PPTX is ready to deliver.")
+    _add_check_arguments(check, output="pptlint-report", fail_on="none")
     audit = subcommands.add_parser("audit", help="Audit a PPTX and write offline HTML and JSON reports.")
-    audit.add_argument("input", type=Path, help="PPTX file to audit")
-    audit.add_argument("--output", type=Path, default=Path("decklint-report"), help="Report filename prefix")
-    audit.add_argument("--profile", choices=("baseline", "ai-generated"), default="baseline")
-    audit.add_argument("--renderer", choices=("auto", "wireframe", "libreoffice"), default="auto")
-    audit.add_argument("--soffice-path", help="Optional path to the LibreOffice soffice executable")
-    audit.add_argument("--fail-on", choices=("none", "low", "medium", "high", "critical"), default="high")
-    audit.add_argument("--min-score", type=_score_value, default=None)
+    _add_check_arguments(audit, output="decklint-report", fail_on="high")
     compare = subcommands.add_parser("compare", help="Compare two DeckLint audit reports.")
     compare.add_argument("before", type=Path, help="Before audit JSON report")
     compare.add_argument("after", type=Path, help="After audit JSON report")
@@ -75,17 +81,19 @@ def _run_audit(args: argparse.Namespace) -> int:
         report = build_report(deck, findings, scores, rendering, profile=args.profile)
         html_path, json_path = write_reports(args.output.expanduser(), report)
     except (DeckLoadError, RenderError, OSError, ValueError) as exc:
-        print(f"DeckLint could not audit the file: {exc}", file=sys.stderr)
+        print(f"PPTLint could not check the file: {exc}", file=sys.stderr)
         return 2
 
     counts = report["summary"]
     print(
-        f"DeckLint score {scores.overall}/100 · "
+        f"PPTLint readiness {report['readiness']['status']} · score {scores.overall}/100 · "
         f"{counts['critical']} critical, {counts['high']} high, {counts['medium']} medium, {counts['low']} low"
     )
     print(f"HTML report: {html_path}")
     print(f"JSON report: {json_path}")
     failed = _threshold_failed(findings, args.fail_on)
+    if args.command == "check" and report["readiness"]["status"] == "blocked":
+        failed = True
     if args.min_score is not None and scores.overall < args.min_score:
         failed = True
     return 1 if failed else 0

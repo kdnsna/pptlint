@@ -45,6 +45,8 @@ def slide_xml(
     body_text_color: str | None = None,
     body_text: str | None = "Evidence-backed summary",
     hidden: bool = False,
+    body_overflow: str | None = None,
+    second_body: bool = False,
 ) -> str:
     title_shape = f"""
     <p:sp>
@@ -62,14 +64,21 @@ def slide_xml(
     <p:sp>
       <p:nvSpPr><p:cNvPr id="3" name="Body 2"/><p:cNvSpPr/><p:nvPr/></p:nvSpPr>
       <p:spPr><a:xfrm><a:off x="{body_x}" y="{body_y}"/><a:ext cx="{body_w}" cy="{body_h}"/></a:xfrm>{f'<a:solidFill><a:srgbClr val="{body_fill}"/></a:solidFill>' if body_fill else ''}</p:spPr>
-      <p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:rPr sz="{body_size}" latin="{body_font}">{f'<a:solidFill><a:srgbClr val="{body_text_color}"/></a:solidFill>' if body_text_color else ''}</a:rPr><a:t>{body_text}</a:t></a:r></a:p></p:txBody>
+      <p:txBody><a:bodyPr{f' vertOverflow="{body_overflow}"' if body_overflow else ''}/><a:lstStyle/><a:p><a:r><a:rPr sz="{body_size}" latin="{body_font}">{f'<a:solidFill><a:srgbClr val="{body_text_color}"/></a:solidFill>' if body_text_color else ''}</a:rPr><a:t>{body_text}</a:t></a:r></a:p></p:txBody>
     </p:sp>""" if body_text is not None else ""
+    second_body_shape = f"""
+    <p:sp>
+      <p:nvSpPr><p:cNvPr id="5" name="Body overlap"/><p:cNvSpPr/><p:nvPr/></p:nvSpPr>
+      <p:spPr><a:xfrm><a:off x="{body_x + body_w // 4}" y="{body_y + body_h // 4}"/><a:ext cx="{body_w}" cy="{body_h}"/></a:xfrm></p:spPr>
+      <p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:rPr sz="{body_size}" latin="{body_font}"/><a:t>Overlapping text</a:t></a:r></a:p></p:txBody>
+    </p:sp>""" if second_body else ""
     return f"""<?xml version="1.0" encoding="UTF-8"?>
 <p:sld xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" show="{'0' if hidden else '1'}">
   <p:cSld><p:spTree>
     <p:nvGrpSpPr><p:cNvPr id="1" name=""/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr/>
     {title_shape}
     {body_shape}
+    {second_body_shape}
     {picture}
   </p:spTree></p:cSld>
 </p:sld>"""
@@ -89,6 +98,7 @@ def write_pptx(
     slide_order: list[int] | None = None,
     slide_width: str = "12192000",
     slide_height: str = "6858000",
+    omit_picture_content_type: bool = False,
     presentation_relationship_type: str = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide",
     presentation_relationship_target: str = "slides/slide1.xml",
 ) -> Path:
@@ -112,6 +122,11 @@ def write_pptx(
         '  <Override PartName="/ppt/slides/slide1.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.slide+xml"/>',
         overrides,
     )
+    if include_picture and not omit_picture_content_type:
+        content_types = content_types.replace(
+            "</Types>",
+            '<Default Extension="png" ContentType="image/png"/></Types>',
+        )
     slide_ids = "".join(f'<p:sldId id="{255 + index}" r:id="rId{slide_number}"/>' for index, slide_number in enumerate(slide_order, 1))
     presentation = PRESENTATION.replace('<p:sldId id="256" r:id="rId1"/>', slide_ids)
     presentation = presentation.replace('cx="12192000" cy="6858000"', f'cx="{slide_width}" cy="{slide_height}"')

@@ -62,6 +62,7 @@ class Shape:
     placeholder_type: str | None = None
     z_order: int = 0
     media_target: str | None = None
+    text_vertical_overflow: str | None = None
 
 
 @dataclass(frozen=True)
@@ -181,6 +182,7 @@ class DeckModel:
     metadata: dict[str, str] = field(default_factory=dict)
     comments_count: int = 0
     orphan_slide_parts: list[str] = field(default_factory=list)
+    missing_content_types: list[str] = field(default_factory=list)
 
 
 def _read_xml(package: zipfile.ZipFile, name: str):
@@ -336,6 +338,7 @@ def _parse_shape(node, z_order: int, transform: CoordinateTransform, id_prefix: 
     placeholder = node.find(".//p:ph", NS)
     fill_colors = _colors(node, ".//p:spPr/a:solidFill/a:srgbClr")
     text_colors = _colors(node, ".//a:rPr/a:solidFill/a:srgbClr")
+    body_properties = node.find("p:txBody/a:bodyPr", NS)
     return Shape(
         shape_id=shape_id,
         name=name,
@@ -349,6 +352,7 @@ def _parse_shape(node, z_order: int, transform: CoordinateTransform, id_prefix: 
         alt_text=alt_text,
         placeholder_type=placeholder.get("type", "body") if placeholder is not None else None,
         z_order=z_order,
+        text_vertical_overflow=(body_properties.get("vertOverflow") if body_properties is not None else None),
     )
 
 
@@ -462,6 +466,23 @@ def load_deck(path: Path) -> DeckModel:
         if "[Content_Types].xml" not in names:
             raise DeckLoadError("Required PPTX part is missing: [Content_Types].xml")
         content_types = _read_xml(package, "[Content_Types].xml")
+        default_content_types = {
+            item.get("Extension", "").lower()
+            for item in content_types.findall("ct:Default", NS)
+            if item.get("Extension")
+        }
+        override_content_types = {
+            item.get("PartName", "").lstrip("/")
+            for item in content_types.findall("ct:Override", NS)
+            if item.get("PartName")
+        }
+        missing_content_types = sorted(
+            name
+            for name in names
+            if name != "[Content_Types].xml"
+            and name not in override_content_types
+            and name.rsplit(".", 1)[-1].lower() not in default_content_types
+        )
         declared_slide_parts = {
             override.get("PartName", "").lstrip("/")
             for override in content_types.findall("ct:Override", NS)
@@ -588,4 +609,5 @@ def load_deck(path: Path) -> DeckModel:
             metadata=metadata,
             comments_count=comments_count,
             orphan_slide_parts=orphan_slide_parts,
+            missing_content_types=missing_content_types,
         )

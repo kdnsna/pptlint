@@ -3,9 +3,9 @@ requires = ["hatchling>=1.27"]
 build-backend = "hatchling.build"
 
 [project]
-name = "decklint"
-version = "0.2.0"
-description = "Lighthouse for PowerPoint: deterministic, local-first PPTX quality reports."
+name = "pptlint"
+version = "0.3.0"
+description = "Open-source PPT/PPTX preflight checks for AI-generated PowerPoint files."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
@@ -27,7 +27,8 @@ classifiers = [
 ]
 
 [project.scripts]
-decklint = "decklint.cli:main"
+pptlint = "pptlint.cli:main"
+decklint = "decklint.compat:main"
 
 [project.urls]
 Homepage = "https://github.com/kdnsna/decklint"
@@ -46,7 +47,7 @@ dev = [
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/decklint"]
+packages = ["src/pptlint", "src/decklint"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
