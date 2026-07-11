@@ -6,4 +6,7 @@ __pycache__/
 build/
 dist/
 *.egg-info/
-
+.coverage
+htmlcov/
+decklint-report.html
+decklint-report.json

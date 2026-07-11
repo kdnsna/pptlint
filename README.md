@@ -84,3 +84,7 @@ Synthetic public fixtures live in `tests/fixtures/corpus/`; no private business 
 ## License
 
 MIT. See [third-party notices](THIRD_PARTY_NOTICES.md).
+
+## Acknowledgments
+
+DeckLint's native-object inspection grew out of quality-gate work in [Ultimate PPT Master](https://github.com/kdnsna/ultimate-ppt-master-skill). DeckLint deliberately extracts only the neutral inspection layer; it does not vendor the generator, templates, Bridge, or workflow contracts.
