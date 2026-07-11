@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 from dataclasses import asdict, dataclass
 from typing import Literal
 
@@ -51,12 +52,31 @@ class Finding:
     @property
     def finding_id(self) -> str:
         location = f"s{self.slide_index or 0}-{self.shape_id or 'deck'}"
-        return f"{self.rule_id}:{location}"
+        fingerprint = hashlib.sha256(
+            f"{self.rule_id}|{location}|{self.evidence}|{self.message}".encode("utf-8")
+        ).hexdigest()[:10]
+        return f"{self.rule_id}:{location}:{fingerprint}"
 
-    def to_dict(self, *, deck_width: int = 0, deck_height: int = 0) -> dict[str, object]:
+    def to_dict(
+        self,
+        *,
+        finding_id: str | None = None,
+        deck_width: int = 0,
+        deck_height: int = 0,
+    ) -> dict[str, object]:
         payload = asdict(self)
-        payload["id"] = self.finding_id
+        payload["id"] = finding_id or self.finding_id
         if self.bbox is not None:
             payload["bbox"] = asdict(self.bbox.normalized(deck_width, deck_height))
         return payload
 
+
+def identified_findings(findings: list[Finding]) -> list[tuple[str, Finding]]:
+    counts: dict[str, int] = {}
+    identified: list[tuple[str, Finding]] = []
+    for finding in findings:
+        base_id = finding.finding_id
+        counts[base_id] = counts.get(base_id, 0) + 1
+        suffix = "" if counts[base_id] == 1 else f":{counts[base_id]}"
+        identified.append((f"{base_id}{suffix}", finding))
+    return identified

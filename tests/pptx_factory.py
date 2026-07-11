@@ -80,12 +80,17 @@ def write_pptx(
     slides: list[str] | None = None,
     creator: str | None = None,
     include_comments: bool = False,
+    empty_comments: bool = False,
     notes_text: str | None = None,
     external_url: str | None = None,
     slide_order: list[int] | None = None,
+    slide_width: str = "12192000",
+    slide_height: str = "6858000",
+    presentation_relationship_type: str = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide",
+    presentation_relationship_target: str = "slides/slide1.xml",
 ) -> Path:
     slides = slides or [slide_xml(include_picture=include_picture)]
-    slide_order = slide_order or list(range(1, len(slides) + 1))
+    slide_order = list(range(1, len(slides) + 1)) if slide_order is None else slide_order
     image_target = "../media/missing.png" if broken_relationship else "../media/image1.png"
     relationship_items = []
     if include_picture or broken_relationship:
@@ -106,9 +111,10 @@ def write_pptx(
     )
     slide_ids = "".join(f'<p:sldId id="{255 + index}" r:id="rId{slide_number}"/>' for index, slide_number in enumerate(slide_order, 1))
     presentation = PRESENTATION.replace('<p:sldId id="256" r:id="rId1"/>', slide_ids)
+    presentation = presentation.replace('cx="12192000" cy="6858000"', f'cx="{slide_width}" cy="{slide_height}"')
     presentation_rels = """<?xml version="1.0" encoding="UTF-8"?>
 <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">""" + "".join(
-        f'<Relationship Id="rId{index}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide{index}.xml"/>'
+        f'<Relationship Id="rId{index}" Type="{presentation_relationship_type}" Target="{presentation_relationship_target if index == 1 else "slides/slide%d.xml" % index}"/>'
         for index in range(1, len(slides) + 1)
     ) + "</Relationships>"
     with zipfile.ZipFile(path, "w") as package:
@@ -130,7 +136,11 @@ def write_pptx(
                 f'''<?xml version="1.0" encoding="UTF-8"?><cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:creator>{creator}</dc:creator><cp:lastModifiedBy>{creator}</cp:lastModifiedBy></cp:coreProperties>''',
             )
         if include_comments:
-            package.writestr("ppt/comments/comment1.xml", "<p:cmLst xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\"/>")
+            comment = "" if empty_comments else '<p:cm authorId="0" idx="1"><p:pos x="0" y="0"/><p:text>Review this</p:text></p:cm>'
+            package.writestr(
+                "ppt/comments/comment1.xml",
+                f'<p:cmLst xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">{comment}</p:cmLst>',
+            )
         if notes_text:
             package.writestr(
                 "ppt/notesSlides/notesSlide1.xml",

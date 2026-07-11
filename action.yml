@@ -33,6 +33,9 @@ outputs:
   json-report:
     description: Path to the generated JSON report.
     value: ${{ steps.audit.outputs.json-report }}
+  exit-code:
+    description: DeckLint CLI exit code (0 pass, 1 quality gate, 2 operational error).
+    value: ${{ steps.audit.outputs.exit-code }}
 runs:
   using: composite
   steps:
@@ -54,16 +57,20 @@ runs:
         INPUT_MIN_SCORE: ${{ inputs.min-score }}
         INPUT_RENDERER: ${{ inputs.renderer }}
       run: |
-        args=(decklint audit "$INPUT_PATH" --profile "$INPUT_PROFILE" --fail-on "$INPUT_FAIL_ON" --renderer "$INPUT_RENDERER" --output decklint-report)
+        report_dir=$(mktemp -d "$RUNNER_TEMP/decklint.XXXXXX")
+        report_prefix="$report_dir/decklint-report"
+        html_report="$report_prefix.html"
+        json_report="$report_prefix.json"
+        args=(decklint audit "$INPUT_PATH" --profile "$INPUT_PROFILE" --fail-on "$INPUT_FAIL_ON" --renderer "$INPUT_RENDERER" --output "$report_prefix")
         if [[ -n "$INPUT_MIN_SCORE" ]]; then args+=(--min-score "$INPUT_MIN_SCORE"); fi
         set +e
         "${args[@]}"
         status=$?
         set -e
-        score=$(python -c 'import json; print(json.load(open("decklint-report.json"))["scores"]["overall"])' 2>/dev/null || printf '0')
+        score=$(JSON_REPORT="$json_report" python -c 'import json, os; print(json.load(open(os.environ["JSON_REPORT"]))["scores"]["overall"])' 2>/dev/null || printf '0')
         printf 'score=%s\n' "$score" >> "$GITHUB_OUTPUT"
-        printf 'html-report=%s\n' "$GITHUB_WORKSPACE/decklint-report.html" >> "$GITHUB_OUTPUT"
-        printf 'json-report=%s\n' "$GITHUB_WORKSPACE/decklint-report.json" >> "$GITHUB_OUTPUT"
+        printf 'html-report=%s\n' "$html_report" >> "$GITHUB_OUTPUT"
+        printf 'json-report=%s\n' "$json_report" >> "$GITHUB_OUTPUT"
         printf 'exit-code=%s\n' "$status" >> "$GITHUB_OUTPUT"
     - name: Upload DeckLint reports
       if: always()
@@ -71,9 +78,9 @@ runs:
       with:
         name: ${{ inputs.artifact-name }}
         path: |
-          decklint-report.html
-          decklint-report.json
-        if-no-files-found: error
+          ${{ steps.audit.outputs.html-report }}
+          ${{ steps.audit.outputs.json-report }}
+        if-no-files-found: warn
     - name: Enforce quality gate
       if: always()
       shell: bash

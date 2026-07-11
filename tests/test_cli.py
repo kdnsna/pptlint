@@ -76,3 +76,22 @@ def test_cli_returns_two_for_invalid_pptx(tmp_path: Path) -> None:
 
     assert exit_code == 2
     assert not (tmp_path / "report.json").exists()
+
+
+def test_cli_returns_two_when_explicit_libreoffice_is_unavailable(tmp_path: Path) -> None:
+    source = write_pptx(tmp_path / "valid.pptx")
+
+    exit_code = main(
+        [
+            "audit",
+            str(source),
+            "--renderer",
+            "libreoffice",
+            "--soffice-path",
+            "/missing/soffice",
+            "--output",
+            str(tmp_path / "report"),
+        ]
+    )
+
+    assert exit_code == 2

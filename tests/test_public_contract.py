@@ -10,6 +10,7 @@ from decklint.model import load_deck
 from decklint.render import render_deck
 from decklint.report import build_report
 from decklint.rules import audit_deck
+from decklint.schema import Finding
 from decklint.scoring import score_findings
 
 from .pptx_factory import write_pptx
@@ -34,6 +35,43 @@ def test_report_matches_published_json_schema(tmp_path: Path) -> None:
     jsonschema.validate(report, schema)
 
 
+def test_report_schema_accepts_category_floor_deductions(tmp_path: Path) -> None:
+    source = write_pptx(tmp_path / "deck.pptx")
+    deck = load_deck(source)
+    findings = [
+        Finding(
+            rule_id=f"integrity.synthetic-{index}",
+            category="integrity",
+            severity="critical",
+            confidence="high",
+            message="Synthetic integrity failure",
+            evidence=str(index),
+            remediation="Repair the package.",
+        )
+        for index in range(5)
+    ]
+    report = build_report(
+        deck,
+        findings,
+        score_findings(findings),
+        render_deck(deck, source=source, renderer="wireframe"),
+        profile="baseline",
+    )
+    schema = json.loads((ROOT / "schema/decklint-report-v1.schema.json").read_text(encoding="utf-8"))
+
+    jsonschema.validate(report, schema)
+
+
+def test_committed_proof_reports_match_schema_and_scoring_contract() -> None:
+    schema = json.loads((ROOT / "schema/decklint-report-v1.schema.json").read_text(encoding="utf-8"))
+
+    for name in ("good-deck", "bad-deck"):
+        report = json.loads((ROOT / f"examples/reports/{name}.json").read_text(encoding="utf-8"))
+        jsonschema.validate(report, schema)
+        assert "deductions" in report["scores"]
+        assert "Scoring policy" in (ROOT / f"examples/reports/{name}.html").read_text(encoding="utf-8")
+
+
 def test_github_action_exposes_the_cli_contract() -> None:
     action = yaml.safe_load((ROOT / "action.yml").read_text(encoding="utf-8"))
 
@@ -43,6 +81,12 @@ def test_github_action_exposes_the_cli_contract() -> None:
     assert "pip install" in run_scripts
     assert "decklint audit" in run_scripts
     assert "upload-artifact" in json.dumps(action)
+    assert "mktemp -d" in run_scripts
+    assert "$RUNNER_TEMP" in run_scripts
+    upload_step = next(step for step in action["runs"]["steps"] if step.get("uses") == "actions/upload-artifact@v4")
+    assert "steps.audit.outputs.html-report" in upload_step["with"]["path"]
+    assert "steps.audit.outputs.json-report" in upload_step["with"]["path"]
+    assert action["outputs"]["exit-code"]["value"] == "${{ steps.audit.outputs.exit-code }}"
 
 
 def test_agent_skill_is_short_and_delegates_to_cli() -> None:

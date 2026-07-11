@@ -98,6 +98,12 @@ def test_privacy_rules_find_notes_and_external_relationships(tmp_path: Path) -> 
     assert {"privacy.speaker-notes", "privacy.external-relationship"} <= ids
 
 
+def test_empty_comments_container_does_not_claim_comments_exist(tmp_path: Path) -> None:
+    source = write_pptx(tmp_path / "empty-comments.pptx", include_comments=True, empty_comments=True)
+
+    assert "privacy.comments" not in rule_ids(source)
+
+
 def test_three_identical_slides_only_create_low_confidence_layout_warning(tmp_path: Path) -> None:
     source = write_pptx(tmp_path / "repeated.pptx", slides=[slide_xml(), slide_xml(), slide_xml()])
 

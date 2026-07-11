@@ -33,7 +33,7 @@
     "scores": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["overall", "categories"],
+      "required": ["overall", "categories", "weights", "policy", "deductions", "calculation"],
       "properties": {
         "overall": { "$ref": "#/$defs/score" },
         "categories": {
@@ -46,6 +46,69 @@
             "editability": { "$ref": "#/$defs/score" },
             "consistency": { "$ref": "#/$defs/score" },
             "accessibility": { "$ref": "#/$defs/score" }
+          }
+        },
+        "weights": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["integrity", "readability", "editability", "consistency", "accessibility"],
+          "properties": {
+            "integrity": { "type": "number", "const": 0.3 },
+            "readability": { "type": "number", "const": 0.25 },
+            "editability": { "type": "number", "const": 0.2 },
+            "consistency": { "type": "number", "const": 0.15 },
+            "accessibility": { "type": "number", "const": 0.1 }
+          }
+        },
+        "policy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["startingScore", "severityDeductions", "perRuleCap", "integrityCriticalOverallCap", "lowConfidenceAffectsScore", "privacyAffectsScore"],
+          "properties": {
+            "startingScore": { "const": 100 },
+            "severityDeductions": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["critical", "high", "medium", "low"],
+              "properties": {
+                "critical": { "const": 30 },
+                "high": { "const": 15 },
+                "medium": { "const": 5 },
+                "low": { "const": 1 }
+              }
+            },
+            "perRuleCap": { "const": 30 },
+            "integrityCriticalOverallCap": { "const": 49 },
+            "lowConfidenceAffectsScore": { "const": false },
+            "privacyAffectsScore": { "const": false }
+          }
+        },
+        "deductions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["findingId", "category", "ruleId", "severity", "confidence", "requested", "applied", "reason"],
+            "properties": {
+              "findingId": { "type": "string" },
+              "category": { "enum": ["integrity", "readability", "editability", "consistency", "accessibility", "privacy"] },
+              "ruleId": { "type": "string" },
+              "severity": { "enum": ["low", "medium", "high", "critical"] },
+              "confidence": { "enum": ["low", "high"] },
+              "requested": { "type": "integer", "minimum": 1, "maximum": 30 },
+              "applied": { "type": "integer", "minimum": 0, "maximum": 30 },
+              "reason": { "enum": ["applied", "low-confidence", "unscored-category", "per-rule-cap", "category-floor"] }
+            }
+          }
+        },
+        "calculation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["method", "weightedTotal", "integrityCriticalCapApplied"],
+          "properties": {
+            "method": { "const": "weighted-average-rounded" },
+            "weightedTotal": { "type": "number", "minimum": 0, "maximum": 100 },
+            "integrityCriticalCapApplied": { "type": "boolean" }
           }
         }
       }

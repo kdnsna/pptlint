@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import base64
 import io
+import os
 import shutil
 import subprocess
 import tempfile
@@ -12,6 +13,14 @@ import pypdfium2 as pdfium
 from PIL import Image, ImageDraw, ImageFont
 
 from .model import DeckModel, Slide
+
+
+WIREFRAME_LONG_EDGE = 960
+MAX_WIREFRAME_PIXELS = 2_000_000
+
+
+class RenderError(RuntimeError):
+    """Raised when an explicitly requested renderer cannot complete."""
 
 
 @dataclass(frozen=True)
@@ -33,19 +42,31 @@ def _data_uri(image: Image.Image) -> str:
 
 
 def _wireframe(deck: DeckModel, slide: Slide) -> str:
-    width = 960
-    height = max(1, round(width * deck.height / deck.width))
+    if deck.width <= 0 or deck.height <= 0:
+        raise RenderError("Slide dimensions must be positive for wireframe rendering.")
+    if deck.width >= deck.height:
+        width = WIREFRAME_LONG_EDGE
+        height = max(1, round(width * deck.height / deck.width))
+    else:
+        height = WIREFRAME_LONG_EDGE
+        width = max(1, round(height * deck.width / deck.height))
+    if width * height > MAX_WIREFRAME_PIXELS:
+        raise RenderError("Wireframe preview exceeds the pixel safety limit.")
     image = Image.new("RGB", (width, height), "#f7f5ef")
     draw = ImageDraw.Draw(image)
     font = ImageFont.load_default()
     scale_x = width / deck.width
     scale_y = height / deck.height
     for shape in slide.shapes:
-        box = (
+        raw_box = (
             round(shape.bbox.x * scale_x),
             round(shape.bbox.y * scale_y),
             round((shape.bbox.x + shape.bbox.w) * scale_x),
             round((shape.bbox.y + shape.bbox.h) * scale_y),
+        )
+        box = tuple(
+            max(-2 * max(width, height), min(3 * max(width, height), coordinate))
+            for coordinate in raw_box
         )
         if shape.kind == "picture":
             draw.rectangle(box, fill="#d7dce2", outline="#7b8794", width=2)
@@ -104,6 +125,23 @@ def _libreoffice_previews(source: Path, soffice: str) -> list[str]:
         return previews
 
 
+def discover_soffice(explicit_path: str | None = None) -> str | None:
+    if explicit_path:
+        candidate = Path(explicit_path).expanduser()
+        return str(candidate) if candidate.is_file() else None
+    discovered = shutil.which("soffice") or shutil.which("libreoffice")
+    if discovered:
+        return discovered
+    candidates = [
+        Path("/Applications/LibreOffice.app/Contents/MacOS/soffice"),
+        Path.home() / "Applications/LibreOffice.app/Contents/MacOS/soffice",
+    ]
+    for environment_name in ("ProgramFiles", "ProgramFiles(x86)"):
+        if os.environ.get(environment_name):
+            candidates.append(Path(os.environ[environment_name]) / "LibreOffice/program/soffice.exe")
+    return next((str(candidate) for candidate in candidates if candidate.is_file()), None)
+
+
 def render_deck(
     deck: DeckModel,
     *,
@@ -115,8 +153,10 @@ def render_deck(
         raise ValueError(f"Unsupported renderer: {renderer}")
     if renderer == "wireframe":
         return RenderResult(renderer, "wireframe", "ok", "", _wireframe_previews(deck))
-    soffice = soffice_path if soffice_path is not None else shutil.which("soffice") or shutil.which("libreoffice")
-    if not soffice or not Path(soffice).is_file():
+    soffice = discover_soffice(soffice_path)
+    if not soffice:
+        if renderer == "libreoffice":
+            raise RenderError("LibreOffice executable was not found.")
         return RenderResult(
             renderer,
             "wireframe",
@@ -131,6 +171,8 @@ def render_deck(
         return RenderResult(renderer, "libreoffice", "ok", "", previews)
     except (OSError, RuntimeError, subprocess.SubprocessError) as exc:
         safe_detail = str(exc).replace(str(source.resolve()), source.name)
+        if renderer == "libreoffice":
+            raise RenderError(f"LibreOffice rendering failed: {safe_detail[:240]}") from exc
         return RenderResult(
             renderer,
             "wireframe",

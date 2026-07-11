@@ -7,7 +7,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        python: ["3.10", "3.12", "3.13"]
+        python: ["3.10", "3.11", "3.12", "3.13"]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -54,3 +54,35 @@ jobs:
         env:
           BAD_OUTCOME: ${{ steps.bad.outcome }}
         run: test "$BAD_OUTCOME" = failure
+      - name: Minimum score can fail independently
+        id: minimum
+        continue-on-error: true
+        uses: ./
+        with:
+          path: examples/bad-deck.pptx
+          fail-on: none
+          min-score: "100"
+          renderer: wireframe
+          artifact-name: minimum-score-report
+      - name: Confirm minimum-score exit code
+        if: always()
+        env:
+          OUTCOME: ${{ steps.minimum.outcome }}
+          EXIT_CODE: ${{ steps.minimum.outputs.exit-code }}
+        run: test "$OUTCOME" = failure && test "$EXIT_CODE" = 1
+      - name: Create damaged PPTX input
+        run: printf 'not a zip' > "$RUNNER_TEMP/damaged.pptx"
+      - name: Damaged files are operational errors
+        id: damaged
+        continue-on-error: true
+        uses: ./
+        with:
+          path: ${{ runner.temp }}/damaged.pptx
+          renderer: wireframe
+          artifact-name: damaged-deck-report
+      - name: Confirm damaged-file exit code
+        if: always()
+        env:
+          OUTCOME: ${{ steps.damaged.outcome }}
+          EXIT_CODE: ${{ steps.damaged.outputs.exit-code }}
+        run: test "$OUTCOME" = failure && test "$EXIT_CODE" = 2

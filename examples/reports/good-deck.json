@@ -1,7 +1,7 @@
 {
   "file": {
     "name": "good-deck.pptx",
-    "sha256": "92967a58fc5d9bf8ddd8b2bd49fbd18f84af73f7fd2e84fee449fc1b4f7f7f26",
+    "sha256": "de9418ef0fed7dcdddaa9bfcf71a3b12579ad63c1d61ed3ad02c7f274c28a99b",
     "slides": 1
   },
   "findings": [],
@@ -14,6 +14,11 @@
   },
   "schemaVersion": "decklint-report/v1",
   "scores": {
+    "calculation": {
+      "integrityCriticalCapApplied": false,
+      "method": "weighted-average-rounded",
+      "weightedTotal": 100.0
+    },
     "categories": {
       "accessibility": 100,
       "consistency": 100,
@@ -21,7 +26,28 @@
       "integrity": 100,
       "readability": 100
     },
-    "overall": 100
+    "deductions": [],
+    "overall": 100,
+    "policy": {
+      "integrityCriticalOverallCap": 49,
+      "lowConfidenceAffectsScore": false,
+      "perRuleCap": 30,
+      "privacyAffectsScore": false,
+      "severityDeductions": {
+        "critical": 30,
+        "high": 15,
+        "low": 1,
+        "medium": 5
+      },
+      "startingScore": 100
+    },
+    "weights": {
+      "accessibility": 0.1,
+      "consistency": 0.15,
+      "editability": 0.2,
+      "integrity": 0.3,
+      "readability": 0.25
+    }
   },
   "slides": [
     {

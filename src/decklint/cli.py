@@ -5,7 +5,7 @@ import sys
 from pathlib import Path
 
 from .model import DeckLoadError, load_deck
-from .render import render_deck
+from .render import RenderError, render_deck
 from .report import build_report, write_reports
 from .rules import audit_deck
 from .scoring import score_findings
@@ -29,6 +29,7 @@ def build_parser() -> argparse.ArgumentParser:
     audit.add_argument("--output", type=Path, default=Path("decklint-report"), help="Report filename prefix")
     audit.add_argument("--profile", choices=("baseline", "ai-generated"), default="baseline")
     audit.add_argument("--renderer", choices=("auto", "wireframe", "libreoffice"), default="auto")
+    audit.add_argument("--soffice-path", help="Optional path to the LibreOffice soffice executable")
     audit.add_argument("--fail-on", choices=("none", "low", "medium", "high", "critical"), default="high")
     audit.add_argument("--min-score", type=_score_value, default=None)
     return parser
@@ -50,10 +51,15 @@ def main(argv: list[str] | None = None) -> int:
         deck = load_deck(args.input.expanduser())
         findings = audit_deck(deck, profile=args.profile)
         scores = score_findings(findings)
-        rendering = render_deck(deck, source=args.input.expanduser(), renderer=args.renderer)
+        rendering = render_deck(
+            deck,
+            source=args.input.expanduser(),
+            renderer=args.renderer,
+            soffice_path=args.soffice_path,
+        )
         report = build_report(deck, findings, scores, rendering, profile=args.profile)
         html_path, json_path = write_reports(args.output.expanduser(), report)
-    except (DeckLoadError, OSError, ValueError) as exc:
+    except (DeckLoadError, RenderError, OSError, ValueError) as exc:
         print(f"DeckLint could not audit the file: {exc}", file=sys.stderr)
         return 2
 
@@ -68,4 +74,3 @@ def main(argv: list[str] | None = None) -> int:
     if args.min_score is not None and scores.overall < args.min_score:
         failed = True
     return 1 if failed else 0
-

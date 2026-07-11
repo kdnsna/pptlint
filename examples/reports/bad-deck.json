@@ -1,7 +1,7 @@
 {
   "file": {
     "name": "bad-deck.pptx",
-    "sha256": "a4a7b1e00b3d58852227a82fc53ee11a63135a4b61e74df613288421699746da",
+    "sha256": "4d3f57de055bae414d0e4171faf9f5c02fced8f710cc61169d371c08fbbbd36f",
     "slides": 1
   },
   "findings": [
@@ -15,7 +15,7 @@
       "category": "accessibility",
       "confidence": "high",
       "evidence": "Hero has an empty descr/title attribute",
-      "id": "accessibility.missing-alt-text:s1-4",
+      "id": "accessibility.missing-alt-text:s1-4:275634bc8d",
       "message": "An image has no alternative text.",
       "remediation": "Add concise alt text or mark the image as decorative in PowerPoint.",
       "rule_id": "accessibility.missing-alt-text",
@@ -28,7 +28,7 @@
       "category": "accessibility",
       "confidence": "high",
       "evidence": "Slide 1 has no title or centered-title placeholder text",
-      "id": "accessibility.missing-title:s1-deck",
+      "id": "accessibility.missing-title:s1-deck:77588f6fee",
       "message": "The slide has no populated title placeholder.",
       "remediation": "Add a unique slide title using the title placeholder.",
       "rule_id": "accessibility.missing-title",
@@ -46,7 +46,7 @@
       "category": "editability",
       "confidence": "high",
       "evidence": "image coverage=100.0%; native text boxes=1",
-      "id": "editability.full-slide-image:s1-4",
+      "id": "editability.full-slide-image:s1-4:2b1cc784f8",
       "message": "The slide is dominated by a full-canvas image and has little native text.",
       "remediation": "Keep body text, charts, and key labels as native PowerPoint objects.",
       "rule_id": "editability.full-slide-image",
@@ -64,7 +64,7 @@
       "category": "readability",
       "confidence": "high",
       "evidence": "text=['F8F8F8']; fill=FFFFFF",
-      "id": "readability.low-contrast:s1-3",
+      "id": "readability.low-contrast:s1-3:884eb35530",
       "message": "Explicit text and fill colors have a contrast ratio of 1.06:1.",
       "remediation": "Use text and background colors with at least 3:1 contrast for large type.",
       "rule_id": "readability.low-contrast",
@@ -82,7 +82,7 @@
       "category": "readability",
       "confidence": "high",
       "evidence": "Body 2: minimum explicit font size 9 pt",
-      "id": "readability.small-font:s1-3",
+      "id": "readability.small-font:s1-3:17892eb799",
       "message": "Text uses 9 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -100,6 +100,11 @@
   },
   "schemaVersion": "decklint-report/v1",
   "scores": {
+    "calculation": {
+      "integrityCriticalCapApplied": false,
+      "method": "weighted-average-rounded",
+      "weightedTotal": 88.5
+    },
     "categories": {
       "accessibility": 90,
       "consistency": 100,
@@ -107,7 +112,79 @@
       "integrity": 100,
       "readability": 70
     },
-    "overall": 88
+    "deductions": [
+      {
+        "applied": 5,
+        "category": "accessibility",
+        "confidence": "high",
+        "findingId": "accessibility.missing-alt-text:s1-4:275634bc8d",
+        "reason": "applied",
+        "requested": 5,
+        "ruleId": "accessibility.missing-alt-text",
+        "severity": "medium"
+      },
+      {
+        "applied": 5,
+        "category": "accessibility",
+        "confidence": "high",
+        "findingId": "accessibility.missing-title:s1-deck:77588f6fee",
+        "reason": "applied",
+        "requested": 5,
+        "ruleId": "accessibility.missing-title",
+        "severity": "medium"
+      },
+      {
+        "applied": 15,
+        "category": "editability",
+        "confidence": "high",
+        "findingId": "editability.full-slide-image:s1-4:2b1cc784f8",
+        "reason": "applied",
+        "requested": 15,
+        "ruleId": "editability.full-slide-image",
+        "severity": "high"
+      },
+      {
+        "applied": 15,
+        "category": "readability",
+        "confidence": "high",
+        "findingId": "readability.low-contrast:s1-3:884eb35530",
+        "reason": "applied",
+        "requested": 15,
+        "ruleId": "readability.low-contrast",
+        "severity": "high"
+      },
+      {
+        "applied": 15,
+        "category": "readability",
+        "confidence": "high",
+        "findingId": "readability.small-font:s1-3:17892eb799",
+        "reason": "applied",
+        "requested": 15,
+        "ruleId": "readability.small-font",
+        "severity": "high"
+      }
+    ],
+    "overall": 88,
+    "policy": {
+      "integrityCriticalOverallCap": 49,
+      "lowConfidenceAffectsScore": false,
+      "perRuleCap": 30,
+      "privacyAffectsScore": false,
+      "severityDeductions": {
+        "critical": 30,
+        "high": 15,
+        "low": 1,
+        "medium": 5
+      },
+      "startingScore": 100
+    },
+    "weights": {
+      "accessibility": 0.1,
+      "consistency": 0.15,
+      "editability": 0.2,
+      "integrity": 0.3,
+      "readability": 0.25
+    }
   },
   "slides": [
     {

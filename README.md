@@ -47,9 +47,17 @@ Exit code `0` passes, `1` means a configured quality gate failed, and `2` means 
 
 High-confidence findings affect scores and gates. Low-confidence layout or density heuristics are advisory only.
 
+## Transparent scoring
+
+Each scored category starts at 100. High-confidence findings deduct 30 points for critical, 15 for high, 5 for medium, and 1 for low severity, capped at 30 points per rule. The overall score is the rounded weighted average: Integrity 30%, Readability 25%, Editability 20%, Consistency 15%, and Accessibility 10%. A critical Integrity finding caps the overall score at 49. Privacy and low-confidence findings remain visible but deduct zero points.
+
+The JSON report publishes the weights, policy, per-finding requested/applied deductions, cap reason, weighted total, and integrity-cap state. The HTML report shows the same deduction beside each finding.
+
 ## Rendering
 
 `wireframe` renders a structural preview directly from OOXML and works everywhere. `auto` uses LibreOffice when available to render real slide previews through an isolated temporary profile, then falls back to wireframes without losing the audit.
+
+Explicit `--renderer libreoffice` is strict and returns exit code `2` when LibreOffice cannot render. Use `--soffice-path /path/to/soffice` when it is installed outside normal macOS, Windows, or `PATH` locations.
 
 ## GitHub Action
 

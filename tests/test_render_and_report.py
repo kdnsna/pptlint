@@ -3,9 +3,11 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from decklint.model import load_deck
 from decklint.report import build_report, write_reports
-from decklint.render import render_deck
+from decklint.render import RenderError, render_deck
 from decklint.rules import audit_deck
 from decklint.scoring import score_findings
 
@@ -57,6 +59,8 @@ def test_html_report_is_self_contained_and_locates_findings(tmp_path: Path) -> N
     assert "data:image/png;base64," in html
     assert "accessibility.missing-alt-text" in html
     assert "data-slide=\"1\"" in html
+    assert "Scoring policy" in html
+    assert "points" in html
     assert payload == report
 
 
@@ -70,3 +74,23 @@ def test_auto_renderer_degrades_to_wireframe_when_soffice_is_unavailable(tmp_pat
     assert result.status == "degraded"
     assert "LibreOffice" in result.detail
 
+
+def test_output_prefix_with_dots_is_not_truncated(tmp_path: Path) -> None:
+    source = write_pptx(tmp_path / "deck.pptx")
+    deck = load_deck(source)
+    findings = audit_deck(deck, profile="baseline")
+    rendering = render_deck(deck, source=source, renderer="wireframe")
+    report = build_report(deck, findings, score_findings(findings), rendering, profile="baseline")
+
+    html_path, json_path = write_reports(tmp_path / "release.v0.1-report", report)
+
+    assert html_path.name == "release.v0.1-report.html"
+    assert json_path.name == "release.v0.1-report.json"
+
+
+def test_explicit_libreoffice_mode_fails_when_executable_is_missing(tmp_path: Path) -> None:
+    source = write_pptx(tmp_path / "deck.pptx")
+    deck = load_deck(source)
+
+    with pytest.raises(RenderError, match="LibreOffice"):
+        render_deck(deck, source=source, renderer="libreoffice", soffice_path="/missing/soffice")

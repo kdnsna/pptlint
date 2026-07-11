@@ -74,6 +74,18 @@ def audit_deck(deck: DeckModel, *, profile: str = "baseline") -> list[Finding]:
                 "Restore at least one valid slide before delivery.",
             )
         )
+    for part_name in deck.orphan_slide_parts:
+        findings.append(
+            _finding(
+                "integrity.orphan-slide-part",
+                "integrity",
+                "medium",
+                "high",
+                "The package contains a slide part that is not referenced by the presentation slide list.",
+                part_name,
+                "Remove the orphan part or restore its presentation relationship.",
+            )
+        )
     for relationship in deck.broken_relationships:
         findings.append(
             _finding(
@@ -286,7 +298,7 @@ def audit_deck(deck: DeckModel, *, profile: str = "baseline") -> list[Finding]:
             _finding(
                 "privacy.personal-metadata",
                 "privacy",
-                "high",
+                "medium",
                 "high",
                 "The PPTX contains author or last-editor metadata.",
                 "; ".join(f"{key}={value}" for key, value in sorted(deck.metadata.items())),
