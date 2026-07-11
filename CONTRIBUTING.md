@@ -1,6 +1,6 @@
 # Contributing
 
-DeckLint accepts narrowly scoped rules with reproducible PPTX fixtures.
+PPTLint accepts narrowly scoped checks with reproducible PPTX fixtures.
 
 1. Open an issue describing the observable defect and why it can be judged deterministically.
 2. Add a synthetic or openly licensed fixture; never commit private presentations.
@@ -8,5 +8,4 @@ DeckLint accepts narrowly scoped rules with reproducible PPTX fixtures.
 4. Keep low-confidence visual heuristics advisory: they must not deduct points or fail CI.
 5. Run `pytest`, `ruff check src tests tools`, `python -m build`, and `git diff --check`.
 
-Every finding must include evidence and a concrete remediation. Rules that judge taste, factual truth, or business strategy are out of scope.
-
+Every reported item must include evidence and a concrete repair step. Checks that judge taste, factual truth, or business strategy are out of scope.

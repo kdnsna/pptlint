@@ -31,10 +31,10 @@ pptlint = "pptlint.cli:main"
 decklint = "decklint.compat:main"
 
 [project.urls]
-Homepage = "https://github.com/kdnsna/decklint"
-Repository = "https://github.com/kdnsna/decklint"
-Issues = "https://github.com/kdnsna/decklint/issues"
-Documentation = "https://kdnsna.github.io/decklint/"
+Homepage = "https://github.com/kdnsna/pptlint"
+Repository = "https://github.com/kdnsna/pptlint"
+Issues = "https://github.com/kdnsna/pptlint/issues"
+Documentation = "https://kdnsna.github.io/pptlint/"
 
 [project.optional-dependencies]
 dev = [

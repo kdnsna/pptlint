@@ -8,14 +8,13 @@
 
 ## PyPI trusted publishing
 
-DeckLint does not store a PyPI token in GitHub.
+PPTLint does not store a PyPI token in GitHub.
 
-Before the first publish, create the `decklint` project or a pending trusted publisher in PyPI and authorize:
+Before the first publish, create the `pptlint` project or a pending trusted publisher in PyPI and authorize:
 
 - Owner: `kdnsna`
-- Repository: `decklint`
+- Repository: `pptlint`
 - Workflow: `publish-pypi.yml`
 - Environment: `pypi`
 
 Then run the **Publish to PyPI** workflow manually and enter the exact version from `pyproject.toml`. The workflow checks the version, builds in a clean job, and publishes through GitHub OIDC. A manual trigger prevents an unconfigured or accidental GitHub release from attempting a package upload.
-

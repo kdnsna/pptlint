@@ -116,13 +116,13 @@ def _render_html(report: dict[str, object]) -> str:
     severity_deductions = policy["severityDeductions"]
     assert isinstance(severity_deductions, dict)
     scoring_policy = (
-        '<section class="scoring-policy"><h2>Scoring policy</h2>'
+        '<details class="scoring-policy"><summary>How the secondary score is calculated</summary>'
         f'<p>Starts at {policy["startingScore"]} per category. High-confidence deductions: '
         f'critical {severity_deductions["critical"]}, high {severity_deductions["high"]}, '
         f'medium {severity_deductions["medium"]}, low {severity_deductions["low"]} points; '
         f'per-rule cap {policy["perRuleCap"]}. Weights: '
         + ", ".join(f"{name} {float(weight):.0%}" for name, weight in weights.items())
-        + ". Low-confidence and privacy findings deduct 0 points.</p></section>"
+        + ". Suggestions that require human judgment and privacy reminders deduct 0 points.</p></details>"
     )
     status = str(readiness["status"])
     status_label = {"ready": "Ready", "review": "Needs review", "blocked": "Blocked"}[status]
@@ -182,9 +182,9 @@ def _render_html(report: dict[str, object]) -> str:
             )
         slide_cards.append(
             f'<article class="slide-card" data-slide="{index}"><header><span>Slide {index:02d}</span>'
-            f'<h2>{_escape(slide.get("title") or "Untitled slide")}</h2><b>{len(slide_findings)} findings</b></header>'
+            f'<h2>{_escape(slide.get("title") or "Untitled slide")}</h2><b>{len(slide_findings)} items to check</b></header>'
             f'<div class="slide-preview"><img alt="Slide {index} preview" src="{_escape(slide.get("preview", ""))}">{overlays}</div>'
-            f'<ul>{finding_items or "<li class=clean>No slide-level findings.</li>"}</ul></article>'
+            f'<ul>{finding_items or "<li class=clean>No item to check on this slide.</li>"}</ul></article>'
         )
     deck_findings = finding_groups.get(0, [])
     deck_items = ""
@@ -204,7 +204,7 @@ def _render_html(report: dict[str, object]) -> str:
     safe_json = raw_json.replace("&", "\\u0026").replace("<", "\\u003c").replace(">", "\\u003e")
     return f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>DeckLint report · {_escape(file_info["name"])}</title>
+<title>PPTLint report · {_escape(file_info["name"])}</title>
 <style>
 :root{{--ink:#172033;--paper:#f4f0e7;--panel:#fffdf8;--muted:#667085;--critical:#b42318;--high:#d92d20;--medium:#dc6803;--low:#175cd3}}
 *{{box-sizing:border-box}}body{{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}}
@@ -219,12 +219,12 @@ main{{max-width:1240px;margin:auto;padding:48px 24px 80px}}.hero{{display:grid;g
 ul{{list-style:none;margin:0;padding:0;display:grid;gap:10px}}.finding{{border-left:4px solid var(--low);padding:8px 12px;background:#f7f8fa}}.finding.severity-critical{{border-color:var(--critical)}}.finding.severity-high{{border-color:var(--high)}}.finding.severity-medium{{border-color:var(--medium)}}.finding code{{display:inline-block;color:var(--muted);font-size:11px}}.finding em{{float:right;color:var(--muted);font:700 11px ui-monospace,monospace}}.finding strong{{display:block;clear:both;margin:3px 0}}.finding p,.finding small{{margin:0;color:var(--muted)}}.deck-findings{{margin:0 0 32px}}.scoring-policy{{background:#ebe6dc;border-left:4px solid #8a3d22;padding:12px 18px;margin:-28px 0 36px}}.scoring-policy h2{{font-size:14px;margin:0 0 3px}}.scoring-policy p{{margin:0;color:var(--muted)}}
 @media(max-width:800px){{.hero,.readiness{{grid-template-columns:1fr}}.overall{{width:110px;height:110px}}.scores{{grid-template-columns:repeat(2,1fr)}}.slide-card{{grid-template-columns:1fr}}}}
 </style></head><body><main>
-<section class="hero"><div><span class="eyebrow">DeckLint · Lighthouse for PowerPoint</span><h1>{_escape(file_info["name"])}</h1><p>{_escape(file_info["slides"])} slides · {_escape(report["profile"])} profile · {_escape(renderer["used"])} renderer</p></div><div class="overall"><div><strong>{_escape(scores["overall"])}</strong><span>overall</span></div></div></section>
+<section class="hero"><div><span class="eyebrow">PPTLint · PowerPoint delivery check</span><h1>{_escape(file_info["name"])}</h1><p>{_escape(file_info["slides"])} slides · {_escape(report["profile"])} profile · {_escape(renderer["used"])} renderer</p></div><div class="overall"><div><strong>{_escape(scores["overall"])}</strong><span>secondary score</span></div></div></section>
 {readiness_panel}
 <section class="scores">{score_cards}</section>
 {scoring_policy}
 {f'<div class="notice">{_escape(renderer["detail"])}</div>' if renderer.get("detail") else ''}
-{f'<section class="deck-findings"><h2>Deck-level findings</h2><ul>{deck_items}</ul></section>' if deck_items else ''}
+{f'<section class="deck-findings"><h2>Items that affect the whole file</h2><ul>{deck_items}</ul></section>' if deck_items else ''}
 <section class="slide-grid">{"".join(slide_cards)}</section>
 <script id="decklint-data" type="application/json">{safe_json}</script>
 </main></body></html>"""

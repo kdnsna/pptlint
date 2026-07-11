@@ -1,6 +1,12 @@
 # Roadmap
 
-DeckLint 保持窄边界：在交付前检查 PowerPoint，并用可复现证据说明问题和变化。
+PPTLint 保持窄边界：在发送或演示前检查 PowerPoint，并用可复现证据说明问题和变化。
+
+## v0.3 — 普通用户可以直接理解的交付检查
+
+- `pptlint check`、可以交付／建议检查／暂勿交付三种结果。
+- 最多三项优先修改，以及 PowerPoint 中的具体操作步骤。
+- PPTLint 新主仓；DeckLint 保留旧 Action 兼容入口。
 
 ## v0.1 — 只读审计基础
 
@@ -9,14 +15,14 @@ DeckLint 保持窄边界：在交付前检查 PowerPoint，并用可复现证据
 
 ## v0.2 — Proof Loop
 
-- `decklint compare` 前后报告比较。
+- `pptlint compare` 前后报告比较。
 - `decklint-comparison/v1`、中文离线比较报告和回归门禁。
 - AI 生成页面的原生语义标题识别。
 - Ultimate PPT Master 真实修复闭环、Pages 案例和公开证据资产。
 
 ## 后续候选
 
-- `.decklint.yml` 策略覆盖与品牌字体/色彩规则。
+- 可选策略文件与品牌字体、色彩检查。
 - SARIF 与 PR 注释。
 - 有跨平台公开样本支持的更多 renderer。
 - 仅在诊断误报率与用户信任得到验证后，研究安全修复副本。

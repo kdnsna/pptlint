@@ -86,7 +86,7 @@ def classify_finding(finding: Finding) -> dict[str, object]:
         [
             finding.remediation,
             "Save changes to a separate delivery copy.",
-            "Run PPTLint again and confirm that the finding is resolved.",
+            "Run PPTLint again and confirm that the reported item no longer appears.",
         ],
     )
     return {"disposition": disposition, "impact": impact, "fixSteps": steps}

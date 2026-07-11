@@ -86,7 +86,7 @@ def test_html_report_is_self_contained_and_locates_findings(tmp_path: Path) -> N
     assert "data:image/png;base64," in html
     assert "accessibility.missing-alt-text" in html
     assert "data-slide=\"1\"" in html
-    assert "Scoring policy" in html
+    assert "How the secondary score is calculated" in html
     assert "points" in html
     assert payload == report
 

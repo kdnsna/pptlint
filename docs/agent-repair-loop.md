@@ -1,11 +1,11 @@
-# Agent 修复闭环
+# 修改与复检
 
-DeckLint 只负责诊断与比较，不修改 PowerPoint。生成 Agent 必须保留源文件，并输出独立修复副本。
+PPTLint 只负责检查与比较，不修改 PowerPoint。生成 Agent 必须保留源文件，并输出独立修复副本。
 
 ## 1. 审计初稿
 
 ```bash
-decklint audit before.pptx \
+pptlint check before.pptx \
   --profile ai-generated \
   --renderer auto \
   --fail-on none \
@@ -32,7 +32,7 @@ decklint audit before.pptx \
 ## 4. 复审
 
 ```bash
-decklint audit after.pptx \
+pptlint check after.pptx \
   --profile ai-generated \
   --renderer auto \
   --fail-on high \
@@ -42,7 +42,7 @@ decklint audit after.pptx \
 ## 5. 比较并阻断回归
 
 ```bash
-decklint compare before-report.json after-report.json \
+pptlint compare before-report.json after-report.json \
   --output decklint-comparison \
   --fail-on-regression high
 ```

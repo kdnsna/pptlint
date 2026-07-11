@@ -64,23 +64,26 @@ def test_report_schema_accepts_category_floor_deductions(tmp_path: Path) -> None
 
 
 def test_committed_proof_reports_match_schema_and_scoring_contract() -> None:
-    schema = json.loads((ROOT / "schema/decklint-report-v1.schema.json").read_text(encoding="utf-8"))
+    schema = json.loads((ROOT / "schema/pptlint-report-v2.schema.json").read_text(encoding="utf-8"))
 
     for name in ("good-deck", "bad-deck"):
         report = json.loads((ROOT / f"examples/reports/{name}.json").read_text(encoding="utf-8"))
         jsonschema.validate(report, schema)
         assert "deductions" in report["scores"]
-        assert "Scoring policy" in (ROOT / f"examples/reports/{name}.html").read_text(encoding="utf-8")
+        html = (ROOT / f"examples/reports/{name}.html").read_text(encoding="utf-8")
+        assert "Delivery readiness" in html
+        assert "Priority actions" in html
+    assert (ROOT / "assets/pptlint-demo.gif").is_file()
 
 
 def test_github_action_exposes_the_cli_contract() -> None:
     action = yaml.safe_load((ROOT / "action.yml").read_text(encoding="utf-8"))
 
     assert {"path", "profile", "fail-on", "min-score", "renderer"} <= set(action["inputs"])
-    assert {"score", "html-report", "json-report"} <= set(action["outputs"])
+    assert {"readiness", "score", "html-report", "json-report"} <= set(action["outputs"])
     run_scripts = "\n".join(step.get("run", "") for step in action["runs"]["steps"])
     assert "pip install" in run_scripts
-    assert "decklint audit" in run_scripts
+    assert "pptlint check" in run_scripts
     assert "upload-artifact" in json.dumps(action)
     assert "mktemp -d" in run_scripts
     assert "$RUNNER_TEMP" in run_scripts
@@ -94,31 +97,48 @@ def test_agent_skill_is_short_and_delegates_to_cli() -> None:
     skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
 
     assert len(skill.splitlines()) <= 100
-    assert "decklint audit" in skill
+    assert "pptlint check" in skill
+    assert "readiness" in skill
     assert "Do not" in skill and "modify" in skill
 
 
 def test_readme_leads_with_single_product_promise() -> None:
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
 
-    assert any("Lighthouse for PowerPoint" in line for line in readme.splitlines()[2:12])
-    assert "uvx decklint audit" in readme
-    assert "does not upload" in readme.lower()
+    assert readme.startswith("# PPTLint")
+    first_screen = "\n".join(readme.splitlines()[:60]).lower()
+    assert "ai-generated powerpoint" in first_screen
+    assert "before you send" in first_screen
+    assert "pptlint check" in first_screen
+    assert "does not upload" in first_screen
+    assert not {"regression", "schema", "finding", "quality gate"} & set(first_screen.split())
+    assert "README.zh-CN.md" in readme
     assert "examples/reports/good-deck.html" in readme
     assert "examples/reports/bad-deck.html" in readme
 
 
-def test_v02_public_surface_is_chinese_first_and_exposes_compare() -> None:
-    readme = (ROOT / "README.md").read_text(encoding="utf-8")
-    first_screen = "\n".join(readme.splitlines()[:40])
+def test_v03_has_plain_language_chinese_home_and_keeps_compare() -> None:
+    readme = (ROOT / "README.zh-CN.md").read_text(encoding="utf-8")
+    first_screen = "\n".join(readme.splitlines()[:60])
     skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
 
-    assert "PPT 质量基础设施" in first_screen
-    assert "decklint compare" in readme
-    assert "GitHub Release" in first_screen
-    assert "uvx decklint audit" not in first_screen
-    assert "decklint compare" in skill
+    assert "AI 生成 PPT" in first_screen
+    assert "发出去之前" in first_screen
+    assert "pptlint check" in first_screen
+    assert not {"门禁", "回归", "Schema", "finding"} & set(first_screen.split())
+    assert "pptlint compare" in readme
+    assert "pptlint compare" in skill
     assert len(skill.splitlines()) <= 100
+
+
+def test_pages_home_uses_plain_language_and_new_repository_links() -> None:
+    site = (ROOT / "site/index.html").read_text(encoding="utf-8")
+    hero = site.split("</header>", 1)[0]
+
+    assert "Is this PowerPoint ready to send?" in hero
+    assert "https://github.com/kdnsna/pptlint" in hero
+    assert "pptlint check" in site
+    assert all(term not in hero.lower() for term in ("regression", "schema", "finding", "quality gate"))
 
 
 def test_proof_loop_case_is_schema_valid_and_matches_public_claims() -> None:
@@ -141,7 +161,7 @@ def test_proof_loop_case_is_schema_valid_and_matches_public_claims() -> None:
     assert comparison["gate"]["passed"] is True
 
     site = (ROOT / "site/index.html").read_text(encoding="utf-8")
-    assert "49→100" in site
+    assert "49 → 100" in site
     assert "proof-loop/comparison.html" in site
     assert "http://" not in site and "https://" in site
 

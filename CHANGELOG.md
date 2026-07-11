@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.0 — 2026-07-11
+
+- Rename the primary product and package to PPTLint while keeping the previous command available through v0.4.
+- Add `pptlint check`, `pptlint-report/v2`, plain-language delivery results, and three priority actions.
+- Add content-type, blank-slide, substantial text-overlap, clipping-risk, font-portability, aspect-ratio, and editability checks.
+- Replace the score-first report and homepage with a ready, review, or blocked result for ordinary PowerPoint users.
+
 ## 0.2.0 — 2026-07-11
 
 - Add deterministic before/after comparison with resolved, persistent, and new findings.
