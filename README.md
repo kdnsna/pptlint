@@ -8,6 +8,8 @@
 [![Pages](https://github.com/kdnsna/pptlint/actions/workflows/pages.yml/badge.svg)](https://kdnsna.github.io/pptlint/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-10233f.svg)](LICENSE)
 
+[![A risky AI-generated PowerPoint beside the repaired delivery-ready deck](site/assets/pptlint-before-after-hero.png)](https://kdnsna.github.io/pptlint/proof-loop/comparison.html)
+
 AI tools can make a PowerPoint quickly. They can also leave behind missing files, clipped text, overlapping text boxes, unreadable type, flattened slides, speaker notes, comments, and personal information.
 
 PPTLint checks the `.pptx` on your computer and answers three questions:
@@ -17,6 +19,8 @@ PPTLint checks the `.pptx` on your computer and answers three questions:
 - **Fix before sending** — fix the listed problem before sending the file.
 
 PPTLint does not upload the presentation, call an AI model, or change the source file.
+
+Need to create or repair the presentation first? Use [Ultimate PPT Master](https://github.com/kdnsna/ultimate-ppt-master-skill), then run PPTLint as the independent delivery check.
 
 ## Ask your coding agent
 

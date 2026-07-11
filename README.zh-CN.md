@@ -4,6 +4,8 @@
 
 [English](README.md) · [在线示例](https://kdnsna.github.io/pptlint/) · [修改前后对比](https://kdnsna.github.io/pptlint/proof-loop/comparison.html)
 
+[![存在问题的 AI PPT 与修改后可交付版本对比](site/assets/pptlint-before-after-hero.png)](https://kdnsna.github.io/pptlint/proof-loop/comparison.html)
+
 AI 工具可以很快生成 PowerPoint，但也可能留下缺失文件、文字被裁掉、文字框互相遮挡、字号过小、整页变成图片、讲者备注、批注或个人信息。
 
 PPTLint 在你的电脑上检查 `.pptx`，直接给出三种结果：
@@ -13,6 +15,8 @@ PPTLint 在你的电脑上检查 `.pptx`，直接给出三种结果：
 - **暂勿交付**：先解决报告列出的必要修改，再发送文件。
 
 PPTLint 不上传 PPT、不调用 AI 模型，也不修改源文件。
+
+如果需要先生成或修复 PPT，请使用 [Ultimate PPT Master](https://github.com/kdnsna/ultimate-ppt-master-skill)，再用 PPTLint 做独立交付检查。
 
 ## 直接交给 Agent
 
