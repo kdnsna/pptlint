@@ -29,11 +29,10 @@ Show me the slides I must fix first and the exact PowerPoint steps for each one.
 
 ## Run it yourself
 
-Until the first PyPI release is verified, run the release wheel:
+Install from PyPI and run:
 
 ```bash
-uvx --from https://github.com/kdnsna/pptlint/releases/download/v0.3.1/pptlint-0.3.1-py3-none-any.whl \
-  pptlint check output.pptx --profile ai-generated
+uvx pptlint check output.pptx --profile ai-generated
 ```
 
 PPTLint writes two files:
