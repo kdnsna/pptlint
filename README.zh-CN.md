@@ -28,7 +28,7 @@ PPTLint 不上传 PPT、不调用 AI 模型，也不修改源文件。
 PyPI 首次发布验证完成前，使用 GitHub Release：
 
 ```bash
-uvx --from https://github.com/kdnsna/pptlint/releases/download/v0.3.0/pptlint-0.3.0-py3-none-any.whl \
+uvx --from https://github.com/kdnsna/pptlint/releases/download/v0.3.1/pptlint-0.3.1-py3-none-any.whl \
   pptlint check output.pptx --profile ai-generated
 ```
 

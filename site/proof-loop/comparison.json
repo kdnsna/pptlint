@@ -1,7 +1,7 @@
 {
   "after": {
     "file": {
-      "name": "decklint_proof_loop_v02_20260711_155303.pptx",
+      "name": "after.pptx",
       "sha256": "3ca4cbaaa819cd0191f7f392ab6d193920638e1a561b5dad067709486355e651",
       "slides": 9
     },
@@ -12,12 +12,12 @@
       "status": "ok",
       "used": "libreoffice"
     },
-    "sourceSchema": "decklint-report/v1"
+    "sourceSchema": "pptlint-report/v2"
   },
-  "agentSummary": "比较门禁通过；总分从 49 变为 100（变化 +51）；已解决 103 项，持续存在 18 项，新增 0 项。",
+  "agentSummary": "比较门禁通过；总分从 49 变为 100（变化 +51）；已解决 103 项，持续存在 20 项，新增 3 项。",
   "before": {
     "file": {
-      "name": "decklint_proof_loop_v02_20260711_153110.pptx",
+      "name": "before.pptx",
       "sha256": "ae222237daff012bc819cb03b2541650dd3d25b57d38ed27695f0a1d2f0cec8f",
       "slides": 9
     },
@@ -28,14 +28,69 @@
       "status": "ok",
       "used": "wireframe"
     },
-    "sourceSchema": "decklint-report/v1"
+    "sourceSchema": "pptlint-report/v2"
   },
   "gate": {
     "failureReasons": [],
     "passed": true,
     "threshold": "high"
   },
-  "new": [],
+  "new": [
+    {
+      "bbox": {
+        "h": 0.053333,
+        "w": 0.09,
+        "x": 0.455,
+        "y": 0.552222
+      },
+      "category": "readability",
+      "confidence": "low",
+      "evidence": "TextBox 39 overlaps TextBox 40; smaller-box overlap=27.1%",
+      "id": "readability.text-overlap:s3-41/40:12b82820d7",
+      "message": "Two native text boxes substantially overlap.",
+      "remediation": "Separate or resize the text boxes, then inspect the slide at presentation size.",
+      "rule_id": "readability.text-overlap",
+      "severity": "high",
+      "shape_id": "41/40",
+      "slide_index": 3
+    },
+    {
+      "bbox": {
+        "h": 0.053333,
+        "w": 0.247406,
+        "x": 0.066875,
+        "y": 0.402222
+      },
+      "category": "readability",
+      "confidence": "low",
+      "evidence": "TextBox 9 overlaps TextBox 10; smaller-box overlap=27.1%",
+      "id": "readability.text-overlap:s9-19/10:a572a23ade",
+      "message": "Two native text boxes substantially overlap.",
+      "remediation": "Separate or resize the text boxes, then inspect the slide at presentation size.",
+      "rule_id": "readability.text-overlap",
+      "severity": "high",
+      "shape_id": "19/10",
+      "slide_index": 9
+    },
+    {
+      "bbox": {
+        "h": 0.053333,
+        "w": 0.235547,
+        "x": 0.066875,
+        "y": 0.593889
+      },
+      "category": "readability",
+      "confidence": "low",
+      "evidence": "TextBox 13 overlaps TextBox 14; smaller-box overlap=27.1%",
+      "id": "readability.text-overlap:s9-19/14:c85bb59154",
+      "message": "Two native text boxes substantially overlap.",
+      "remediation": "Separate or resize the text boxes, then inspect the slide at presentation size.",
+      "rule_id": "readability.text-overlap",
+      "severity": "high",
+      "shape_id": "19/14",
+      "slide_index": 9
+    }
+  ],
   "persistent": [
     {
       "after": {
@@ -539,6 +594,72 @@
         "severity": "medium",
         "shape_id": null,
         "slide_index": 9
+      }
+    },
+    {
+      "after": {
+        "bbox": null,
+        "category": "readability",
+        "confidence": "low",
+        "evidence": "font=Consolas; explicit declarations=70",
+        "id": "readability.font-portability-risk:s0-deck:78a53550da",
+        "message": "A font may be substituted on another computer.",
+        "remediation": "Confirm the font on the delivery computer, embed it when licensing permits, or use an approved portable font.",
+        "rule_id": "readability.font-portability-risk",
+        "severity": "medium",
+        "shape_id": null,
+        "slide_index": null
+      },
+      "before": {
+        "bbox": null,
+        "category": "readability",
+        "confidence": "low",
+        "evidence": "font=Consolas; explicit declarations=70",
+        "id": "readability.font-portability-risk:s0-deck:78a53550da",
+        "message": "A font may be substituted on another computer.",
+        "remediation": "Confirm the font on the delivery computer, embed it when licensing permits, or use an approved portable font.",
+        "rule_id": "readability.font-portability-risk",
+        "severity": "medium",
+        "shape_id": null,
+        "slide_index": null
+      }
+    },
+    {
+      "after": {
+        "bbox": {
+          "h": 0.053333,
+          "w": 0.057656,
+          "x": 0.375859,
+          "y": 0.527222
+        },
+        "category": "readability",
+        "confidence": "low",
+        "evidence": "TextBox 21 overlaps TextBox 22; smaller-box overlap=32.3%",
+        "id": "readability.text-overlap:s5-44/23/22:e44202e7d6",
+        "message": "Two native text boxes substantially overlap.",
+        "remediation": "Separate or resize the text boxes, then inspect the slide at presentation size.",
+        "rule_id": "readability.text-overlap",
+        "severity": "high",
+        "shape_id": "44/23/22",
+        "slide_index": 5
+      },
+      "before": {
+        "bbox": {
+          "h": 0.04,
+          "w": 0.043242,
+          "x": 0.383066,
+          "y": 0.534306
+        },
+        "category": "readability",
+        "confidence": "low",
+        "evidence": "TextBox 21 overlaps TextBox 22; smaller-box overlap=25.3%",
+        "id": "readability.text-overlap:s5-44/23/22:ef075a8d7a",
+        "message": "Two native text boxes substantially overlap.",
+        "remediation": "Separate or resize the text boxes, then inspect the slide at presentation size.",
+        "rule_id": "readability.text-overlap",
+        "severity": "high",
+        "shape_id": "44/23/22",
+        "slide_index": 5
       }
     }
   ],
@@ -2385,9 +2506,9 @@
       "delta": -9
     },
     "high": {
-      "after": 0,
-      "before": 92,
-      "delta": -92
+      "after": 4,
+      "before": 93,
+      "delta": -89
     },
     "low": {
       "after": 0,
@@ -2395,8 +2516,8 @@
       "delta": 0
     },
     "medium": {
-      "after": 18,
-      "before": 20,
+      "after": 19,
+      "before": 21,
       "delta": -2
     }
   },
@@ -2537,5 +2658,5 @@
       "index": 9
     }
   ],
-  "toolVersion": "0.2.0"
+  "toolVersion": "0.3.1"
 }

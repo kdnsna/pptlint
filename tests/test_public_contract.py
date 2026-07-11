@@ -87,7 +87,9 @@ def test_github_action_exposes_the_cli_contract() -> None:
     assert "upload-artifact" in json.dumps(action)
     assert "mktemp -d" in run_scripts
     assert "$RUNNER_TEMP" in run_scripts
-    upload_step = next(step for step in action["runs"]["steps"] if step.get("uses") == "actions/upload-artifact@v4")
+    upload_step = next(
+        step for step in action["runs"]["steps"] if step.get("uses") == "actions/upload-artifact@v4"
+    )
     assert "steps.audit.outputs.html-report" in upload_step["with"]["path"]
     assert "steps.audit.outputs.json-report" in upload_step["with"]["path"]
     assert action["outputs"]["exit-code"]["value"] == "${{ steps.audit.outputs.exit-code }}"
@@ -164,7 +166,7 @@ def test_contribution_templates_cover_samples_integrations_and_rule_challenges()
 
 
 def test_proof_loop_case_is_schema_valid_and_matches_public_claims() -> None:
-    report_schema = json.loads((ROOT / "schema/decklint-report-v1.schema.json").read_text(encoding="utf-8"))
+    report_schema = json.loads((ROOT / "schema/pptlint-report-v2.schema.json").read_text(encoding="utf-8"))
     comparison_schema = json.loads(
         (ROOT / "schema/decklint-comparison-v1.schema.json").read_text(encoding="utf-8")
     )
@@ -179,7 +181,8 @@ def test_proof_loop_case_is_schema_valid_and_matches_public_claims() -> None:
     assert after["scores"]["overall"] == 100
     assert comparison["scores"]["overall"] == {"before": 49, "after": 100, "delta": 51}
     assert len(comparison["resolved"]) == 103
-    assert len(comparison["new"]) == 0
+    assert len(comparison["new"]) == 3
+    assert all(item["confidence"] == "low" for item in comparison["new"])
     assert comparison["gate"]["passed"] is True
 
     site = (ROOT / "site/index.html").read_text(encoding="utf-8")
@@ -188,8 +191,18 @@ def test_proof_loop_case_is_schema_valid_and_matches_public_claims() -> None:
     assert "http://" not in site and "https://" in site
 
 
-def test_version_is_030() -> None:
-    assert decklint.__version__ == "0.3.0"
+def test_version_is_031() -> None:
+    assert decklint.__version__ == "0.3.1"
+
+
+def test_homepage_leads_with_agent_instruction_before_cli() -> None:
+    site = (ROOT / "site" / "index.html").read_text(encoding="utf-8")
+
+    agent_text = "Ask your coding agent"
+    command = "pptlint check output.pptx"
+    assert agent_text in site
+    assert site.index(agent_text) < site.index(command)
+    assert "See how five AI PowerPoint tools will be checked" in site
 
 
 def test_corpus_contains_one_hundred_public_synthetic_pptx_files() -> None:

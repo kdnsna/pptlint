@@ -105,7 +105,7 @@
       "additionalProperties": false,
       "required": ["sourceSchema", "profile", "file", "renderer"],
       "properties": {
-        "sourceSchema": { "const": "decklint-report/v1" },
+        "sourceSchema": { "enum": ["decklint-report/v1", "pptlint-report/v2"] },
         "profile": { "enum": ["baseline", "ai-generated"] },
         "file": { "$ref": "#/$defs/file" },
         "renderer": { "$ref": "#/$defs/renderer" }

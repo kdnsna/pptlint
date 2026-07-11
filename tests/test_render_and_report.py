@@ -85,7 +85,7 @@ def test_html_report_is_self_contained_and_locates_findings(tmp_path: Path) -> N
     assert "https://" not in html and "http://" not in html
     assert "data:image/png;base64," in html
     assert "accessibility.missing-alt-text" in html
-    assert "data-slide=\"1\"" in html
+    assert 'data-slide="1"' in html
     assert "How the secondary score is calculated" in html
     assert "points" in html
     assert payload == report
@@ -102,10 +102,16 @@ def test_html_leads_with_delivery_readiness_and_priority_actions(tmp_path: Path)
     html = html_path.read_text(encoding="utf-8")
 
     assert "Delivery readiness" in html
-    assert "Blocked" in html
+    assert "Fix before sending" in html
     assert "Priority actions" in html
     assert "PowerPoint may repair the file" in html
     assert "Run PPTLint again" in html
+    assert html.index("Delivery readiness") < html.index("Secondary score")
+    assert "Checked locally" in html
+    assert "Fix before sending" in html
+    assert "Technical details" in html
+    assert '<details class="technical-details">' in html
+    assert "ai-generated profile" not in html.split("</section>", 1)[0]
 
 
 def test_v2_report_exposes_editability_metrics(tmp_path: Path) -> None:

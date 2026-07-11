@@ -139,7 +139,7 @@ def test_blank_slide_requires_human_review(tmp_path: Path) -> None:
     assert "readability.blank-slide" in rule_ids(source)
 
 
-def test_substantial_text_box_overlap_is_high_confidence(tmp_path: Path) -> None:
+def test_substantial_text_box_overlap_remains_advisory_until_visually_confirmed(tmp_path: Path) -> None:
     source = write_pptx(
         tmp_path / "overlap.pptx",
         slides=[slide_xml(second_body=True)],
@@ -151,9 +151,21 @@ def test_substantial_text_box_overlap_is_high_confidence(tmp_path: Path) -> None
         if item.rule_id == "readability.text-overlap"
     )
 
-    assert finding.confidence == "high"
+    assert finding.confidence == "low"
     assert finding.slide_index == 1
     assert finding.bbox is not None
+
+
+def test_intentional_text_overlays_in_public_deck_do_not_block_delivery() -> None:
+    source = Path(__file__).parents[1] / "examples" / "proof-loop" / "after.pptx"
+    overlaps = [
+        item
+        for item in audit_deck(load_deck(source), profile="ai-generated")
+        if item.rule_id == "readability.text-overlap"
+    ]
+
+    assert overlaps
+    assert all(item.confidence == "low" for item in overlaps)
 
 
 def test_explicit_clipping_and_portability_fonts_are_advisory(tmp_path: Path) -> None:

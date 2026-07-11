@@ -12,9 +12,9 @@ AI tools can make a PowerPoint quickly. They can also leave behind missing files
 
 PPTLint checks the `.pptx` on your computer and answers three questions:
 
-- **Ready** — no high-confidence delivery problem was found.
-- **Needs review** — open the named slides and confirm the highlighted items.
-- **Blocked** — fix the listed problem before sending the file.
+- **Ready to send** — no high-confidence delivery problem was found.
+- **Check before sending** — open the named slides and confirm the highlighted items.
+- **Fix before sending** — fix the listed problem before sending the file.
 
 PPTLint does not upload the presentation, call an AI model, or change the source file.
 
@@ -32,7 +32,7 @@ Show me the slides I must fix first and the exact PowerPoint steps for each one.
 Until the first PyPI release is verified, run the release wheel:
 
 ```bash
-uvx --from https://github.com/kdnsna/pptlint/releases/download/v0.3.0/pptlint-0.3.0-py3-none-any.whl \
+uvx --from https://github.com/kdnsna/pptlint/releases/download/v0.3.1/pptlint-0.3.1-py3-none-any.whl \
   pptlint check output.pptx --profile ai-generated
 ```
 

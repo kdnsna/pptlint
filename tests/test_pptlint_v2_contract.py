@@ -55,13 +55,14 @@ def test_readiness_uses_review_for_non_blocking_delivery_risks() -> None:
     assert len(result.priority_actions) <= 3
 
 
-def test_pptlint_check_writes_v2_report_with_actionable_findings(tmp_path: Path) -> None:
+def test_pptlint_check_writes_v2_report_with_actionable_findings(
+    tmp_path: Path,
+    capsys,
+) -> None:
     source = write_pptx(tmp_path / "broken.pptx", broken_relationship=True)
     output = tmp_path / "pptlint-report"
 
-    exit_code = main(
-        ["check", str(source), "--renderer", "wireframe", "--output", str(output)]
-    )
+    exit_code = main(["check", str(source), "--renderer", "wireframe", "--output", str(output)])
 
     payload = json.loads(output.with_suffix(".json").read_text(encoding="utf-8"))
     assert exit_code == 1
@@ -71,15 +72,26 @@ def test_pptlint_check_writes_v2_report_with_actionable_findings(tmp_path: Path)
     assert payload["findings"][0]["disposition"] in {"blocker", "review", "advisory"}
     assert payload["findings"][0]["impact"]
     assert payload["findings"][0]["fixSteps"]
+    output_text = capsys.readouterr().out
+    first_line = output_text.splitlines()[0]
+    assert first_line == "PPTLint result: Fix before sending"
+    assert "score" not in first_line.lower()
+    assert "Whole file" in output_text
+    assert "Open the HTML report for the highlighted slides" in output_text
 
 
-def test_pptlint_check_uses_new_default_output_prefix(tmp_path: Path, monkeypatch) -> None:
+def test_pptlint_check_uses_new_default_output_prefix(
+    tmp_path: Path,
+    monkeypatch,
+    capsys,
+) -> None:
     source = write_pptx(tmp_path / "valid.pptx")
     monkeypatch.chdir(tmp_path)
 
     assert main(["check", str(source), "--renderer", "wireframe"]) == 0
     assert (tmp_path / "pptlint-report.html").is_file()
     assert (tmp_path / "pptlint-report.json").is_file()
+    assert capsys.readouterr().out.splitlines()[0] == "PPTLint result: Ready to send"
 
 
 def test_pptlint_exposes_the_supported_analysis_modules() -> None:

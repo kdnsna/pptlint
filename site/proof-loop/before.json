@@ -1,6 +1,6 @@
 {
   "file": {
-    "name": "decklint_proof_loop_v02_20260711_153110.pptx",
+    "name": "before.pptx",
     "sha256": "ae222237daff012bc819cb03b2541650dd3d25b57d38ed27695f0a1d2f0cec8f",
     "slides": 9
   },
@@ -9,8 +9,15 @@
       "bbox": null,
       "category": "integrity",
       "confidence": "high",
+      "disposition": "blocker",
       "evidence": "ppt/notesSlides/notesSlide1.xml#rId1 -> ppt/notesMasters/notesMaster1.xml",
+      "fixSteps": [
+        "Open a duplicate of the file in PowerPoint and note any repair warning.",
+        "Restore the missing media or object, then save the duplicate as a new PPTX.",
+        "Run PPTLint again and confirm that the broken relationship is gone."
+      ],
       "id": "integrity.broken-relationship:s0-deck:e3923518a8",
+      "impact": "PowerPoint may repair the file, omit content, or refuse to open it.",
       "message": "A PPTX relationship points to a missing package part.",
       "remediation": "Restore the missing media or remove the dangling relationship.",
       "rule_id": "integrity.broken-relationship",
@@ -22,8 +29,15 @@
       "bbox": null,
       "category": "integrity",
       "confidence": "high",
+      "disposition": "blocker",
       "evidence": "ppt/notesSlides/notesSlide2.xml#rId1 -> ppt/notesMasters/notesMaster1.xml",
+      "fixSteps": [
+        "Open a duplicate of the file in PowerPoint and note any repair warning.",
+        "Restore the missing media or object, then save the duplicate as a new PPTX.",
+        "Run PPTLint again and confirm that the broken relationship is gone."
+      ],
       "id": "integrity.broken-relationship:s0-deck:9b1be78d36",
+      "impact": "PowerPoint may repair the file, omit content, or refuse to open it.",
       "message": "A PPTX relationship points to a missing package part.",
       "remediation": "Restore the missing media or remove the dangling relationship.",
       "rule_id": "integrity.broken-relationship",
@@ -35,8 +49,15 @@
       "bbox": null,
       "category": "integrity",
       "confidence": "high",
+      "disposition": "blocker",
       "evidence": "ppt/notesSlides/notesSlide3.xml#rId1 -> ppt/notesMasters/notesMaster1.xml",
+      "fixSteps": [
+        "Open a duplicate of the file in PowerPoint and note any repair warning.",
+        "Restore the missing media or object, then save the duplicate as a new PPTX.",
+        "Run PPTLint again and confirm that the broken relationship is gone."
+      ],
       "id": "integrity.broken-relationship:s0-deck:d4cf01909b",
+      "impact": "PowerPoint may repair the file, omit content, or refuse to open it.",
       "message": "A PPTX relationship points to a missing package part.",
       "remediation": "Restore the missing media or remove the dangling relationship.",
       "rule_id": "integrity.broken-relationship",
@@ -48,8 +69,15 @@
       "bbox": null,
       "category": "integrity",
       "confidence": "high",
+      "disposition": "blocker",
       "evidence": "ppt/notesSlides/notesSlide4.xml#rId1 -> ppt/notesMasters/notesMaster1.xml",
+      "fixSteps": [
+        "Open a duplicate of the file in PowerPoint and note any repair warning.",
+        "Restore the missing media or object, then save the duplicate as a new PPTX.",
+        "Run PPTLint again and confirm that the broken relationship is gone."
+      ],
       "id": "integrity.broken-relationship:s0-deck:5484b13315",
+      "impact": "PowerPoint may repair the file, omit content, or refuse to open it.",
       "message": "A PPTX relationship points to a missing package part.",
       "remediation": "Restore the missing media or remove the dangling relationship.",
       "rule_id": "integrity.broken-relationship",
@@ -61,8 +89,15 @@
       "bbox": null,
       "category": "integrity",
       "confidence": "high",
+      "disposition": "blocker",
       "evidence": "ppt/notesSlides/notesSlide5.xml#rId1 -> ppt/notesMasters/notesMaster1.xml",
+      "fixSteps": [
+        "Open a duplicate of the file in PowerPoint and note any repair warning.",
+        "Restore the missing media or object, then save the duplicate as a new PPTX.",
+        "Run PPTLint again and confirm that the broken relationship is gone."
+      ],
       "id": "integrity.broken-relationship:s0-deck:c844e72bb9",
+      "impact": "PowerPoint may repair the file, omit content, or refuse to open it.",
       "message": "A PPTX relationship points to a missing package part.",
       "remediation": "Restore the missing media or remove the dangling relationship.",
       "rule_id": "integrity.broken-relationship",
@@ -74,8 +109,15 @@
       "bbox": null,
       "category": "integrity",
       "confidence": "high",
+      "disposition": "blocker",
       "evidence": "ppt/notesSlides/notesSlide6.xml#rId1 -> ppt/notesMasters/notesMaster1.xml",
+      "fixSteps": [
+        "Open a duplicate of the file in PowerPoint and note any repair warning.",
+        "Restore the missing media or object, then save the duplicate as a new PPTX.",
+        "Run PPTLint again and confirm that the broken relationship is gone."
+      ],
       "id": "integrity.broken-relationship:s0-deck:18f80ef580",
+      "impact": "PowerPoint may repair the file, omit content, or refuse to open it.",
       "message": "A PPTX relationship points to a missing package part.",
       "remediation": "Restore the missing media or remove the dangling relationship.",
       "rule_id": "integrity.broken-relationship",
@@ -87,8 +129,15 @@
       "bbox": null,
       "category": "integrity",
       "confidence": "high",
+      "disposition": "blocker",
       "evidence": "ppt/notesSlides/notesSlide7.xml#rId1 -> ppt/notesMasters/notesMaster1.xml",
+      "fixSteps": [
+        "Open a duplicate of the file in PowerPoint and note any repair warning.",
+        "Restore the missing media or object, then save the duplicate as a new PPTX.",
+        "Run PPTLint again and confirm that the broken relationship is gone."
+      ],
       "id": "integrity.broken-relationship:s0-deck:6da073f083",
+      "impact": "PowerPoint may repair the file, omit content, or refuse to open it.",
       "message": "A PPTX relationship points to a missing package part.",
       "remediation": "Restore the missing media or remove the dangling relationship.",
       "rule_id": "integrity.broken-relationship",
@@ -100,8 +149,15 @@
       "bbox": null,
       "category": "integrity",
       "confidence": "high",
+      "disposition": "blocker",
       "evidence": "ppt/notesSlides/notesSlide8.xml#rId1 -> ppt/notesMasters/notesMaster1.xml",
+      "fixSteps": [
+        "Open a duplicate of the file in PowerPoint and note any repair warning.",
+        "Restore the missing media or object, then save the duplicate as a new PPTX.",
+        "Run PPTLint again and confirm that the broken relationship is gone."
+      ],
       "id": "integrity.broken-relationship:s0-deck:11c7f589e8",
+      "impact": "PowerPoint may repair the file, omit content, or refuse to open it.",
       "message": "A PPTX relationship points to a missing package part.",
       "remediation": "Restore the missing media or remove the dangling relationship.",
       "rule_id": "integrity.broken-relationship",
@@ -113,8 +169,15 @@
       "bbox": null,
       "category": "integrity",
       "confidence": "high",
+      "disposition": "blocker",
       "evidence": "ppt/notesSlides/notesSlide9.xml#rId1 -> ppt/notesMasters/notesMaster1.xml",
+      "fixSteps": [
+        "Open a duplicate of the file in PowerPoint and note any repair warning.",
+        "Restore the missing media or object, then save the duplicate as a new PPTX.",
+        "Run PPTLint again and confirm that the broken relationship is gone."
+      ],
       "id": "integrity.broken-relationship:s0-deck:ebe391a0d2",
+      "impact": "PowerPoint may repair the file, omit content, or refuse to open it.",
       "message": "A PPTX relationship points to a missing package part.",
       "remediation": "Restore the missing media or remove the dangling relationship.",
       "rule_id": "integrity.broken-relationship",
@@ -126,8 +189,15 @@
       "bbox": null,
       "category": "privacy",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "lastModifiedBy=Steve Canny",
+      "fixSteps": [
+        "Remove personal document properties before external delivery.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "privacy.personal-metadata:s0-deck:fe9aa1b091",
+      "impact": "This issue may reduce delivery quality or requires a human decision before sharing.",
       "message": "The PPTX contains author or last-editor metadata.",
       "remediation": "Remove personal document properties before external delivery.",
       "rule_id": "privacy.personal-metadata",
@@ -137,10 +207,37 @@
     },
     {
       "bbox": null,
+      "category": "readability",
+      "confidence": "low",
+      "disposition": "advisory",
+      "evidence": "font=Consolas; explicit declarations=70",
+      "fixSteps": [
+        "Confirm the font on the delivery computer, embed it when licensing permits, or use an approved portable font.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
+      "id": "readability.font-portability-risk:s0-deck:78a53550da",
+      "impact": "This issue may reduce delivery quality or requires a human decision before sharing.",
+      "message": "A font may be substituted on another computer.",
+      "remediation": "Confirm the font on the delivery computer, embed it when licensing permits, or use an approved portable font.",
+      "rule_id": "readability.font-portability-risk",
+      "severity": "medium",
+      "shape_id": null,
+      "slide_index": null
+    },
+    {
+      "bbox": null,
       "category": "accessibility",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "Slide 1 has no title or centered-title placeholder text",
+      "fixSteps": [
+        "Add a unique slide title using the title placeholder.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "accessibility.missing-title:s1-deck:77588f6fee",
+      "impact": "This issue may reduce delivery quality or requires a human decision before sharing.",
       "message": "The slide has no populated title placeholder.",
       "remediation": "Add a unique slide title using the title placeholder.",
       "rule_id": "accessibility.missing-title",
@@ -152,8 +249,15 @@
       "bbox": null,
       "category": "accessibility",
       "confidence": "low",
+      "disposition": "advisory",
       "evidence": "visual=['2', '7/3', '10/8', '7/6', '7/4', '7/5', '14/11', '14/12', '14/13', '20/15', '20/16', '20/17', '20/18', '20/19', '10/9']; z-order=['2', '7/3', '7/4', '7/5', '7/6', '10/8', '10/9', '14/11', '14/12', '14/13', '20/15', '20/16', '20/17', '20/18', '20/19']",
+      "fixSteps": [
+        "Review the Selection Pane reading order for screen readers.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "accessibility.reading-order-risk:s1-deck:338cf6f423",
+      "impact": "This issue may reduce delivery quality or requires a human decision before sharing.",
       "message": "Shape order differs from the top-to-bottom visual order.",
       "remediation": "Review the Selection Pane reading order for screen readers.",
       "rule_id": "accessibility.reading-order-risk",
@@ -165,8 +269,15 @@
       "bbox": null,
       "category": "privacy",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "Slide 1 contains 205 note characters",
+      "fixSteps": [
+        "Open Notes view and review the notes on the reported slide.",
+        "Remove confidential or draft-only text from the delivery copy.",
+        "Run PPTLint again to confirm the intended result."
+      ],
       "id": "privacy.speaker-notes:s1-deck:99e0bf1abe",
+      "impact": "Speaker notes may contain information that was not intended for recipients.",
       "message": "The slide contains speaker notes.",
       "remediation": "Review speaker notes and remove information that should not be shared.",
       "rule_id": "privacy.speaker-notes",
@@ -183,8 +294,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 8: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s1-10/8:0e58fb92bb",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -201,8 +319,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 9: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s1-10/9:7b61b741aa",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -219,8 +344,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 19: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s1-20/19:d124c78be7",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -232,8 +364,15 @@
       "bbox": null,
       "category": "accessibility",
       "confidence": "low",
+      "disposition": "advisory",
       "evidence": "visual=['2', '6/3', '6/4', '6/5', '11/7', '33/17/13', '33/22/18', '33/27/23', '33/32/28', '33/17/14', '33/22/19', '33/27/24', '33/32/29', '11/8', '33/12', '33/17/15', '33/22/20', '33/27/25', '33/32/30', '33/17/16', '33/22/21', '33/27/26', '33/32/31', '11/9', '11/10', '40/34', '40/38', '40/37/35', '40/37/36', '40/39', '43/41', '43/42']; z-order=['2', '6/3', '6/4', '6/5', '11/7', '11/8', '11/9', '11/10', '33/12', '33/17/13', '33/17/14', '33/17/15', '33/17/16', '33/22/18', '33/22/19', '33/22/20', '33/22/21', '33/27/23', '33/27/24', '33/27/25', '33/27/26', '33/32/28', '33/32/29', '33/32/30', '33/32/31', '40/34', '40/37/35', '40/37/36', '40/38', '40/39', '43/41', '43/42']",
+      "fixSteps": [
+        "Review the Selection Pane reading order for screen readers.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "accessibility.reading-order-risk:s2-deck:f3b2b6038e",
+      "impact": "This issue may reduce delivery quality or requires a human decision before sharing.",
       "message": "Shape order differs from the top-to-bottom visual order.",
       "remediation": "Review the Selection Pane reading order for screen readers.",
       "rule_id": "accessibility.reading-order-risk",
@@ -245,8 +384,15 @@
       "bbox": null,
       "category": "privacy",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "Slide 2 contains 172 note characters",
+      "fixSteps": [
+        "Open Notes view and review the notes on the reported slide.",
+        "Remove confidential or draft-only text from the delivery copy.",
+        "Run PPTLint again to confirm the intended result."
+      ],
       "id": "privacy.speaker-notes:s2-deck:ce057a0cf4",
+      "impact": "Speaker notes may contain information that was not intended for recipients.",
       "message": "The slide contains speaker notes.",
       "remediation": "Review speaker notes and remove information that should not be shared.",
       "rule_id": "privacy.speaker-notes",
@@ -263,8 +409,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 14: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s2-33/17/14:cb7f8c4aff",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -281,8 +434,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 16: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s2-33/17/16:f32fa6b03a",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -299,8 +459,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 19: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s2-33/22/19:669002719e",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -317,8 +484,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 21: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s2-33/22/21:80209c8248",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -335,8 +509,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 24: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s2-33/27/24:2cdd37e2da",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -353,8 +534,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 26: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s2-33/27/26:2e4aba8c80",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -371,8 +559,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 29: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s2-33/32/29:cd43f1df8d",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -389,8 +584,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 31: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s2-33/32/31:190eb8c91d",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -407,8 +609,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 39: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s2-40/39:04fba98df9",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -425,8 +634,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 41: minimum explicit font size 10.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s2-43/41:8a89434701",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 10.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -443,8 +659,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 42: minimum explicit font size 10.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s2-43/42:27cfa90913",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 10.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -461,8 +684,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 3: minimum explicit font size 10.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s2-6/3:4e3f63a12d",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 10.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -474,8 +704,15 @@
       "bbox": null,
       "category": "accessibility",
       "confidence": "low",
+      "disposition": "advisory",
       "evidence": "visual=['2', '6/3', '6/4', '6/5', '20/7', '35/21', '20/12/9', '20/12/8', '20/13', '35/28', '35/27/22', '35/27/24', '35/27/26', '20/12/11', '20/12/10', '35/27/23', '35/27/25', '20/14', '35/29', '41/36', '41/38', '20/15', '35/30', '41/39', '20/16', '35/31', '41/40', '20/17', '35/32', '41/37', '20/18', '35/33', '20/19', '35/34', '44/42', '44/43']; z-order=['2', '6/3', '6/4', '6/5', '20/7', '20/12/8', '20/12/9', '20/12/10', '20/12/11', '20/13', '20/14', '20/15', '20/16', '20/17', '20/18', '20/19', '35/21', '35/27/22', '35/27/23', '35/27/24', '35/27/25', '35/27/26', '35/28', '35/29', '35/30', '35/31', '35/32', '35/33', '35/34', '41/36', '41/37', '41/38', '41/39', '41/40', '44/42', '44/43']",
+      "fixSteps": [
+        "Review the Selection Pane reading order for screen readers.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "accessibility.reading-order-risk:s3-deck:8edae3cf46",
+      "impact": "This issue may reduce delivery quality or requires a human decision before sharing.",
       "message": "Shape order differs from the top-to-bottom visual order.",
       "remediation": "Review the Selection Pane reading order for screen readers.",
       "rule_id": "accessibility.reading-order-risk",
@@ -487,8 +724,15 @@
       "bbox": null,
       "category": "privacy",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "Slide 3 contains 206 note characters",
+      "fixSteps": [
+        "Open Notes view and review the notes on the reported slide.",
+        "Remove confidential or draft-only text from the delivery copy.",
+        "Run PPTLint again to confirm the intended result."
+      ],
       "id": "privacy.speaker-notes:s3-deck:c83da014ed",
+      "impact": "Speaker notes may contain information that was not intended for recipients.",
       "message": "The slide contains speaker notes.",
       "remediation": "Review speaker notes and remove information that should not be shared.",
       "rule_id": "privacy.speaker-notes",
@@ -505,8 +749,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 19: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s3-20/19:4b738043ff",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -523,8 +774,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 34: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s3-35/34:4fe6904443",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -541,8 +799,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 39: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s3-41/39:dd892b8adb",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -559,8 +824,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 40: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s3-41/40:1e4748116c",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -577,8 +849,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 42: minimum explicit font size 10.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s3-44/42:9d019d2831",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 10.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -595,8 +874,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 43: minimum explicit font size 10.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s3-44/43:a6b57b0ee3",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 10.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -613,8 +899,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 3: minimum explicit font size 10.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s3-6/3:0f3e5cb62f",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 10.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -626,8 +919,15 @@
       "bbox": null,
       "category": "accessibility",
       "confidence": "low",
+      "disposition": "advisory",
       "evidence": "visual=['2', '6/3', '6/4', '6/5', '47/13/9', '47/23/14', '47/28/24', '47/35/29', '47/46/36', '47/46/43/40', '47/35/32/30', '47/23/20/15', '47/23/20/17', '47/46/43/37', '47/46/43/39', '47/13/10', '47/28/25', '47/46/43/41', '47/7', '47/23/20/19', '47/35/32/31', '47/46/43/42', '47/46/43/38', '47/23/20/16', '47/23/20/18', '47/13/11', '47/23/21', '47/28/26', '47/35/33', '47/46/44', '47/13/12', '47/23/22', '47/28/27', '47/35/34', '47/46/45', '47/8', '51/48', '51/49', '51/50', '54/52', '54/53']; z-order=['2', '6/3', '6/4', '6/5', '47/7', '47/8', '47/13/9', '47/13/10', '47/13/11', '47/13/12', '47/23/14', '47/23/20/15', '47/23/20/16', '47/23/20/17', '47/23/20/18', '47/23/20/19', '47/23/21', '47/23/22', '47/28/24', '47/28/25', '47/28/26', '47/28/27', '47/35/29', '47/35/32/30', '47/35/32/31', '47/35/33', '47/35/34', '47/46/36', '47/46/43/37', '47/46/43/38', '47/46/43/39', '47/46/43/40', '47/46/43/41', '47/46/43/42', '47/46/44', '47/46/45', '51/48', '51/49', '51/50', '54/52', '54/53']",
+      "fixSteps": [
+        "Review the Selection Pane reading order for screen readers.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "accessibility.reading-order-risk:s4-deck:989abdbec4",
+      "impact": "This issue may reduce delivery quality or requires a human decision before sharing.",
       "message": "Shape order differs from the top-to-bottom visual order.",
       "remediation": "Review the Selection Pane reading order for screen readers.",
       "rule_id": "accessibility.reading-order-risk",
@@ -639,8 +939,15 @@
       "bbox": null,
       "category": "privacy",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "Slide 4 contains 248 note characters",
+      "fixSteps": [
+        "Open Notes view and review the notes on the reported slide.",
+        "Remove confidential or draft-only text from the delivery copy.",
+        "Run PPTLint again to confirm the intended result."
+      ],
       "id": "privacy.speaker-notes:s4-deck:68fbbd33ee",
+      "impact": "Speaker notes may contain information that was not intended for recipients.",
       "message": "The slide contains speaker notes.",
       "remediation": "Review speaker notes and remove information that should not be shared.",
       "rule_id": "privacy.speaker-notes",
@@ -657,8 +964,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 12: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s4-47/13/12:7b39397ea3",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -675,8 +989,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 22: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s4-47/23/22:7676760f46",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -693,8 +1014,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 27: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s4-47/28/27:8d3de5f17b",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -711,8 +1039,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 34: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s4-47/35/34:3f502c824a",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -729,8 +1064,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 45: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s4-47/46/45:d0907dfabf",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -747,8 +1089,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 49: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s4-51/49:d6132b14cd",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -765,8 +1114,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 50: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s4-51/50:d95cb687c1",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -783,8 +1139,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 52: minimum explicit font size 10.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s4-54/52:3624e768ea",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 10.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -801,8 +1164,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 53: minimum explicit font size 10.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s4-54/53:e195984e6b",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 10.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -819,8 +1189,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 3: minimum explicit font size 10.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s4-6/3:62ddb4b97d",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 10.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -832,8 +1209,15 @@
       "bbox": null,
       "category": "accessibility",
       "confidence": "low",
+      "disposition": "advisory",
       "evidence": "visual=['2', '6/3', '6/4', '44/31/28', '6/5', '44/27/24', '44/31/29', '44/27/25', '56/45', '44/31/30', '44/27/26', '44/8', '44/23/12', '56/49/46', '44/7', '56/49/47', '56/49/48', '44/23/20/13', '44/23/20/15', '44/23/20/17', '44/23/20/18', '44/23/20/16', '56/50', '44/23/20/19', '44/23/20/14', '44/23/21', '44/11', '44/9', '44/10', '44/35/32', '56/51', '44/23/22', '44/35/33', '56/52', '44/35/34', '44/43/40', '56/53', '56/54', '44/39/36', '44/43/41', '56/55', '44/43/42', '44/39/37', '44/39/38', '58/57', '61/59', '61/60']; z-order=['2', '6/3', '6/4', '6/5', '44/7', '44/8', '44/9', '44/10', '44/11', '44/23/12', '44/23/20/13', '44/23/20/14', '44/23/20/15', '44/23/20/16', '44/23/20/17', '44/23/20/18', '44/23/20/19', '44/23/21', '44/23/22', '44/27/24', '44/27/25', '44/27/26', '44/31/28', '44/31/29', '44/31/30', '44/35/32', '44/35/33', '44/35/34', '44/39/36', '44/39/37', '44/39/38', '44/43/40', '44/43/41', '44/43/42', '56/45', '56/49/46', '56/49/47', '56/49/48', '56/50', '56/51', '56/52', '56/53', '56/54', '56/55', '58/57', '61/59', '61/60']",
+      "fixSteps": [
+        "Review the Selection Pane reading order for screen readers.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "accessibility.reading-order-risk:s5-deck:4738b7d282",
+      "impact": "This issue may reduce delivery quality or requires a human decision before sharing.",
       "message": "Shape order differs from the top-to-bottom visual order.",
       "remediation": "Review the Selection Pane reading order for screen readers.",
       "rule_id": "accessibility.reading-order-risk",
@@ -845,8 +1229,15 @@
       "bbox": null,
       "category": "privacy",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "Slide 5 contains 216 note characters",
+      "fixSteps": [
+        "Open Notes view and review the notes on the reported slide.",
+        "Remove confidential or draft-only text from the delivery copy.",
+        "Run PPTLint again to confirm the intended result."
+      ],
       "id": "privacy.speaker-notes:s5-deck:91cb07be4e",
+      "impact": "Speaker notes may contain information that was not intended for recipients.",
       "message": "The slide contains speaker notes.",
       "remediation": "Review speaker notes and remove information that should not be shared.",
       "rule_id": "privacy.speaker-notes",
@@ -863,8 +1254,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 22: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s5-44/23/22:c175efb60f",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -881,8 +1279,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 25: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s5-44/27/25:4240c3afd8",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -899,8 +1304,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 29: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s5-44/31/29:415abaa3a7",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -917,8 +1329,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 33: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s5-44/35/33:e27c766084",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -935,8 +1354,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 37: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s5-44/39/37:635eef2766",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -953,8 +1379,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 41: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s5-44/43/41:224f38cb47",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -971,8 +1404,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 53: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s5-56/53:cc8db27953",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -989,8 +1429,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 54: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s5-56/54:55064f38b3",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1007,8 +1454,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 55: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s5-56/55:b13ca5eeb9",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1025,8 +1479,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 57: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s5-58/57:f628c3829a",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1043,8 +1504,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 3: minimum explicit font size 10.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s5-6/3:c86564449b",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 10.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1061,8 +1529,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 59: minimum explicit font size 10.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s5-61/59:73bf7cd9a8",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 10.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1079,8 +1554,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 60: minimum explicit font size 10.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s5-61/60:bbaf0c917f",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 10.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1089,11 +1571,43 @@
       "slide_index": 5
     },
     {
+      "bbox": {
+        "h": 0.04,
+        "w": 0.043242,
+        "x": 0.383066,
+        "y": 0.534306
+      },
+      "category": "readability",
+      "confidence": "low",
+      "disposition": "advisory",
+      "evidence": "TextBox 21 overlaps TextBox 22; smaller-box overlap=25.3%",
+      "fixSteps": [
+        "Separate or resize the text boxes, then inspect the slide at presentation size.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
+      "id": "readability.text-overlap:s5-44/23/22:ef075a8d7a",
+      "impact": "Two text regions may cover each other in the delivered slide.",
+      "message": "Two native text boxes substantially overlap.",
+      "remediation": "Separate or resize the text boxes, then inspect the slide at presentation size.",
+      "rule_id": "readability.text-overlap",
+      "severity": "high",
+      "shape_id": "44/23/22",
+      "slide_index": 5
+    },
+    {
       "bbox": null,
       "category": "accessibility",
       "confidence": "low",
+      "disposition": "advisory",
       "evidence": "visual=['2', '5/3', '5/4', '27/17', '27/16', '14/6', '27/15', '14/7', '27/18', '14/8', '27/21', '27/20', '14/12/9', '14/12/10', '14/12/11', '27/19', '27/22', '27/25', '27/24', '27/23', '27/26', '14/13', '30/28', '30/29']; z-order=['2', '5/3', '5/4', '14/6', '14/7', '14/8', '14/12/9', '14/12/10', '14/12/11', '14/13', '27/15', '27/16', '27/17', '27/18', '27/19', '27/20', '27/21', '27/22', '27/23', '27/24', '27/25', '27/26', '30/28', '30/29']",
+      "fixSteps": [
+        "Review the Selection Pane reading order for screen readers.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "accessibility.reading-order-risk:s6-deck:64c9e5cde6",
+      "impact": "This issue may reduce delivery quality or requires a human decision before sharing.",
       "message": "Shape order differs from the top-to-bottom visual order.",
       "remediation": "Review the Selection Pane reading order for screen readers.",
       "rule_id": "accessibility.reading-order-risk",
@@ -1105,8 +1619,15 @@
       "bbox": null,
       "category": "privacy",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "Slide 6 contains 192 note characters",
+      "fixSteps": [
+        "Open Notes view and review the notes on the reported slide.",
+        "Remove confidential or draft-only text from the delivery copy.",
+        "Run PPTLint again to confirm the intended result."
+      ],
       "id": "privacy.speaker-notes:s6-deck:ba94274b8e",
+      "impact": "Speaker notes may contain information that was not intended for recipients.",
       "message": "The slide contains speaker notes.",
       "remediation": "Review speaker notes and remove information that should not be shared.",
       "rule_id": "privacy.speaker-notes",
@@ -1123,8 +1644,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 13: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s6-14/13:37312c1b79",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1141,8 +1669,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 16: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s6-27/16:625970e312",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1159,8 +1694,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 20: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s6-27/20:5979927d9e",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1177,8 +1719,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 24: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s6-27/24:49c7410115",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1195,8 +1744,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 28: minimum explicit font size 10.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s6-30/28:99c5fbd7b4",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 10.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1213,8 +1769,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 29: minimum explicit font size 10.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s6-30/29:3033cba108",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 10.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1231,8 +1794,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 3: minimum explicit font size 10.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s6-5/3:5ee50caa9f",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 10.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1244,8 +1814,15 @@
       "bbox": null,
       "category": "accessibility",
       "confidence": "low",
+      "disposition": "advisory",
       "evidence": "visual=['2', '6/3', '6/4', '6/5', '13/7', '13/9', '13/11', '13/8', '13/10', '13/12', '45/14', '59/46', '45/17', '45/18', '45/15', '45/16', '59/53/50', '59/53/47', '59/53/49', '59/53/51', '45/23/19', '45/23/21', '45/23/22', '59/53/52', '59/53/48', '45/23/20', '45/28/24', '59/54', '45/28/26', '45/28/27', '45/28/25', '59/55', '45/33/29', '45/33/31', '45/33/32', '45/33/30', '59/56', '45/38/34', '45/38/36', '45/38/37', '45/38/35', '59/57', '45/43/39', '45/43/41', '45/43/42', '59/58', '45/43/40', '45/44', '62/60', '62/61']; z-order=['2', '6/3', '6/4', '6/5', '13/7', '13/8', '13/9', '13/10', '13/11', '13/12', '45/14', '45/15', '45/16', '45/17', '45/18', '45/23/19', '45/23/20', '45/23/21', '45/23/22', '45/28/24', '45/28/25', '45/28/26', '45/28/27', '45/33/29', '45/33/30', '45/33/31', '45/33/32', '45/38/34', '45/38/35', '45/38/36', '45/38/37', '45/43/39', '45/43/40', '45/43/41', '45/43/42', '45/44', '59/46', '59/53/47', '59/53/48', '59/53/49', '59/53/50', '59/53/51', '59/53/52', '59/54', '59/55', '59/56', '59/57', '59/58', '62/60', '62/61']",
+      "fixSteps": [
+        "Review the Selection Pane reading order for screen readers.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "accessibility.reading-order-risk:s7-deck:afb9692db3",
+      "impact": "This issue may reduce delivery quality or requires a human decision before sharing.",
       "message": "Shape order differs from the top-to-bottom visual order.",
       "remediation": "Review the Selection Pane reading order for screen readers.",
       "rule_id": "accessibility.reading-order-risk",
@@ -1257,8 +1834,15 @@
       "bbox": null,
       "category": "privacy",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "Slide 7 contains 223 note characters",
+      "fixSteps": [
+        "Open Notes view and review the notes on the reported slide.",
+        "Remove confidential or draft-only text from the delivery copy.",
+        "Run PPTLint again to confirm the intended result."
+      ],
       "id": "privacy.speaker-notes:s7-deck:72ca5813c6",
+      "impact": "Speaker notes may contain information that was not intended for recipients.",
       "message": "The slide contains speaker notes.",
       "remediation": "Review speaker notes and remove information that should not be shared.",
       "rule_id": "privacy.speaker-notes",
@@ -1275,8 +1859,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 11: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s7-13/11:e63316bb9d",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1293,8 +1884,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 7: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s7-13/7:af3945e97f",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1311,8 +1909,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 9: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s7-13/9:2a9ac1788f",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1329,8 +1934,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 17: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s7-45/17:11487ab19b",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1347,8 +1959,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 18: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s7-45/18:6e332992dd",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1365,8 +1984,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 19: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s7-45/23/19:4586179746",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1383,8 +2009,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 24: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s7-45/28/24:2bc889ae7c",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1401,8 +2034,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 29: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s7-45/33/29:0a130003ed",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1419,8 +2059,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 34: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s7-45/38/34:99ea359838",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1437,8 +2084,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 39: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s7-45/43/39:66342b80c2",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1455,8 +2109,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 44: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s7-45/44:1ce8122f48",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1473,8 +2134,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 54: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s7-59/54:5b4004dbd9",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1491,8 +2159,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 55: minimum explicit font size 10.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s7-59/55:ce74599485",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 10.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1509,8 +2184,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 56: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s7-59/56:be560ff9ba",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1527,8 +2209,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 57: minimum explicit font size 10.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s7-59/57:8f5ca30003",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 10.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1545,8 +2234,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 58: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s7-59/58:7f650ed123",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1563,8 +2259,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 3: minimum explicit font size 10.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s7-6/3:3d8e5c3a7d",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 10.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1581,8 +2284,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 60: minimum explicit font size 10.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s7-62/60:3d3ebd2fd8",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 10.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1599,8 +2309,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 61: minimum explicit font size 10.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s7-62/61:c72479531f",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 10.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1612,8 +2329,15 @@
       "bbox": null,
       "category": "accessibility",
       "confidence": "low",
+      "disposition": "advisory",
       "evidence": "visual=['2', '6/3', '6/4', '6/5', '22/17', '16/11/8', '16/11/7', '33/29/24', '33/29/26', '33/29/28', '16/11/10', '16/11/9', '33/29/25', '33/29/27', '22/18', '16/12', '33/30', '22/19', '16/13', '33/31', '16/15', '33/23', '22/20', '16/14', '33/32', '22/21', '37/34', '37/35', '37/36', '40/38', '40/39']; z-order=['2', '6/3', '6/4', '6/5', '16/11/7', '16/11/8', '16/11/9', '16/11/10', '16/12', '16/13', '16/14', '16/15', '22/17', '22/18', '22/19', '22/20', '22/21', '33/23', '33/29/24', '33/29/25', '33/29/26', '33/29/27', '33/29/28', '33/30', '33/31', '33/32', '37/34', '37/35', '37/36', '40/38', '40/39']",
+      "fixSteps": [
+        "Review the Selection Pane reading order for screen readers.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "accessibility.reading-order-risk:s8-deck:581a60db54",
+      "impact": "This issue may reduce delivery quality or requires a human decision before sharing.",
       "message": "Shape order differs from the top-to-bottom visual order.",
       "remediation": "Review the Selection Pane reading order for screen readers.",
       "rule_id": "accessibility.reading-order-risk",
@@ -1625,8 +2349,15 @@
       "bbox": null,
       "category": "privacy",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "Slide 8 contains 202 note characters",
+      "fixSteps": [
+        "Open Notes view and review the notes on the reported slide.",
+        "Remove confidential or draft-only text from the delivery copy.",
+        "Run PPTLint again to confirm the intended result."
+      ],
       "id": "privacy.speaker-notes:s8-deck:770c2d4b29",
+      "impact": "Speaker notes may contain information that was not intended for recipients.",
       "message": "The slide contains speaker notes.",
       "remediation": "Review speaker notes and remove information that should not be shared.",
       "rule_id": "privacy.speaker-notes",
@@ -1643,8 +2374,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 18: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s8-22/18:b5693871d6",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1661,8 +2399,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 21: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s8-22/21:e00125b703",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1679,8 +2424,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 35: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s8-37/35:7f8b5fb060",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1697,8 +2449,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 36: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s8-37/36:9b1777b95c",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1715,8 +2474,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 38: minimum explicit font size 10.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s8-40/38:6af36a9740",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 10.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1733,8 +2499,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 39: minimum explicit font size 10.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s8-40/39:f419e35980",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 10.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1751,8 +2524,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 3: minimum explicit font size 10.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s8-6/3:6435f7593b",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 10.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1764,8 +2544,15 @@
       "bbox": null,
       "category": "accessibility",
       "confidence": "low",
+      "disposition": "advisory",
       "evidence": "visual=['2', '6/3', '6/4', '6/5', '19/7', '39/20', '19/8', '19/9', '39/24', '39/23/21', '39/23/22', '19/10', '39/28', '39/27/25', '19/11', '39/27/26', '19/12', '39/32', '39/31/29', '39/31/30', '19/13', '19/14', '39/36', '39/35/33', '39/35/34', '19/15', '19/16', '39/37', '19/17', '39/38', '19/18', '43/40', '43/41', '43/42']; z-order=['2', '6/3', '6/4', '6/5', '19/7', '19/8', '19/9', '19/10', '19/11', '19/12', '19/13', '19/14', '19/15', '19/16', '19/17', '19/18', '39/20', '39/23/21', '39/23/22', '39/24', '39/27/25', '39/27/26', '39/28', '39/31/29', '39/31/30', '39/32', '39/35/33', '39/35/34', '39/36', '39/37', '39/38', '43/40', '43/41', '43/42']",
+      "fixSteps": [
+        "Review the Selection Pane reading order for screen readers.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "accessibility.reading-order-risk:s9-deck:cecafa7c9b",
+      "impact": "This issue may reduce delivery quality or requires a human decision before sharing.",
       "message": "Shape order differs from the top-to-bottom visual order.",
       "remediation": "Review the Selection Pane reading order for screen readers.",
       "rule_id": "accessibility.reading-order-risk",
@@ -1777,8 +2564,15 @@
       "bbox": null,
       "category": "privacy",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "Slide 9 contains 207 note characters",
+      "fixSteps": [
+        "Open Notes view and review the notes on the reported slide.",
+        "Remove confidential or draft-only text from the delivery copy.",
+        "Run PPTLint again to confirm the intended result."
+      ],
       "id": "privacy.speaker-notes:s9-deck:64f126f8c1",
+      "impact": "Speaker notes may contain information that was not intended for recipients.",
       "message": "The slide contains speaker notes.",
       "remediation": "Review speaker notes and remove information that should not be shared.",
       "rule_id": "privacy.speaker-notes",
@@ -1795,8 +2589,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 10: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s9-19/10:9c4eac8d50",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1813,8 +2614,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 12: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s9-19/12:227c402f3f",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1831,8 +2639,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 13: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s9-19/13:858de41d30",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1849,8 +2664,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 14: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s9-19/14:3164aa2c29",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1867,8 +2689,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 16: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s9-19/16:5d97cabcb6",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1885,8 +2714,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 17: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s9-19/17:24d252b1a6",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1903,8 +2739,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 18: minimum explicit font size 10.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s9-19/18:55a8f61106",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 10.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1921,8 +2764,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 8: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s9-19/8:f00a3a3098",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1939,8 +2789,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 9: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s9-19/9:f90a7b55c7",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1957,8 +2814,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 20: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s9-39/20:a44dc882c1",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1975,8 +2839,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 40: minimum explicit font size 13.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s9-43/40:6602cafe5f",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 13.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -1993,8 +2864,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 41: minimum explicit font size 10.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s9-43/41:05acc9a167",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 10.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -2011,8 +2889,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 42: minimum explicit font size 10.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s9-43/42:3e6c8ee13d",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 10.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -2029,8 +2914,15 @@
       },
       "category": "readability",
       "confidence": "high",
+      "disposition": "review",
       "evidence": "TextBox 3: minimum explicit font size 10.5 pt",
+      "fixSteps": [
+        "Increase the font size or split dense content across slides.",
+        "Save changes to a separate delivery copy.",
+        "Run PPTLint again and confirm that the reported item no longer appears."
+      ],
       "id": "readability.small-font:s9-6/3:42dade8392",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
       "message": "Text uses 10.5 pt type, below the 18 pt profile threshold.",
       "remediation": "Increase the font size or split dense content across slides.",
       "rule_id": "readability.small-font",
@@ -2039,14 +2931,117 @@
       "slide_index": 9
     }
   ],
+  "metrics": {
+    "editability": {
+      "flattenedSlides": 0,
+      "graphicFrames": 0,
+      "nativeObjectRatio": 1.0,
+      "nativeTextShapes": 161,
+      "pictures": 0
+    }
+  },
+  "priorityActions": [
+    {
+      "disposition": "blocker",
+      "fixSteps": [
+        "Open a duplicate of the file in PowerPoint and note any repair warning.",
+        "Restore the missing media or object, then save the duplicate as a new PPTX.",
+        "Run PPTLint again and confirm that the broken relationship is gone."
+      ],
+      "impact": "PowerPoint may repair the file, omit content, or refuse to open it.",
+      "ruleId": "integrity.broken-relationship",
+      "slideIndex": null
+    },
+    {
+      "disposition": "blocker",
+      "fixSteps": [
+        "Open a duplicate of the file in PowerPoint and note any repair warning.",
+        "Restore the missing media or object, then save the duplicate as a new PPTX.",
+        "Run PPTLint again and confirm that the broken relationship is gone."
+      ],
+      "impact": "PowerPoint may repair the file, omit content, or refuse to open it.",
+      "ruleId": "integrity.broken-relationship",
+      "slideIndex": null
+    },
+    {
+      "disposition": "blocker",
+      "fixSteps": [
+        "Open a duplicate of the file in PowerPoint and note any repair warning.",
+        "Restore the missing media or object, then save the duplicate as a new PPTX.",
+        "Run PPTLint again and confirm that the broken relationship is gone."
+      ],
+      "impact": "PowerPoint may repair the file, omit content, or refuse to open it.",
+      "ruleId": "integrity.broken-relationship",
+      "slideIndex": null
+    }
+  ],
   "profile": "ai-generated",
+  "readiness": {
+    "reasons": [
+      {
+        "evidence": "ppt/notesSlides/notesSlide1.xml#rId1 -> ppt/notesMasters/notesMaster1.xml",
+        "impact": "PowerPoint may repair the file, omit content, or refuse to open it.",
+        "ruleId": "integrity.broken-relationship",
+        "slideIndex": null
+      },
+      {
+        "evidence": "ppt/notesSlides/notesSlide2.xml#rId1 -> ppt/notesMasters/notesMaster1.xml",
+        "impact": "PowerPoint may repair the file, omit content, or refuse to open it.",
+        "ruleId": "integrity.broken-relationship",
+        "slideIndex": null
+      },
+      {
+        "evidence": "ppt/notesSlides/notesSlide3.xml#rId1 -> ppt/notesMasters/notesMaster1.xml",
+        "impact": "PowerPoint may repair the file, omit content, or refuse to open it.",
+        "ruleId": "integrity.broken-relationship",
+        "slideIndex": null
+      },
+      {
+        "evidence": "ppt/notesSlides/notesSlide4.xml#rId1 -> ppt/notesMasters/notesMaster1.xml",
+        "impact": "PowerPoint may repair the file, omit content, or refuse to open it.",
+        "ruleId": "integrity.broken-relationship",
+        "slideIndex": null
+      },
+      {
+        "evidence": "ppt/notesSlides/notesSlide5.xml#rId1 -> ppt/notesMasters/notesMaster1.xml",
+        "impact": "PowerPoint may repair the file, omit content, or refuse to open it.",
+        "ruleId": "integrity.broken-relationship",
+        "slideIndex": null
+      },
+      {
+        "evidence": "ppt/notesSlides/notesSlide6.xml#rId1 -> ppt/notesMasters/notesMaster1.xml",
+        "impact": "PowerPoint may repair the file, omit content, or refuse to open it.",
+        "ruleId": "integrity.broken-relationship",
+        "slideIndex": null
+      },
+      {
+        "evidence": "ppt/notesSlides/notesSlide7.xml#rId1 -> ppt/notesMasters/notesMaster1.xml",
+        "impact": "PowerPoint may repair the file, omit content, or refuse to open it.",
+        "ruleId": "integrity.broken-relationship",
+        "slideIndex": null
+      },
+      {
+        "evidence": "ppt/notesSlides/notesSlide8.xml#rId1 -> ppt/notesMasters/notesMaster1.xml",
+        "impact": "PowerPoint may repair the file, omit content, or refuse to open it.",
+        "ruleId": "integrity.broken-relationship",
+        "slideIndex": null
+      },
+      {
+        "evidence": "ppt/notesSlides/notesSlide9.xml#rId1 -> ppt/notesMasters/notesMaster1.xml",
+        "impact": "PowerPoint may repair the file, omit content, or refuse to open it.",
+        "ruleId": "integrity.broken-relationship",
+        "slideIndex": null
+      }
+    ],
+    "status": "blocked"
+  },
   "renderer": {
     "detail": "",
     "requested": "wireframe",
     "status": "ok",
     "used": "wireframe"
   },
-  "schemaVersion": "decklint-report/v1",
+  "schemaVersion": "pptlint-report/v2",
   "scores": {
     "calculation": {
       "integrityCriticalCapApplied": true,
@@ -2159,6 +3154,16 @@
         "reason": "unscored-category",
         "requested": 5,
         "ruleId": "privacy.personal-metadata",
+        "severity": "medium"
+      },
+      {
+        "applied": 0,
+        "category": "readability",
+        "confidence": "low",
+        "findingId": "readability.font-portability-risk:s0-deck:78a53550da",
+        "reason": "low-confidence",
+        "requested": 5,
+        "ruleId": "readability.font-portability-risk",
         "severity": "medium"
       },
       {
@@ -2719,6 +3724,16 @@
         "reason": "per-rule-cap",
         "requested": 15,
         "ruleId": "readability.small-font",
+        "severity": "high"
+      },
+      {
+        "applied": 0,
+        "category": "readability",
+        "confidence": "low",
+        "findingId": "readability.text-overlap:s5-44/23/22:ef075a8d7a",
+        "reason": "low-confidence",
+        "requested": 15,
+        "ruleId": "readability.text-overlap",
         "severity": "high"
       },
       {
@@ -3352,9 +4367,9 @@
   ],
   "summary": {
     "critical": 9,
-    "high": 92,
+    "high": 93,
     "low": 0,
-    "medium": 20
+    "medium": 21
   },
-  "toolVersion": "0.2.0"
+  "toolVersion": "0.3.1"
 }

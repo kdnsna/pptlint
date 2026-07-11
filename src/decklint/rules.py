@@ -177,7 +177,9 @@ def audit_deck(deck: DeckModel, *, profile: str = "baseline") -> list[Finding]:
     small_high = 14 if profile == "ai-generated" else 12
     small_medium = 18 if profile == "ai-generated" else 14
     for slide in deck.slides:
-        if not any(shape.text.strip() or shape.kind in {"picture", "graphic-frame"} for shape in slide.shapes):
+        if not any(
+            shape.text.strip() or shape.kind in {"picture", "graphic-frame"} for shape in slide.shapes
+        ):
             findings.append(
                 _finding(
                     "readability.blank-slide",
@@ -190,7 +192,9 @@ def audit_deck(deck: DeckModel, *, profile: str = "baseline") -> list[Finding]:
                     slide=slide,
                 )
             )
-        title_shapes = [shape for shape in slide.shapes if shape.placeholder_type in {"title", "ctrTitle"} and shape.text]
+        title_shapes = [
+            shape for shape in slide.shapes if shape.placeholder_type in {"title", "ctrTitle"} and shape.text
+        ]
         semantic_title = (
             _semantic_title_shape(slide, deck.width, deck.height)
             if profile == "ai-generated" and not title_shapes
@@ -334,13 +338,14 @@ def audit_deck(deck: DeckModel, *, profile: str = "baseline") -> list[Finding]:
                 break
 
         text_shapes = [
-            shape
-            for shape in slide.shapes
-            if shape.text.strip() and shape.bbox.w > 0 and shape.bbox.h > 0
+            shape for shape in slide.shapes if shape.text.strip() and shape.bbox.w > 0 and shape.bbox.h > 0
         ]
         for first_index, first in enumerate(text_shapes):
             for second in text_shapes[first_index + 1 :]:
-                if first.placeholder_type in {"title", "ctrTitle"} or second.placeholder_type in {"title", "ctrTitle"}:
+                if first.placeholder_type in {"title", "ctrTitle"} or second.placeholder_type in {
+                    "title",
+                    "ctrTitle",
+                }:
                     continue
                 first_area = first.bbox.w * first.bbox.h
                 second_area = second.bbox.w * second.bbox.h
@@ -353,7 +358,7 @@ def audit_deck(deck: DeckModel, *, profile: str = "baseline") -> list[Finding]:
                             "readability.text-overlap",
                             "readability",
                             "high",
-                            "high",
+                            "low",
                             "Two native text boxes substantially overlap.",
                             f"{first.name} overlaps {second.name}; smaller-box overlap={ratio:.1%}",
                             "Separate or resize the text boxes, then inspect the slide at presentation size.",
@@ -362,7 +367,9 @@ def audit_deck(deck: DeckModel, *, profile: str = "baseline") -> list[Finding]:
                         )
                     )
 
-        visual_order = [shape.shape_id for shape in sorted(slide.shapes, key=lambda item: (item.bbox.y, item.bbox.x))]
+        visual_order = [
+            shape.shape_id for shape in sorted(slide.shapes, key=lambda item: (item.bbox.y, item.bbox.x))
+        ]
         z_order = [shape.shape_id for shape in slide.shapes]
         if len(z_order) >= 4 and visual_order != z_order:
             findings.append(
@@ -404,7 +411,9 @@ def audit_deck(deck: DeckModel, *, profile: str = "baseline") -> list[Finding]:
                 )
             )
 
-    font_counts = Counter(font for slide in deck.slides for shape in slide.shapes for font in shape.font_families)
+    font_counts = Counter(
+        font for slide in deck.slides for shape in slide.shapes for font in shape.font_families
+    )
     for font in sorted(font_counts):
         if font.casefold() not in PORTABLE_FONTS:
             findings.append(

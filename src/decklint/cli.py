@@ -34,7 +34,9 @@ def _add_check_arguments(command: argparse.ArgumentParser, *, output: str, fail_
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="pptlint", description="Preflight checks for AI-generated PowerPoint files.")
+    parser = argparse.ArgumentParser(
+        prog="pptlint", description="Preflight checks for AI-generated PowerPoint files."
+    )
     subcommands = parser.add_subparsers(dest="command", required=True)
     check = subcommands.add_parser("check", help="Check whether a PPTX is ready to deliver.")
     _add_check_arguments(check, output="pptlint-report", fail_on="none")
@@ -84,12 +86,23 @@ def _run_audit(args: argparse.Namespace) -> int:
         print(f"PPTLint could not check the file: {exc}", file=sys.stderr)
         return 2
 
-    counts = report["summary"]
-    print(
-        f"PPTLint readiness {report['readiness']['status']} · score {scores.overall}/100 · "
-        f"{counts['critical']} critical, {counts['high']} high, {counts['medium']} medium, {counts['low']} low"
-    )
-    print(f"HTML report: {html_path}")
+    status = report["readiness"]["status"]
+    result_label = {
+        "ready": "Ready to send",
+        "review": "Check before sending",
+        "blocked": "Fix before sending",
+    }[status]
+    print(f"PPTLint result: {result_label}")
+    actions = report["priorityActions"]
+    if actions:
+        print("Next actions:")
+        for action in actions:
+            slide = action.get("slideIndex")
+            location = f"Slide {slide}" if slide else "Whole file"
+            print(f"- {location}: {action['impact']}")
+    else:
+        print("No high-confidence delivery problem was found.")
+    print(f"Open the HTML report for the highlighted slides: {html_path}")
     print(f"JSON report: {json_path}")
     failed = _threshold_failed(findings, args.fail_on)
     if args.command == "check" and report["readiness"]["status"] == "blocked":
@@ -114,10 +127,7 @@ def _run_compare(args: argparse.Namespace) -> int:
         return 2
 
     overall = report["scores"]["overall"]
-    print(
-        f"DeckLint comparison {overall['before']} -> {overall['after']} "
-        f"({overall['delta']:+d})"
-    )
+    print(f"PPTLint comparison {overall['before']} -> {overall['after']} ({overall['delta']:+d})")
     print(f"HTML report: {html_path}")
     print(f"JSON report: {json_path}")
     return 0 if report["gate"]["passed"] else 1

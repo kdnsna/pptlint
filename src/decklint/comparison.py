@@ -8,6 +8,19 @@ from pathlib import Path
 
 MAX_REPORT_BYTES = 100 * 1024 * 1024
 SEVERITY_RANK = {"low": 1, "medium": 2, "high": 3, "critical": 4}
+COMPARISON_FINDING_FIELDS = (
+    "id",
+    "rule_id",
+    "category",
+    "severity",
+    "confidence",
+    "message",
+    "evidence",
+    "remediation",
+    "slide_index",
+    "shape_id",
+    "bbox",
+)
 
 
 class ComparisonError(ValueError):
@@ -57,10 +70,7 @@ def match_findings(
         left = sorted(grouped_before[key], key=_sort_key)
         right = sorted(grouped_after[key], key=_sort_key)
         paired = min(len(left), len(right))
-        persistent.extend(
-            {"before": left[index], "after": right[index]}
-            for index in range(paired)
-        )
+        persistent.extend({"before": left[index], "after": right[index]} for index in range(paired))
         resolved.extend(left[paired:])
         new.extend(right[paired:])
     return FindingMatch(resolved=resolved, persistent=persistent, new=new)
@@ -78,6 +88,11 @@ def _list_field(container: dict[str, object], key: str) -> list[dict[str, object
     if not isinstance(value, list) or not all(isinstance(item, dict) for item in value):
         raise ComparisonError(f"Audit report field must be an object array: {key}")
     return value
+
+
+def _comparison_finding(item: dict[str, object]) -> dict[str, object]:
+    """Keep the stable v1 comparison shape when reading richer v2 reports."""
+    return {field: item.get(field) for field in COMPARISON_FINDING_FIELDS}
 
 
 def _delta_map(
@@ -102,8 +117,8 @@ def compare_reports(
 ) -> dict[str, object]:
     if threshold not in {"none", *SEVERITY_RANK}:
         raise ComparisonError(f"Unsupported regression threshold: {threshold}")
-    before_findings = _list_field(before, "findings")
-    after_findings = _list_field(after, "findings")
+    before_findings = [_comparison_finding(item) for item in _list_field(before, "findings")]
+    after_findings = [_comparison_finding(item) for item in _list_field(after, "findings")]
     matches = match_findings(before_findings, after_findings)
     before_scores = _dict_field(before, "scores")
     after_scores = _dict_field(after, "scores")

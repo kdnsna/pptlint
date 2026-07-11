@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.1 — 2026-07-11
+
+- Put the plain-language delivery result first in the terminal and HTML report.
+- Print the three most important slide-level actions directly in the terminal.
+- Move scores, rule identifiers, renderer names, and other technical details behind optional sections.
+- Make the coding-agent instruction the first action on the public homepage.
+
 ## 0.3.0 — 2026-07-11
 
 - Rename the primary product and package to PPTLint while keeping the previous command available through v0.4.

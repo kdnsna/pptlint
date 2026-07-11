@@ -9,7 +9,7 @@
     :root{--paper:#f7f5ef;--ink:#102a43;--muted:#52606d;--line:#c8d0d7;--signal:#e56a2f;--ok:#2f7d5b;--bad:#b42318}
     *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,"Segoe UI",Arial,sans-serif;line-height:1.55}main{max-width:1120px;margin:auto;padding:56px 28px 96px}
     header{padding-bottom:56px;border-bottom:2px solid var(--line)}.eyebrow{font:700 13px/1.2 ui-monospace,monospace;letter-spacing:.12em;color:var(--signal)}h1{font-size:clamp(48px,8vw,88px);line-height:1.02;margin:18px 0;max-width:920px}h2{font-size:34px;margin:68px 0 18px}p{font-size:20px;color:var(--muted);max-width:840px}.actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:30px}.button{display:inline-block;padding:12px 18px;border:2px solid var(--ink);color:var(--ink);text-decoration:none;font-weight:700}.button.primary{background:var(--ink);color:var(--paper)}
-    pre{overflow:auto;background:var(--ink);color:var(--paper);padding:24px;font:16px/1.6 ui-monospace,monospace}.result{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.result article{padding:22px;background:#fff;border-top:5px solid var(--ok)}.result article:nth-child(2){border-color:var(--signal)}.result article:nth-child(3){border-color:var(--bad)}.result strong{display:block;font-size:27px}.proof{display:grid;grid-template-columns:repeat(3,1fr);border:2px solid var(--line)}.metric{padding:26px;border-right:2px solid var(--line)}.metric:last-child{border:0}.metric strong{display:block;font:700 44px ui-monospace,monospace}.links{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.links a{padding:16px;border:1px solid var(--line);color:var(--ink);text-decoration:none;background:#fff}img{width:100%;border:2px solid var(--line);margin-top:20px}.note{font-size:16px;border-left:4px solid var(--signal);padding-left:14px}footer{margin-top:76px;padding-top:22px;border-top:2px solid var(--line);color:var(--muted)}
+    .agent-prompt{background:#fff;border-left:6px solid var(--signal);padding:18px 22px;margin:28px 0 14px}.agent-prompt strong{display:block;color:var(--ink);margin-bottom:5px}.agent-prompt p{font:16px/1.55 ui-monospace,monospace;margin:0;color:var(--ink)}pre{overflow:auto;background:var(--ink);color:var(--paper);padding:18px 22px;font:15px/1.6 ui-monospace,monospace}.result{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.result article{padding:22px;background:#fff;border-top:5px solid var(--ok)}.result article:nth-child(2){border-color:var(--signal)}.result article:nth-child(3){border-color:var(--bad)}.result strong{display:block;font-size:27px}.proof{display:grid;grid-template-columns:repeat(3,1fr);border:2px solid var(--line)}.metric{padding:26px;border-right:2px solid var(--line)}.metric:last-child{border:0}.metric strong{display:block;font:700 44px ui-monospace,monospace}.links{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.links a{padding:16px;border:1px solid var(--line);color:var(--ink);text-decoration:none;background:#fff}img{width:100%;border:2px solid var(--line);margin-top:20px}.note{font-size:16px;border-left:4px solid var(--signal);padding-left:14px}footer{margin-top:76px;padding-top:22px;border-top:2px solid var(--line);color:var(--muted)}
     @media(max-width:760px){.result,.proof,.links{grid-template-columns:1fr}.metric{border-right:0;border-bottom:1px solid var(--line)}h1{font-size:48px}}
   </style>
 </head>
@@ -19,23 +19,24 @@
     <h1>Is this PowerPoint ready to send?</h1>
     <p>AI can make a presentation quickly. PPTLint checks the finished PPTX for missing content, clipped or overlapping text, flattened slides, notes, comments, and personal information.</p>
     <p>Your file stays on your computer. PPTLint does not call an AI model or change the source file.</p>
+    <div class="agent-prompt"><strong>Ask your coding agent</strong><p>Install PPTLint and check whether this PowerPoint is ready to send. Show me the slides I must fix first and the exact PowerPoint steps.</p></div>
     <pre>pptlint check output.pptx --profile ai-generated</pre>
-    <div class="actions"><a class="button primary" href="https://github.com/kdnsna/pptlint">View on GitHub</a><a class="button" href="proof-loop/comparison.html">Open a real before/after example</a><a class="button" href="benchmark/">Open AI PowerPoint check method</a></div>
+    <div class="actions"><a class="button primary" href="https://github.com/kdnsna/pptlint">View on GitHub</a><a class="button" href="proof-loop/comparison.html">Open a real before/after example</a><a class="button" href="benchmark/">See how five AI PowerPoint tools will be checked</a></div>
   </header>
 
   <h2>One answer, then the next three actions</h2>
   <section class="result">
-    <article><strong>Ready</strong><span>No high-confidence delivery problem was found.</span></article>
-    <article><strong>Needs review</strong><span>Open the named slides and confirm the highlighted items.</span></article>
-    <article><strong>Blocked</strong><span>Fix the listed problem before sending the file.</span></article>
+    <article><strong>Ready to send</strong><span>No high-confidence delivery problem was found.</span></article>
+    <article><strong>Check before sending</strong><span>Open the named slides and confirm the highlighted items.</span></article>
+    <article><strong>Fix before sending</strong><span>Fix the listed problem before sending the file.</span></article>
   </section>
 
   <h2>A real editable PowerPoint improvement</h2>
-  <p>Ultimate PPT Master created a nine-slide editable presentation. The first check exposed a broken internal relationship and other delivery risks. After focused changes, the file opened cleanly and no new high-confidence problem was introduced.</p>
+  <p>Ultimate PPT Master created a nine-slide editable presentation. The first check exposed broken internal relationships and other delivery risks. After focused changes, all score deductions were removed. PPTLint still asks the user to review speaker notes and keeps three possible overlaps as suggestions rather than blockers.</p>
   <section class="proof">
     <div class="metric"><strong>49 → 100</strong><span>before and after</span></div>
     <div class="metric"><strong>103</strong><span>reported items resolved</span></div>
-    <div class="metric"><strong>0</strong><span>new reported items</span></div>
+    <div class="metric"><strong>0</strong><span>new high-confidence problems</span></div>
   </section>
   <img src="proof-loop/deck-montage.png" alt="Nine-slide editable PowerPoint used in the PPTLint before and after example">
   <p class="note">The original files and complete offline reports are published so anyone can inspect the evidence.</p>

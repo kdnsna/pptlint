@@ -121,7 +121,9 @@ def _finding_list(title: str, items: list[dict[str, object]], css_class: str) ->
     )
     if not rendered:
         rendered = "<li class=empty>无</li>"
-    return f'<section class="finding-group {css_class}"><h2>{_escape(title)}</h2><ul>{rendered}</ul></section>'
+    return (
+        f'<section class="finding-group {css_class}"><h2>{_escape(title)}</h2><ul>{rendered}</ul></section>'
+    )
 
 
 def _render_comparison_html(report: dict[str, object]) -> str:
@@ -141,9 +143,9 @@ def _render_comparison_html(report: dict[str, object]) -> str:
         "accessibility": "无障碍",
     }
     score_cards = "".join(
-        f'<article><span>{_escape(category_names.get(name, name))}</span>'
-        f'<b>{_escape(change["before"])} → {_escape(change["after"])}</b>'
-        f'<em>{int(change["delta"]):+d}</em></article>'
+        f"<article><span>{_escape(category_names.get(name, name))}</span>"
+        f"<b>{_escape(change['before'])} → {_escape(change['after'])}</b>"
+        f"<em>{int(change['delta']):+d}</em></article>"
         for name, change in categories.items()
         if isinstance(change, dict)
     )
@@ -157,10 +159,10 @@ def _render_comparison_html(report: dict[str, object]) -> str:
         right = pair.get("after") if isinstance(pair.get("after"), dict) else {}
         slide_cards += (
             f'<article class="slide-pair"><header><span>第 {index:02d} 页</span>'
-            f'<h2>{_escape(right.get("title") or left.get("title") or "未命名页面")}</h2></header>'
+            f"<h2>{_escape(right.get('title') or left.get('title') or '未命名页面')}</h2></header>"
             '<div class="preview"><figure><figcaption>改造前</figcaption>'
             f'<img alt="第 {index} 页改造前预览" src="{_escape(left.get("preview", ""))}"></figure>'
-            '<figure><figcaption>改造后</figcaption>'
+            "<figure><figcaption>改造后</figcaption>"
             f'<img alt="第 {index} 页改造后预览" src="{_escape(right.get("preview", ""))}"></figure></div></article>'
         )
     resolved = report.get("resolved")
@@ -168,9 +170,7 @@ def _render_comparison_html(report: dict[str, object]) -> str:
     persistent = report.get("persistent")
     assert isinstance(resolved, list) and isinstance(new, list) and isinstance(persistent, list)
     persistent_after = [
-        item["after"]
-        for item in persistent
-        if isinstance(item, dict) and isinstance(item.get("after"), dict)
+        item["after"] for item in persistent if isinstance(item, dict) and isinstance(item.get("after"), dict)
     ]
     findings = (
         _finding_list("已解决", resolved, "resolved")
@@ -182,20 +182,20 @@ def _render_comparison_html(report: dict[str, object]) -> str:
     gate_label = "通过" if gate.get("passed") else "未通过"
     return f"""<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>DeckLint 比较报告 · {_escape(after_file['name'])}</title>
+<title>PPTLint 比较报告 · {_escape(after_file["name"])}</title>
 <style>
 :root{{--ink:#10233f;--paper:#f2f0eb;--panel:#fff;--muted:#667085;--good:#18794e;--warn:#b54708;--bad:#b42318}}
 *{{box-sizing:border-box}}body{{margin:0;background:var(--paper);color:var(--ink);font:15px/1.65 "PingFang SC","Microsoft YaHei",system-ui,sans-serif}}
 main{{max-width:1180px;margin:auto;padding:52px 24px 88px}}header.hero{{border-bottom:3px solid var(--ink);padding-bottom:28px}}
 .kicker{{font-size:12px;font-weight:700;letter-spacing:.14em;color:#8a3d22}}h1{{font-size:clamp(38px,7vw,76px);line-height:1.05;margin:10px 0}}.hero p{{color:var(--muted);margin:0}}
-.overall{{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:22px;background:var(--panel);padding:28px;margin:28px 0}}.overall strong{{font-size:54px}}.overall i{{font-size:34px;color:var(--good)}}.overall .after{{text-align:right}}.gate{{font-weight:700;color:{'var(--good)' if gate.get('passed') else 'var(--bad)'}}}
+.overall{{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:22px;background:var(--panel);padding:28px;margin:28px 0}}.overall strong{{font-size:54px}}.overall i{{font-size:34px;color:var(--good)}}.overall .after{{text-align:right}}.gate{{font-weight:700;color:{"var(--good)" if gate.get("passed") else "var(--bad)"}}}
 .scores{{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}}.scores article{{background:var(--panel);padding:16px;border-top:3px solid var(--ink)}}.scores span,.scores b,.scores em{{display:block}}.scores em{{color:var(--good);font-style:normal}}
 .groups{{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:42px 0}}.finding-group{{background:var(--panel);padding:20px;border-top:5px solid var(--muted)}}.resolved{{border-color:var(--good)}}.new{{border-color:var(--bad)}}ul{{list-style:none;margin:0;padding:0}}li{{padding:9px 0;border-top:1px solid #e4e7ec}}li code,li strong,li span{{display:block}}li code{{font-size:11px;color:var(--muted)}}
 .slide-grid{{display:grid;gap:24px}}.slide-pair{{background:var(--panel);padding:20px}}.slide-pair header{{display:flex;gap:18px;align-items:baseline}}.slide-pair h2{{margin:0 0 12px}}.preview{{display:grid;grid-template-columns:1fr 1fr;gap:14px}}figure{{margin:0}}figcaption{{font-weight:700;margin-bottom:6px}}img{{display:block;width:100%;background:#e4e7ec;min-height:32px}}
 @media(max-width:820px){{.scores,.groups{{grid-template-columns:1fr 1fr}}.preview{{grid-template-columns:1fr}}}}@media(max-width:560px){{.scores,.groups{{grid-template-columns:1fr}}}}
 </style></head><body><main>
-<header class="hero"><span class="kicker">DECKLINT · POWERPOINT 质量闭环</span><h1>改造前后比较报告</h1><p>{_escape(before_file['name'])} → {_escape(after_file['name'])}</p></header>
-<section class="overall"><div><span>改造前</span><strong>{_escape(overall['before'])}</strong></div><i>{int(overall['delta']):+d}</i><div class="after"><span>改造后</span><strong>{_escape(overall['after'])}</strong></div></section>
+<header class="hero"><span class="kicker">PPTLINT · POWERPOINT 修改前后检查</span><h1>改造前后比较报告</h1><p>{_escape(before_file["name"])} → {_escape(after_file["name"])}</p></header>
+<section class="overall"><div><span>改造前</span><strong>{_escape(overall["before"])}</strong></div><i>{int(overall["delta"]):+d}</i><div class="after"><span>改造后</span><strong>{_escape(overall["after"])}</strong></div></section>
 <p class="gate">回归门禁：{gate_label}</p><section class="scores">{score_cards}</section>
 <section class="groups">{findings}</section><section class="slide-grid">{slide_cards}</section>
 <script id="decklint-comparison-data" type="application/json">{safe_json}</script>
