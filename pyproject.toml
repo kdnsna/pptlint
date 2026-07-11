@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "decklint"
-version = "0.1.0"
+version = "0.2.0"
 description = "Lighthouse for PowerPoint: deterministic, local-first PPTX quality reports."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -33,6 +33,7 @@ decklint = "decklint.cli:main"
 Homepage = "https://github.com/kdnsna/decklint"
 Repository = "https://github.com/kdnsna/decklint"
 Issues = "https://github.com/kdnsna/decklint/issues"
+Documentation = "https://kdnsna.github.io/decklint/"
 
 [project.optional-dependencies]
 dev = [

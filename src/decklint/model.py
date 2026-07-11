@@ -156,6 +156,7 @@ class Slide:
     part_name: str
     title: str
     shapes: list[Shape]
+    title_source: str = "none"
     hidden: bool = False
     notes_text: str = ""
 
@@ -553,6 +554,7 @@ def load_deck(path: Path) -> DeckModel:
                     part_name=slide_name,
                     title=title,
                     shapes=shapes,
+                    title_source="placeholder" if title_candidates else "none",
                     hidden=root.get("show") == "0",
                     notes_text=notes_text,
                 )

@@ -40,6 +40,33 @@ def test_report_is_deterministic_and_redacts_absolute_path(tmp_path: Path) -> No
     assert str(tmp_path) not in json.dumps(first)
 
 
+def test_report_publishes_semantic_title_source(tmp_path: Path) -> None:
+    source = write_pptx(
+        tmp_path / "semantic-title.pptx",
+        slides=[
+            slide_xml(
+                title=None,
+                body_size=3200,
+                body_y=200_000,
+                body_w=6_000_000,
+            )
+        ],
+    )
+    deck = load_deck(source)
+    findings = audit_deck(deck, profile="ai-generated")
+    rendering = render_deck(deck, source=source, renderer="wireframe")
+
+    report = build_report(
+        deck,
+        findings,
+        score_findings(findings),
+        rendering,
+        profile="ai-generated",
+    )
+
+    assert report["slides"][0]["titleSource"] == "inferred"
+
+
 def test_html_report_is_self_contained_and_locates_findings(tmp_path: Path) -> None:
     source = write_pptx(
         tmp_path / "deck.pptx",

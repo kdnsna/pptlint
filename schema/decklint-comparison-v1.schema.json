@@ -1,0 +1,174 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kdnsna/decklint/blob/main/schema/decklint-comparison-v1.schema.json",
+  "title": "DeckLint Comparison v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "toolVersion", "before", "after", "scores", "severity", "resolved", "persistent", "new", "gate", "slides", "agentSummary"],
+  "properties": {
+    "schemaVersion": { "const": "decklint-comparison/v1" },
+    "toolVersion": { "type": "string" },
+    "before": { "$ref": "#/$defs/reportIdentity" },
+    "after": { "$ref": "#/$defs/reportIdentity" },
+    "scores": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["overall", "categories"],
+      "properties": {
+        "overall": { "$ref": "#/$defs/scoreChange" },
+        "categories": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["integrity", "readability", "editability", "consistency", "accessibility"],
+          "properties": {
+            "integrity": { "$ref": "#/$defs/scoreChange" },
+            "readability": { "$ref": "#/$defs/scoreChange" },
+            "editability": { "$ref": "#/$defs/scoreChange" },
+            "consistency": { "$ref": "#/$defs/scoreChange" },
+            "accessibility": { "$ref": "#/$defs/scoreChange" }
+          }
+        }
+      }
+    },
+    "severity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["critical", "high", "medium", "low"],
+      "properties": {
+        "critical": { "$ref": "#/$defs/countChange" },
+        "high": { "$ref": "#/$defs/countChange" },
+        "medium": { "$ref": "#/$defs/countChange" },
+        "low": { "$ref": "#/$defs/countChange" }
+      }
+    },
+    "resolved": { "type": "array", "items": { "$ref": "#/$defs/finding" } },
+    "persistent": { "type": "array", "items": { "$ref": "#/$defs/persistentFinding" } },
+    "new": { "type": "array", "items": { "$ref": "#/$defs/finding" } },
+    "gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["threshold", "passed", "failureReasons"],
+      "properties": {
+        "threshold": { "enum": ["none", "low", "medium", "high", "critical"] },
+        "passed": { "type": "boolean" },
+        "failureReasons": { "type": "array", "items": { "enum": ["overall-score-decreased", "new-high-confidence-finding"] }, "uniqueItems": true }
+      }
+    },
+    "slides": { "type": "array", "items": { "$ref": "#/$defs/slidePair" } },
+    "agentSummary": { "type": "string" }
+  },
+  "$defs": {
+    "score": { "type": "integer", "minimum": 0, "maximum": 100 },
+    "scoreChange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["before", "after", "delta"],
+      "properties": {
+        "before": { "$ref": "#/$defs/score" },
+        "after": { "$ref": "#/$defs/score" },
+        "delta": { "type": "integer", "minimum": -100, "maximum": 100 }
+      }
+    },
+    "countChange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["before", "after", "delta"],
+      "properties": {
+        "before": { "type": "integer", "minimum": 0 },
+        "after": { "type": "integer", "minimum": 0 },
+        "delta": { "type": "integer" }
+      }
+    },
+    "renderer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requested", "used", "status", "detail"],
+      "properties": {
+        "requested": { "type": "string" },
+        "used": { "type": "string" },
+        "status": { "type": "string" },
+        "detail": { "type": "string" }
+      }
+    },
+    "file": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "sha256", "slides"],
+      "properties": {
+        "name": { "type": "string" },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "slides": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "reportIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sourceSchema", "profile", "file", "renderer"],
+      "properties": {
+        "sourceSchema": { "const": "decklint-report/v1" },
+        "profile": { "enum": ["baseline", "ai-generated"] },
+        "file": { "$ref": "#/$defs/file" },
+        "renderer": { "$ref": "#/$defs/renderer" }
+      }
+    },
+    "bbox": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["x", "y", "w", "h"],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "w": { "type": "number", "minimum": 0 },
+        "h": { "type": "number", "minimum": 0 }
+      }
+    },
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "rule_id", "category", "severity", "confidence", "message", "evidence", "remediation", "slide_index", "shape_id", "bbox"],
+      "properties": {
+        "id": { "type": "string" },
+        "rule_id": { "type": "string" },
+        "category": { "enum": ["integrity", "readability", "editability", "consistency", "accessibility", "privacy"] },
+        "severity": { "enum": ["low", "medium", "high", "critical"] },
+        "confidence": { "enum": ["low", "high"] },
+        "message": { "type": "string" },
+        "evidence": { "type": "string" },
+        "remediation": { "type": "string" },
+        "slide_index": { "type": ["integer", "null"], "minimum": 1 },
+        "shape_id": { "type": ["string", "null"] },
+        "bbox": { "$ref": "#/$defs/bbox" }
+      }
+    },
+    "persistentFinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["before", "after"],
+      "properties": {
+        "before": { "$ref": "#/$defs/finding" },
+        "after": { "$ref": "#/$defs/finding" }
+      }
+    },
+    "slide": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["index", "title", "titleSource", "preview"],
+      "properties": {
+        "index": { "type": "integer", "minimum": 1 },
+        "title": { "type": "string" },
+        "titleSource": { "enum": ["placeholder", "inferred", "none"] },
+        "preview": { "type": "string", "pattern": "^(data:image/png;base64,|$)" }
+      }
+    },
+    "slidePair": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["index", "before", "after"],
+      "properties": {
+        "index": { "type": "integer", "minimum": 1 },
+        "before": { "oneOf": [{ "$ref": "#/$defs/slide" }, { "type": "null" }] },
+        "after": { "oneOf": [{ "$ref": "#/$defs/slide" }, { "type": "null" }] }
+      }
+    }
+  }
+}

@@ -6,6 +6,7 @@ from pathlib import Path
 import jsonschema
 import yaml
 
+import decklint
 from decklint.model import load_deck
 from decklint.render import render_deck
 from decklint.report import build_report
@@ -105,6 +106,48 @@ def test_readme_leads_with_single_product_promise() -> None:
     assert "does not upload" in readme.lower()
     assert "examples/reports/good-deck.html" in readme
     assert "examples/reports/bad-deck.html" in readme
+
+
+def test_v02_public_surface_is_chinese_first_and_exposes_compare() -> None:
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    first_screen = "\n".join(readme.splitlines()[:40])
+    skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
+
+    assert "PPT 质量基础设施" in first_screen
+    assert "decklint compare" in readme
+    assert "GitHub Release" in first_screen
+    assert "uvx decklint audit" not in first_screen
+    assert "decklint compare" in skill
+    assert len(skill.splitlines()) <= 100
+
+
+def test_proof_loop_case_is_schema_valid_and_matches_public_claims() -> None:
+    report_schema = json.loads((ROOT / "schema/decklint-report-v1.schema.json").read_text(encoding="utf-8"))
+    comparison_schema = json.loads(
+        (ROOT / "schema/decklint-comparison-v1.schema.json").read_text(encoding="utf-8")
+    )
+    before = json.loads((ROOT / "site/proof-loop/before.json").read_text(encoding="utf-8"))
+    after = json.loads((ROOT / "site/proof-loop/after.json").read_text(encoding="utf-8"))
+    comparison = json.loads((ROOT / "site/proof-loop/comparison.json").read_text(encoding="utf-8"))
+
+    jsonschema.validate(before, report_schema)
+    jsonschema.validate(after, report_schema)
+    jsonschema.validate(comparison, comparison_schema)
+    assert before["scores"]["overall"] == 49
+    assert after["scores"]["overall"] == 100
+    assert comparison["scores"]["overall"] == {"before": 49, "after": 100, "delta": 51}
+    assert len(comparison["resolved"]) == 103
+    assert len(comparison["new"]) == 0
+    assert comparison["gate"]["passed"] is True
+
+    site = (ROOT / "site/index.html").read_text(encoding="utf-8")
+    assert "49→100" in site
+    assert "proof-loop/comparison.html" in site
+    assert "http://" not in site and "https://" in site
+
+
+def test_version_is_020() -> None:
+    assert decklint.__version__ == "0.2.0"
 
 
 def test_corpus_contains_thirty_public_synthetic_pptx_files() -> None:

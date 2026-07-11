@@ -43,6 +43,7 @@ def slide_xml(
     body_h: int = 3200400,
     body_fill: str | None = None,
     body_text_color: str | None = None,
+    body_text: str | None = "Evidence-backed summary",
     hidden: bool = False,
 ) -> str:
     title_shape = f"""
@@ -57,16 +58,18 @@ def slide_xml(
       <p:blipFill><a:blip r:embed="rId2"/><a:stretch><a:fillRect/></a:stretch></p:blipFill>
       <p:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="12192000" cy="6858000"/></a:xfrm><a:prstGeom prst="rect"/></p:spPr>
     </p:pic>""" if include_picture else ""
+    body_shape = f"""
+    <p:sp>
+      <p:nvSpPr><p:cNvPr id="3" name="Body 2"/><p:cNvSpPr/><p:nvPr/></p:nvSpPr>
+      <p:spPr><a:xfrm><a:off x="{body_x}" y="{body_y}"/><a:ext cx="{body_w}" cy="{body_h}"/></a:xfrm>{f'<a:solidFill><a:srgbClr val="{body_fill}"/></a:solidFill>' if body_fill else ''}</p:spPr>
+      <p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:rPr sz="{body_size}" latin="{body_font}">{f'<a:solidFill><a:srgbClr val="{body_text_color}"/></a:solidFill>' if body_text_color else ''}</a:rPr><a:t>{body_text}</a:t></a:r></a:p></p:txBody>
+    </p:sp>""" if body_text is not None else ""
     return f"""<?xml version="1.0" encoding="UTF-8"?>
 <p:sld xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" show="{'0' if hidden else '1'}">
   <p:cSld><p:spTree>
     <p:nvGrpSpPr><p:cNvPr id="1" name=""/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr/>
     {title_shape}
-    <p:sp>
-      <p:nvSpPr><p:cNvPr id="3" name="Body 2"/><p:cNvSpPr/><p:nvPr/></p:nvSpPr>
-      <p:spPr><a:xfrm><a:off x="{body_x}" y="{body_y}"/><a:ext cx="{body_w}" cy="{body_h}"/></a:xfrm>{f'<a:solidFill><a:srgbClr val="{body_fill}"/></a:solidFill>' if body_fill else ''}</p:spPr>
-      <p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:rPr sz="{body_size}" latin="{body_font}">{f'<a:solidFill><a:srgbClr val="{body_text_color}"/></a:solidFill>' if body_text_color else ''}</a:rPr><a:t>Evidence-backed summary</a:t></a:r></a:p></p:txBody>
-    </p:sp>
+    {body_shape}
     {picture}
   </p:spTree></p:cSld>
 </p:sld>"""

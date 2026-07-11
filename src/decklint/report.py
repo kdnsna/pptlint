@@ -43,6 +43,7 @@ def build_report(
             {
                 "index": slide.index,
                 "title": slide.title,
+                "titleSource": slide.title_source,
                 "preview": rendering.previews[slide.index - 1] if slide.index <= len(rendering.previews) else "",
             }
             for slide in deck.slides

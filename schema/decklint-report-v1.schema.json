@@ -134,6 +134,7 @@
         "properties": {
           "index": { "type": "integer", "minimum": 1 },
           "title": { "type": "string" },
+          "titleSource": { "enum": ["placeholder", "inferred", "none"] },
           "preview": { "type": "string", "pattern": "^(data:image/png;base64,|$)" }
         }
       }

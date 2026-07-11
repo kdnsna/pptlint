@@ -1,23 +1,24 @@
 # Roadmap
 
-DeckLint stays narrow: inspect presentations before delivery. New features require evidence from public issues or integrations.
+DeckLint 保持窄边界：在交付前检查 PowerPoint，并用可复现证据说明问题和变化。
 
-## v0.1 — report-only foundation
+## v0.1 — 只读审计基础
 
-- Local CLI, deterministic JSON, offline HTML, quality scoring, GitHub Action.
-- No model calls, uploads, source modification, cloud service, or automatic repair.
+- 本地 CLI、确定性 JSON、离线 HTML、透明评分和 GitHub Action。
+- 不调用模型、不上传、不修改源文件。
 
-## Candidate v0.2 work
+## v0.2 — Proof Loop
 
-- `.decklint.yml` policy overrides.
-- SARIF and pull-request annotations.
-- Brand-specific font/color policies.
-- Additional renderers only where cross-platform fixtures prove fidelity.
+- `decklint compare` 前后报告比较。
+- `decklint-comparison/v1`、中文离线比较报告和回归门禁。
+- AI 生成页面的原生语义标题识别。
+- Ultimate PPT Master 真实修复闭环、Pages 案例和公开证据资产。
 
-Only the most requested and testable items should ship. DeckLint may become an optional pinned quality gate for Ultimate PPT Master after the report schema is stable; existing Ultimate PPT Master audit commands should retain compatibility wrappers for two minor releases.
+## 后续候选
 
-PyPI release operations use tokenless trusted publishing; see `docs/publishing.md`.
+- `.decklint.yml` 策略覆盖与品牌字体/色彩规则。
+- SARIF 与 PR 注释。
+- 有跨平台公开样本支持的更多 renderer。
+- 仅在诊断误报率与用户信任得到验证后，研究安全修复副本。
 
-## Candidate v0.3 work
-
-Safe repair copies or Agent-assisted remediation may be explored only after high-confidence false-positive rates remain below 5% on real, shareable decks. The original PPTX must remain untouched.
+PyPI 使用无 token 的 Trusted Publishing，发布流程见 `docs/publishing.md`。

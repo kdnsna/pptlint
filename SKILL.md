@@ -1,39 +1,56 @@
 ---
 name: decklint
-description: Audit a PowerPoint PPTX for integrity, readability, editability, consistency, accessibility, and privacy risks without modifying the source file.
+description: Audit and compare PowerPoint PPTX quality reports without uploading or modifying the source file.
 ---
 
 # DeckLint
 
-Use DeckLint when a user asks to inspect, audit, lint, QA, validate, or review a `.pptx` file.
+当用户要求检查、审计、QA、验证或比较 `.pptx` 时使用 DeckLint。
 
-## Run
+## 审计
 
-Prefer the installed command:
+优先使用已安装命令：
 
 ```bash
 decklint audit input.pptx --output decklint-report
 ```
 
-If DeckLint is not installed and `uvx` is available:
+AI 生成且应保留原生可编辑对象的演示文稿使用：
 
 ```bash
-uvx decklint audit input.pptx --output decklint-report
+decklint audit input.pptx \
+  --profile ai-generated \
+  --renderer auto \
+  --output decklint-report
 ```
 
-Use `--profile ai-generated` when the presentation is expected to contain native editable objects and varied generated layouts. Use `--renderer wireframe` in restricted CI environments; use `auto` locally.
+读取 `decklint-report.json`，按 `slide_index`、`rule_id`、`evidence` 与 `remediation` 建立逐页修复清单。低置信 finding 只作提示。
 
-## Interpret
+## 修复后比较
 
-- Exit `0`: no high-confidence finding reached the configured threshold.
-- Exit `1`: a quality finding or minimum-score gate failed.
-- Exit `2`: the file could not be audited.
-- Read `decklint-report.json` for automation and `decklint-report.html` for human review.
-- Low-confidence findings are advisory and do not reduce the score or fail CI.
+重新审计独立的修复副本，再比较两份 JSON：
 
-## Safety
+```bash
+decklint compare before-report.json after-report.json \
+  --output decklint-comparison \
+  --fail-on-regression high
+```
 
-Do not upload the presentation or report unless the user explicitly asks.
-Do not modify the source PPTX. DeckLint v0.1 is report-only.
-Do not claim that heuristic warnings prove poor design; report their confidence and evidence.
+- `resolved`：改造前存在、改造后消失。
+- `persistent`：同一规则仍在同一页出现。
+- `new`：改造后新增。
+- `gate.passed`：回归门禁是否通过。
 
+## 退出码
+
+- `0`：通过。
+- `1`：质量门禁或回归门禁失败。
+- `2`：输入无效或运行失败。
+
+## 安全边界
+
+- Do not modify source PPTX.
+- 不上传 PPTX 或报告，除非用户明确要求。
+- 不修改源 PPTX；生成器应输出独立修复副本。
+- 不把启发式 warning 描述为已证明的设计缺陷。
+- 不复制 DeckLint 规则逻辑；以 CLI 和 JSON Schema 为唯一合同。

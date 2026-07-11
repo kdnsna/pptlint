@@ -57,6 +57,24 @@ def _layout_fingerprint(slide: Slide, width: int, height: int) -> tuple[tuple[ob
     )
 
 
+def _semantic_title_shape(slide: Slide, width: int, height: int) -> Shape | None:
+    candidates = [
+        shape
+        for shape in slide.shapes
+        if shape.text.strip()
+        and len(shape.text.strip()) <= 160
+        and shape.bbox.y < height * 0.25
+        and shape.bbox.w >= width * 0.20
+        and shape.font_sizes
+        and max(shape.font_sizes) >= 24
+    ]
+    return min(
+        candidates,
+        key=lambda shape: (shape.bbox.y, shape.bbox.x, shape.shape_id),
+        default=None,
+    )
+
+
 def audit_deck(deck: DeckModel, *, profile: str = "baseline") -> list[Finding]:
     if profile not in {"baseline", "ai-generated"}:
         raise ValueError(f"Unsupported profile: {profile}")
@@ -103,7 +121,18 @@ def audit_deck(deck: DeckModel, *, profile: str = "baseline") -> list[Finding]:
     small_medium = 18 if profile == "ai-generated" else 14
     for slide in deck.slides:
         title_shapes = [shape for shape in slide.shapes if shape.placeholder_type in {"title", "ctrTitle"} and shape.text]
-        if not title_shapes:
+        semantic_title = (
+            _semantic_title_shape(slide, deck.width, deck.height)
+            if profile == "ai-generated" and not title_shapes
+            else None
+        )
+        if title_shapes:
+            slide.title_source = "placeholder"
+        elif semantic_title is not None:
+            slide.title = semantic_title.text
+            slide.title_source = "inferred"
+        else:
+            slide.title_source = "none"
             findings.append(
                 _finding(
                     "accessibility.missing-title",

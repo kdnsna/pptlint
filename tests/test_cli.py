@@ -6,6 +6,7 @@ from pathlib import Path
 from decklint.cli import main
 
 from .pptx_factory import slide_xml, write_pptx
+from .report_factory import make_report
 
 
 def test_cli_writes_html_and_json_for_valid_deck(tmp_path: Path, monkeypatch) -> None:
@@ -95,3 +96,62 @@ def test_cli_returns_two_when_explicit_libreoffice_is_unavailable(tmp_path: Path
     )
 
     assert exit_code == 2
+
+
+def test_compare_cli_writes_html_and_json(tmp_path: Path) -> None:
+    before = tmp_path / "before.json"
+    after = tmp_path / "after.json"
+    before.write_text(json.dumps(make_report(score=80)), encoding="utf-8")
+    after.write_text(json.dumps(make_report(score=95)), encoding="utf-8")
+
+    exit_code = main(
+        [
+            "compare",
+            str(before),
+            str(after),
+            "--output",
+            str(tmp_path / "comparison"),
+        ]
+    )
+
+    assert exit_code == 0
+    assert (tmp_path / "comparison.html").is_file()
+    assert (tmp_path / "comparison.json").is_file()
+
+
+def test_compare_cli_returns_one_for_regression(tmp_path: Path) -> None:
+    before = tmp_path / "before.json"
+    after = tmp_path / "after.json"
+    before.write_text(json.dumps(make_report(score=90)), encoding="utf-8")
+    after.write_text(json.dumps(make_report(score=80)), encoding="utf-8")
+
+    exit_code = main(
+        [
+            "compare",
+            str(before),
+            str(after),
+            "--output",
+            str(tmp_path / "comparison"),
+        ]
+    )
+
+    assert exit_code == 1
+
+
+def test_compare_cli_returns_two_without_partial_outputs(tmp_path: Path) -> None:
+    invalid = tmp_path / "invalid.json"
+    invalid.write_text("[]", encoding="utf-8")
+
+    exit_code = main(
+        [
+            "compare",
+            str(invalid),
+            str(invalid),
+            "--output",
+            str(tmp_path / "comparison"),
+        ]
+    )
+
+    assert exit_code == 2
+    assert not (tmp_path / "comparison.html").exists()
+    assert not (tmp_path / "comparison.json").exists()
