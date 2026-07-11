@@ -39,12 +39,18 @@ Install from PyPI and run:
 uvx pptlint check output.pptx --profile ai-generated
 ```
 
+For plain Chinese guidance:
+
+```bash
+uvx pptlint check output.pptx --profile ai-generated --lang zh-CN
+```
+
 PPTLint writes two files:
 
 - `pptlint-report.html` — an offline report for people;
 - `pptlint-report.json` — the same result for agents and automation.
 
-The first screen shows whether the file is ready and the three most important actions. The numerical score is secondary and is intended only for comparing the same presentation before and after changes.
+The first screen answers four ordinary delivery questions and shows the three most important actions. The numerical score is secondary and is intended only for comparing the same presentation before and after changes. A score of 100 is not an aesthetic grade or a zero-risk guarantee.
 
 ## See real examples
 

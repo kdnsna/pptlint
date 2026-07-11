@@ -31,6 +31,7 @@ def _add_check_arguments(command: argparse.ArgumentParser, *, output: str, fail_
     command.add_argument("--soffice-path", help="Optional path to the LibreOffice soffice executable")
     command.add_argument("--fail-on", choices=("none", "low", "medium", "high", "critical"), default=fail_on)
     command.add_argument("--min-score", type=_score_value, default=None)
+    command.add_argument("--lang", choices=("en", "zh-CN"), default="en", help="Report language")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -80,30 +81,39 @@ def _run_audit(args: argparse.Namespace) -> int:
             renderer=args.renderer,
             soffice_path=args.soffice_path,
         )
-        report = build_report(deck, findings, scores, rendering, profile=args.profile)
+        report = build_report(
+            deck, findings, scores, rendering, profile=args.profile, language=args.lang
+        )
         html_path, json_path = write_reports(args.output.expanduser(), report)
     except (DeckLoadError, RenderError, OSError, ValueError) as exc:
         print(f"PPTLint could not check the file: {exc}", file=sys.stderr)
         return 2
 
     status = report["readiness"]["status"]
-    result_label = {
-        "ready": "Ready to send",
-        "review": "Check before sending",
-        "blocked": "Fix before sending",
-    }[status]
-    print(f"PPTLint result: {result_label}")
+    zh = args.lang == "zh-CN"
+    result_label = (
+        {"ready": "可以发送", "review": "发送前再看一眼", "blocked": "先处理再发送"}
+        if zh
+        else {"ready": "Ready to send", "review": "Check before sending", "blocked": "Fix before sending"}
+    )[status]
+    print(f"PPTLint 结果：{result_label}" if zh else f"PPTLint result: {result_label}")
     actions = report["priorityActions"]
     if actions:
-        print("Next actions:")
+        print("先做这几件事：" if zh else "Next actions:")
         for action in actions:
             slide = action.get("slideIndex")
-            location = f"Slide {slide}" if slide else "Whole file"
+            location = f"第 {slide} 页" if zh and slide else ("整个文件" if zh else (f"Slide {slide}" if slide else "Whole file"))
             print(f"- {location}: {action['impact']}")
     else:
-        print("No high-confidence delivery problem was found.")
-    print(f"Open the HTML report for the highlighted slides: {html_path}")
-    print(f"JSON report: {json_path}")
+        print("没有发现必须处理的高把握交付问题。" if zh else "No high-confidence delivery problem was found.")
+    if zh:
+        print(f"打开 HTML 报告查看高亮页面：{html_path}")
+        print(f"JSON 报告：{json_path}")
+        print("说明：100 分仅表示本次规则检查结果，不代表审美满分或绝对零风险。")
+    else:
+        print(f"Open the HTML report for the highlighted slides: {html_path}")
+        print(f"JSON report: {json_path}")
+        print("Note: 100 is this rule-check score, not an aesthetic grade or a zero-risk guarantee.")
     failed = _threshold_failed(findings, args.fail_on)
     if args.command == "check" and report["readiness"]["status"] == "blocked":
         failed = True

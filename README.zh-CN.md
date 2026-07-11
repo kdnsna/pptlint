@@ -32,7 +32,7 @@ PPTLint 不上传 PPT、不调用 AI 模型，也不修改源文件。
 直接从 PyPI 安装并运行：
 
 ```bash
-uvx pptlint check output.pptx --profile ai-generated
+uvx pptlint check output.pptx --profile ai-generated --lang zh-CN
 ```
 
 运行后生成：
@@ -40,7 +40,7 @@ uvx pptlint check output.pptx --profile ai-generated
 - `pptlint-report.html`：普通用户可以离线打开；
 - `pptlint-report.json`：供 Agent 和自动化工具读取。
 
-报告第一屏先显示是否可以交付，再列出最多三项最应优先处理的修改。数字分数只用于观察同一份 PPT 修改前后的变化，不代表整体审美水平。
+报告第一屏先回答四个问题：文件能否正常打开、现场是否看得清、别人能否继续修改、是否带出隐藏内容，然后列出最多三项最应优先处理的修改。数字分数只用于观察同一份 PPT 修改前后的变化；100 分不代表审美满分，也不代表绝对没有风险。
 
 ## 查看真实案例
 

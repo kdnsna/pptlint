@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.2 — 2026-07-12
+
+- Add `--lang zh-CN` for plain Chinese terminal guidance and action-first HTML reports.
+- Add four delivery questions covering file integrity, presentation, editability, and hidden information.
+- Add concrete consequences and practical review steps for the checks used in public launch examples.
+- State explicitly that 100 is a rule-check score, not an aesthetic grade or a zero-risk guarantee.
+
 ## 0.3.1 — 2026-07-11
 
 - Put the plain-language delivery result first in the terminal and HTML report.

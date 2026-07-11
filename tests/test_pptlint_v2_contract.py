@@ -67,6 +67,14 @@ def test_pptlint_check_writes_v2_report_with_actionable_findings(
     payload = json.loads(output.with_suffix(".json").read_text(encoding="utf-8"))
     assert exit_code == 1
     assert payload["schemaVersion"] == "pptlint-report/v2"
+    assert payload["language"] == "en"
+    assert [item["id"] for item in payload["deliveryChecklist"]] == [
+        "file",
+        "presentation",
+        "editability",
+        "privacy",
+    ]
+    assert payload["deliveryChecklist"][0]["status"] == "fix"
     assert payload["readiness"]["status"] == "blocked"
     assert len(payload["priorityActions"]) <= 3
     assert payload["findings"][0]["disposition"] in {"blocker", "review", "advisory"}
@@ -78,6 +86,38 @@ def test_pptlint_check_writes_v2_report_with_actionable_findings(
     assert "score" not in first_line.lower()
     assert "Whole file" in output_text
     assert "Open the HTML report for the highlighted slides" in output_text
+    assert "not an aesthetic grade" in output_text
+
+
+def test_pptlint_check_can_write_plain_chinese_delivery_guidance(
+    tmp_path: Path,
+    capsys,
+) -> None:
+    source = write_pptx(tmp_path / "broken.pptx", broken_relationship=True)
+    output = tmp_path / "zh-report"
+
+    exit_code = main(
+        [
+            "check",
+            str(source),
+            "--renderer",
+            "wireframe",
+            "--lang",
+            "zh-CN",
+            "--output",
+            str(output),
+        ]
+    )
+
+    payload = json.loads(output.with_suffix(".json").read_text(encoding="utf-8"))
+    html = output.with_suffix(".html").read_text(encoding="utf-8")
+    terminal = capsys.readouterr().out
+    assert exit_code == 1
+    assert payload["language"] == "zh-CN"
+    assert payload["deliveryChecklist"][0]["label"] == "文件能否正常打开"
+    assert "PPTLint 结果：先处理再发送" in terminal
+    assert "100 分仅表示本次规则检查结果" in terminal
+    assert "发出去之前，先回答这四个问题" in html
 
 
 def test_pptlint_check_uses_new_default_output_prefix(

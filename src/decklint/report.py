@@ -14,6 +14,58 @@ from .scoring import ScoreCard
 
 SEVERITIES = ("critical", "high", "medium", "low")
 
+DELIVERY_CHECKS = (
+    ("file", {"integrity"}),
+    ("presentation", {"readability", "accessibility", "consistency"}),
+    ("editability", {"editability"}),
+    ("privacy", {"privacy"}),
+)
+
+CHECK_COPY = {
+    "en": {
+        "file": ("Opens reliably", "No package-integrity issue was found."),
+        "presentation": ("Readable in the room", "No current readability risk was found."),
+        "editability": ("Can be handed over", "No flattened full-slide image was found."),
+        "privacy": ("Safe to share", "No note, hidden page, comment, metadata, or external-link reminder was found."),
+    },
+    "zh-CN": {
+        "file": ("文件能否正常打开", "没有发现文件结构问题。"),
+        "presentation": ("现场是否看得清", "没有发现当前页面的可读性风险。"),
+        "editability": ("别人能否继续修改", "没有发现整页图片式页面。"),
+        "privacy": ("是否带出隐藏内容", "没有发现备注、隐藏页、批注、个人信息或外部链接提醒。"),
+    },
+}
+
+
+def _delivery_checklist(findings: list[Finding], *, language: str) -> list[dict[str, object]]:
+    copy = CHECK_COPY[language]
+    result: list[dict[str, object]] = []
+    for check_id, categories in DELIVERY_CHECKS:
+        selected = [finding for finding in findings if finding.category in categories]
+        classified = [classify_finding(finding, language=language) for finding in selected]
+        if any(item["disposition"] == "blocker" for item in classified):
+            status = "fix"
+        elif selected:
+            status = "review"
+        else:
+            status = "pass"
+        label, clean_summary = copy[check_id]
+        if selected:
+            first = classified[0]
+            summary = str(first["impact"])
+        else:
+            summary = clean_summary
+        result.append(
+            {
+                "id": check_id,
+                "status": status,
+                "label": label,
+                "summary": summary,
+                "findingCount": len(selected),
+            }
+        )
+    return result
+
 
 def build_report(
     deck: DeckModel,
@@ -22,11 +74,14 @@ def build_report(
     rendering: RenderResult,
     *,
     profile: str,
+    language: str = "en",
 ) -> dict[str, object]:
+    if language not in CHECK_COPY:
+        raise ValueError(f"Unsupported report language: {language}")
     summary = {
         severity: sum(1 for finding in findings if finding.severity == severity) for severity in SEVERITIES
     }
-    readiness = assess_readiness(findings, renderer_status=rendering.status)
+    readiness = assess_readiness(findings, renderer_status=rendering.status, language=language)
     all_shapes = [shape for slide in deck.slides for shape in slide.shapes]
     native_text_shapes = sum(1 for shape in all_shapes if shape.text.strip())
     pictures = sum(1 for shape in all_shapes if shape.kind == "picture")
@@ -46,6 +101,7 @@ def build_report(
     return {
         "schemaVersion": "pptlint-report/v2",
         "toolVersion": __version__,
+        "language": language,
         "profile": profile,
         "file": {"name": deck.filename, "sha256": deck.sha256, "slides": len(deck.slides)},
         "renderer": rendering.metadata(),
@@ -53,6 +109,7 @@ def build_report(
         "summary": summary,
         "readiness": {"status": readiness.status, "reasons": readiness.reasons},
         "priorityActions": readiness.priority_actions,
+        "deliveryChecklist": _delivery_checklist(findings, language=language),
         "metrics": {
             "editability": {
                 "nativeTextShapes": native_text_shapes,
@@ -69,7 +126,7 @@ def build_report(
                     deck_width=deck.width,
                     deck_height=deck.height,
                 ),
-                **classify_finding(finding),
+                **classify_finding(finding, language=language),
             }
             for finding_id, finding in identified_findings(findings)
         ],
@@ -99,9 +156,13 @@ def _render_html(report: dict[str, object]) -> str:
     renderer = report["renderer"]
     readiness = report["readiness"]
     priority_actions = report["priorityActions"]
+    delivery_checklist = report["deliveryChecklist"]
+    language = str(report.get("language", "en"))
     assert isinstance(file_info, dict) and isinstance(scores, dict) and isinstance(findings, list)
     assert isinstance(slides, list) and isinstance(renderer, dict)
     assert isinstance(readiness, dict) and isinstance(priority_actions, list)
+    assert isinstance(delivery_checklist, list)
+    zh = language == "zh-CN"
     categories = scores["categories"]
     assert isinstance(categories, dict)
     score_cards = "".join(
@@ -127,16 +188,20 @@ def _render_html(report: dict[str, object]) -> str:
         + ". Suggestions that require human judgment and privacy reminders deduct 0 points.</p></details>"
     )
     status = str(readiness["status"])
-    status_label = {
-        "ready": "Ready to send",
-        "review": "Check before sending",
-        "blocked": "Fix before sending",
-    }[status]
-    disposition_labels = {"blocker": "Must fix", "review": "Check", "advisory": "Suggestion"}
+    status_label = (
+        {"ready": "可以发送", "review": "发送前再看一眼", "blocked": "先处理再发送"}
+        if zh
+        else {"ready": "Ready to send", "review": "Check before sending", "blocked": "Fix before sending"}
+    )[status]
+    disposition_labels = (
+        {"blocker": "必须处理", "review": "需要确认", "advisory": "建议查看"}
+        if zh
+        else {"blocker": "Must fix", "review": "Check", "advisory": "Suggestion"}
+    )
     action_items = "".join(
         "<li>"
         f"<span>{_escape(disposition_labels[str(action['disposition'])])} · "
-        f"{_escape('Slide ' + str(action['slideIndex']) if action.get('slideIndex') else 'Whole file')}</span>"
+        f"{_escape(('第 ' + str(action['slideIndex']) + ' 页') if zh and action.get('slideIndex') else ('整个文件' if zh else ('Slide ' + str(action['slideIndex']) if action.get('slideIndex') else 'Whole file')))}</span>"
         f"<strong>{_escape(action['impact'])}</strong>"
         + "<ol>"
         + "".join(f"<li>{_escape(step)}</li>" for step in action["fixSteps"])
@@ -146,12 +211,20 @@ def _render_html(report: dict[str, object]) -> str:
     )
     readiness_panel = (
         f'<section class="readiness readiness-{_escape(status)}">'
-        '<div><span class="eyebrow">Delivery readiness</span>'
+        f'<div><span class="eyebrow">{"发送前结论" if zh else "Delivery readiness"}</span>'
         f"<h2>{_escape(status_label)}</h2>"
-        "<p>Start with these actions. Use the score only to compare this file before and after changes.</p></div>"
-        f'<div class="priority"><h3>Priority actions</h3><ul>{action_items or "<li>No delivery action is required.</li>"}</ul></div>'
+        f'<p>{"先处理下面这些事。分数只用于比较同一份文件修改前后的变化。" if zh else "Start with these actions. Use the score only to compare this file before and after changes."}</p></div>'
+        f'<div class="priority"><h3>{"先做这几件事" if zh else "Priority actions"}</h3><ul>{action_items or ("<li>当前没有必须处理的交付问题。</li>" if zh else "<li>No delivery action is required.</li>")}</ul></div>'
         "</section>"
     )
+    checklist_labels = {"pass": "通过", "review": "确认", "fix": "处理"} if zh else {"pass": "Pass", "review": "Review", "fix": "Fix"}
+    checklist_cards = "".join(
+        f'<article class="check check-{_escape(item["status"])}"><span>{_escape(checklist_labels[str(item["status"])])}</span>'
+        f'<h3>{_escape(item["label"])}</h3><p>{_escape(item["summary"])}</p><small>{_escape(item["findingCount"])} {"项提醒" if zh else "finding(s)"}</small></article>'
+        for item in delivery_checklist
+        if isinstance(item, dict)
+    )
+    checklist_panel = f'<section class="checklist"><header><span class="eyebrow">{"四项交付体检" if zh else "Four delivery checks"}</span><h2>{"发出去之前，先回答这四个问题" if zh else "What happens when someone else opens it?"}</h2></header><div>{checklist_cards}</div></section>'
     finding_groups: dict[int, list[dict[str, object]]] = {}
     for finding in findings:
         assert isinstance(finding, dict)
@@ -223,14 +296,16 @@ main{{max-width:1240px;margin:auto;padding:48px 24px 80px}}.hero{{display:grid;g
 .eyebrow{{font:700 12px/1.2 ui-monospace,monospace;letter-spacing:.12em;text-transform:uppercase;color:#8a3d22}}h1{{font-size:clamp(34px,6vw,72px);line-height:.95;margin:10px 0 12px;max-width:13ch}}.hero p{{color:var(--muted);margin:0}}
 .scores{{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:16px 0}}.score-card{{background:var(--panel);border:1px solid #d6d0c4;padding:16px}}.score-card span{{display:block;color:var(--muted);font-size:12px}}.score-card strong{{font-size:28px}}.secondary-score{{background:#ebe6dc;padding:14px 18px;margin:0 0 36px}}.secondary-score>summary{{font-weight:700;cursor:pointer}}.secondary-score>p{{color:var(--muted)}}
 .readiness{{display:grid;grid-template-columns:minmax(260px,.7fr) minmax(360px,1.3fr);gap:28px;margin:28px 0;background:var(--panel);border-left:8px solid #175cd3;padding:24px}}.readiness-blocked{{border-color:var(--critical)}}.readiness-review{{border-color:var(--medium)}}.readiness-ready{{border-color:#18794e}}.readiness h2{{font-size:44px;margin:4px 0}}.readiness p{{color:var(--muted)}}.priority h3{{margin-top:0}}.priority>ul>li{{padding:10px 0;border-top:1px solid #ded8cd}}.priority span{{font:700 11px ui-monospace,monospace;text-transform:uppercase;color:var(--muted)}}.priority strong{{display:block}}.priority ol,.fix-steps{{margin:6px 0 0;padding-left:20px;color:var(--muted)}}.impact{{font-weight:700;color:var(--ink)!important}}
+.checklist{{margin:28px 0}}.checklist>header h2{{font-size:clamp(26px,4vw,42px);margin:5px 0 18px}}.checklist>div{{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}}.check{{background:var(--panel);border-top:5px solid #18794e;padding:18px}}.check-review{{border-color:var(--medium)}}.check-fix{{border-color:var(--critical)}}.check span{{font-weight:800;font-size:12px}}.check h3{{margin:7px 0}}.check p{{color:var(--muted);min-height:68px}}.check small{{color:var(--muted)}}
 .notice{{padding:12px 16px;background:#fff3d6;border-left:4px solid var(--medium);margin-bottom:24px}}.slide-grid{{display:grid;gap:28px}}.slide-card{{display:grid;grid-template-columns:minmax(360px,1.1fr) minmax(300px,.9fr);gap:24px;background:var(--panel);border:1px solid #d6d0c4;padding:20px}}
 .slide-card header{{grid-column:1/-1;display:flex;align-items:baseline;gap:14px;border-bottom:1px solid #ded8cd}}.slide-card header h2{{margin:0 0 10px;flex:1}}.slide-card header span,.slide-card header b{{font:700 11px ui-monospace,monospace;color:var(--muted)}}
 .slide-preview{{position:relative;align-self:start;background:#ddd;box-shadow:0 12px 28px #17203320}}.slide-preview img{{width:100%;display:block}}.overlay{{position:absolute;border:3px solid var(--high);background:#d92d2015}}.overlay.severity-critical{{border-color:var(--critical)}}.overlay.severity-medium{{border-color:var(--medium)}}
 ul{{list-style:none;margin:0;padding:0;display:grid;gap:10px}}.finding{{border-left:4px solid var(--low);padding:12px;background:#f7f8fa}}.finding.severity-critical{{border-color:var(--critical)}}.finding.severity-high{{border-color:var(--high)}}.finding.severity-medium{{border-color:var(--medium)}}.finding code{{display:inline-block;color:var(--muted);font-size:11px}}.finding em{{float:right;color:var(--muted);font:700 11px ui-monospace,monospace}}.finding strong{{display:block;margin:0 0 3px}}.finding p,.finding small{{margin:0;color:var(--muted)}}.technical-details{{margin-top:10px;color:var(--muted)}}.technical-details summary{{cursor:pointer;font-size:12px}}.technical-details p{{clear:both}}.deck-findings{{margin:0 0 32px}}.scoring-policy{{border-left:4px solid #8a3d22;padding:10px 14px;margin:12px 0 0}}.scoring-policy p{{margin:6px 0 0;color:var(--muted)}}
-@media(max-width:800px){{.hero,.readiness{{grid-template-columns:1fr}}.overall{{width:110px;height:110px}}.scores{{grid-template-columns:repeat(2,1fr)}}.slide-card{{grid-template-columns:1fr}}}}
+@media(max-width:800px){{.hero,.readiness{{grid-template-columns:1fr}}.checklist>div{{grid-template-columns:1fr 1fr}}.overall{{width:110px;height:110px}}.scores{{grid-template-columns:repeat(2,1fr)}}.slide-card{{grid-template-columns:1fr}}}}@media(max-width:480px){{.checklist>div{{grid-template-columns:1fr}}main{{padding-left:16px;padding-right:16px}}}}
 </style></head><body><main>
-<section class="hero"><div><span class="eyebrow">PPTLint · PowerPoint delivery check</span><h1>{_escape(file_info["name"])}</h1><p>Checked locally · {_escape(file_info["slides"])} slide{"s" if int(file_info["slides"]) != 1 else ""} · source file unchanged</p></div></section>
+<section class="hero"><div><span class="eyebrow">PPTLint · {"PPT 发送前体检" if zh else "PowerPoint delivery check"}</span><h1>{_escape(file_info["name"])}</h1><p>{("本地检查 · " + str(file_info["slides"]) + " 页 · 原文件未改动") if zh else ("Checked locally · " + str(file_info["slides"]) + (" slide" if int(file_info["slides"]) == 1 else " slides") + " · source file unchanged")}</p></div></section>
 {readiness_panel}
+{checklist_panel}
 <details class="secondary-score"><summary>Secondary score: {_escape(scores["overall"])}/100</summary><p>Use this only to compare the same presentation before and after changes.</p><section class="scores">{score_cards}</section>{scoring_policy}<details class="technical-details"><summary>Run details</summary><p>{_escape(report["profile"])} profile · {_escape(renderer["used"])} renderer</p></details></details>
 {f'<div class="notice">{_escape(renderer["detail"])}</div>' if renderer.get("detail") else ""}
 {f'<section class="deck-findings"><h2>Items that affect the whole file</h2><ul>{deck_items}</ul></section>' if deck_items else ""}

@@ -191,8 +191,8 @@ def test_proof_loop_case_is_schema_valid_and_matches_public_claims() -> None:
     assert "http://" not in site and "https://" in site
 
 
-def test_version_is_031() -> None:
-    assert decklint.__version__ == "0.3.1"
+def test_version_is_032() -> None:
+    assert decklint.__version__ == "0.3.2"
 
 
 def test_homepage_leads_with_agent_instruction_before_cli() -> None:
