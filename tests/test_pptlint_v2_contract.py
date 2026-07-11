@@ -55,6 +55,28 @@ def test_readiness_uses_review_for_non_blocking_delivery_risks() -> None:
     assert len(result.priority_actions) <= 3
 
 
+def test_priority_actions_group_repeated_rule_across_slides() -> None:
+    notes = [
+        Finding(
+            rule_id="privacy.speaker-notes",
+            category="privacy",
+            severity="medium",
+            confidence="high",
+            message="Speaker notes are present.",
+            evidence=f"Slide {slide} contains notes",
+            remediation="Review the notes.",
+            slide_index=slide,
+        )
+        for slide in (1, 2, 3, 4)
+    ]
+
+    result = assess_readiness(notes, renderer_status="ok", language="zh-CN")
+
+    assert len(result.priority_actions) == 1
+    assert result.priority_actions[0]["affectedSlides"] == [1, 2, 3, 4]
+    assert result.priority_actions[0]["findingCount"] == 4
+
+
 def test_pptlint_check_writes_v2_report_with_actionable_findings(
     tmp_path: Path,
     capsys,

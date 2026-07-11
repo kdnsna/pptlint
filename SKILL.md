@@ -13,6 +13,7 @@ description: Use when a user wants to check whether an existing PowerPoint PPTX 
 pptlint check input.pptx \
   --profile ai-generated \
   --renderer auto \
+  --lang zh-CN \
   --output pptlint-report
 ```
 
@@ -22,20 +23,24 @@ pptlint check input.pptx \
 - `readiness.status == review`：文件可以打开，但仍有内容需要人工确认。
 - `readiness.status == ready`：未发现会阻止交付的高置信问题。
 - `priorityActions`：最多三项最先处理的修改。
+- `deliveryChecklist`：文件打开、现场可读、后续可改、隐藏内容四项交付体检。
+- `affectedSlides`：同一类问题涉及的页面；不要把相同动作重复列出。
 
 向用户说明页码、实际影响和 `fixSteps`。不要先展示内部规则编号或总分。
 
 ## 修改后复检
 
-生成独立副本并再次运行 `pptlint check`。如需证明修改前后的变化：
+生成独立副本后，用同一组设置检查修改前后文件并生成完整证据：
 
 ```bash
-pptlint compare before.json after.json \
+pptlint proof before.pptx after.pptx \
+  --profile ai-generated \
+  --lang zh-CN \
   --output pptlint-comparison \
   --fail-on-regression high
 ```
 
-将 `resolved` 解释为“已经解决”，`persistent` 解释为“仍需处理”，`new` 解释为“修改后新增”。
+命令会写出修改前、修改后和对比三组 HTML/JSON。将 `resolved` 解释为“修改后不再报告”，`persistent` 解释为“仍需人工确认”，`new` 解释为“修改后首次报告”。已经存在两份报告时仍可使用 `pptlint compare`。
 
 ## 退出码
 

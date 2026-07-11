@@ -43,7 +43,7 @@ def build_parser() -> argparse.ArgumentParser:
     _add_check_arguments(check, output="pptlint-report", fail_on="none")
     audit = subcommands.add_parser("audit", help="Audit a PPTX and write offline HTML and JSON reports.")
     _add_check_arguments(audit, output="decklint-report", fail_on="high")
-    compare = subcommands.add_parser("compare", help="Compare two DeckLint audit reports.")
+    compare = subcommands.add_parser("compare", help="Compare two PPTLint audit reports.")
     compare.add_argument("before", type=Path, help="Before audit JSON report")
     compare.add_argument("after", type=Path, help="After audit JSON report")
     compare.add_argument(
@@ -53,6 +53,23 @@ def build_parser() -> argparse.ArgumentParser:
         help="Comparison report filename prefix",
     )
     compare.add_argument(
+        "--fail-on-regression",
+        choices=("none", "low", "medium", "high", "critical"),
+        default="high",
+    )
+    proof = subcommands.add_parser(
+        "proof", help="Check two PPTX files and create a complete before/after proof report."
+    )
+    proof.add_argument("before", type=Path, help="PPTX before changes")
+    proof.add_argument("after", type=Path, help="PPTX after changes")
+    proof.add_argument(
+        "--output", type=Path, default=Path("pptlint-proof"), help="Proof report filename prefix"
+    )
+    proof.add_argument("--profile", choices=("baseline", "ai-generated"), default="baseline")
+    proof.add_argument("--renderer", choices=("auto", "wireframe", "libreoffice"), default="auto")
+    proof.add_argument("--soffice-path", help="Optional path to the LibreOffice soffice executable")
+    proof.add_argument("--lang", choices=("en", "zh-CN"), default="en", help="Report language")
+    proof.add_argument(
         "--fail-on-regression",
         choices=("none", "low", "medium", "high", "critical"),
         default="high",
@@ -70,19 +87,50 @@ def _threshold_failed(findings, threshold: str) -> bool:
     )
 
 
+def _action_location(action: dict[str, object], *, zh: bool) -> str:
+    slides = action.get("affectedSlides")
+    if isinstance(slides, list) and slides:
+        numbers = [str(value) for value in slides[:5]]
+        suffix = "等" if zh and len(slides) > 5 else ("…" if len(slides) > 5 else "")
+        return f"第 {'、'.join(numbers)} 页{suffix}" if zh else f"Slides {', '.join(numbers)}{suffix}"
+    slide = action.get("slideIndex")
+    if slide:
+        return f"第 {slide} 页" if zh else f"Slide {slide}"
+    return "整个文件" if zh else "Whole file"
+
+
+def _build_audit_report(
+    source: Path,
+    *,
+    profile: str,
+    renderer: str,
+    soffice_path: str | None,
+    language: str,
+) -> tuple[dict[str, object], list[object]]:
+    source = source.expanduser()
+    deck = load_deck(source)
+    findings = audit_deck(deck, profile=profile)
+    scores = score_findings(findings)
+    rendering = render_deck(
+        deck,
+        source=source,
+        renderer=renderer,
+        soffice_path=soffice_path,
+    )
+    report = build_report(
+        deck, findings, scores, rendering, profile=profile, language=language
+    )
+    return report, findings
+
+
 def _run_audit(args: argparse.Namespace) -> int:
     try:
-        deck = load_deck(args.input.expanduser())
-        findings = audit_deck(deck, profile=args.profile)
-        scores = score_findings(findings)
-        rendering = render_deck(
-            deck,
-            source=args.input.expanduser(),
+        report, findings = _build_audit_report(
+            args.input,
+            profile=args.profile,
             renderer=args.renderer,
             soffice_path=args.soffice_path,
-        )
-        report = build_report(
-            deck, findings, scores, rendering, profile=args.profile, language=args.lang
+            language=args.lang,
         )
         html_path, json_path = write_reports(args.output.expanduser(), report)
     except (DeckLoadError, RenderError, OSError, ValueError) as exc:
@@ -101,8 +149,7 @@ def _run_audit(args: argparse.Namespace) -> int:
     if actions:
         print("先做这几件事：" if zh else "Next actions:")
         for action in actions:
-            slide = action.get("slideIndex")
-            location = f"第 {slide} 页" if zh and slide else ("整个文件" if zh else (f"Slide {slide}" if slide else "Whole file"))
+            location = _action_location(action, zh=zh)
             print(f"- {location}: {action['impact']}")
     else:
         print("没有发现必须处理的高把握交付问题。" if zh else "No high-confidence delivery problem was found.")
@@ -117,7 +164,7 @@ def _run_audit(args: argparse.Namespace) -> int:
     failed = _threshold_failed(findings, args.fail_on)
     if args.command == "check" and report["readiness"]["status"] == "blocked":
         failed = True
-    if args.min_score is not None and scores.overall < args.min_score:
+    if args.min_score is not None and int(report["scores"]["overall"]) < args.min_score:
         failed = True
     return 1 if failed else 0
 
@@ -133,7 +180,7 @@ def _run_compare(args: argparse.Namespace) -> int:
         )
         html_path, json_path = write_comparison_reports(args.output.expanduser(), report)
     except (ComparisonError, OSError, ValueError) as exc:
-        print(f"DeckLint could not compare the reports: {exc}", file=sys.stderr)
+        print(f"PPTLint could not compare the reports: {exc}", file=sys.stderr)
         return 2
 
     overall = report["scores"]["overall"]
@@ -143,8 +190,67 @@ def _run_compare(args: argparse.Namespace) -> int:
     return 0 if report["gate"]["passed"] else 1
 
 
+def _run_proof(args: argparse.Namespace) -> int:
+    try:
+        before, _ = _build_audit_report(
+            args.before,
+            profile=args.profile,
+            renderer=args.renderer,
+            soffice_path=args.soffice_path,
+            language=args.lang,
+        )
+        after, _ = _build_audit_report(
+            args.after,
+            profile=args.profile,
+            renderer=args.renderer,
+            soffice_path=args.soffice_path,
+            language=args.lang,
+        )
+        output = args.output.expanduser()
+        before_paths = write_reports(Path(f"{output}-before"), before)
+        after_paths = write_reports(Path(f"{output}-after"), after)
+        comparison = build_comparison_report(
+            before,
+            after,
+            threshold=args.fail_on_regression,
+        )
+        comparison_paths = write_comparison_reports(output, comparison)
+    except (DeckLoadError, RenderError, ComparisonError, OSError, ValueError) as exc:
+        message = f"PPTLint 无法生成对比证据：{exc}" if args.lang == "zh-CN" else f"PPTLint could not create the proof: {exc}"
+        print(message, file=sys.stderr)
+        return 2
+
+    overall = comparison["scores"]["overall"]
+    resolved = len(comparison["resolved"])
+    remaining = len(comparison["persistent"])
+    new = len(comparison["new"])
+    new_high = sum(
+        1
+        for finding in comparison["new"]
+        if finding.get("confidence") == "high"
+        and SEVERITY_RANK.get(str(finding.get("severity")), 0) >= SEVERITY_RANK["high"]
+    )
+    if args.lang == "zh-CN":
+        print(f"PPTLint 对比：{overall['before']} → {overall['after']}（{int(overall['delta']):+d}）")
+        print(f"已处理 {resolved} 项 · 仍有 {remaining} 项 · 新增 {new} 项 · 新增高把握问题 {new_high} 项")
+        print(f"修改前报告：{before_paths[0]}")
+        print(f"修改后报告：{after_paths[0]}")
+        print(f"完整对比：{comparison_paths[0]}")
+        print("说明：分数只用于比较同一份文件，不代表审美满分或绝对零风险。")
+    else:
+        print(f"PPTLint proof: {overall['before']} -> {overall['after']} ({int(overall['delta']):+d})")
+        print(f"Resolved {resolved} · Remaining {remaining} · New {new} · New high-confidence {new_high}")
+        print(f"Before report: {before_paths[0]}")
+        print(f"After report: {after_paths[0]}")
+        print(f"Complete comparison: {comparison_paths[0]}")
+        print("Note: the score compares this deck before and after; it is not an aesthetic or zero-risk guarantee.")
+    return 0 if comparison["gate"]["passed"] else 1
+
+
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     if args.command == "compare":
         return _run_compare(args)
+    if args.command == "proof":
+        return _run_proof(args)
     return _run_audit(args)

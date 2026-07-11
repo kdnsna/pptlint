@@ -52,15 +52,13 @@ uvx pptlint check output.pptx --profile ai-generated --lang zh-CN
 
 ## 修改后再次检查
 
-保留原文件，修改独立副本，然后比较两次结果：
+保留原文件和修改后的独立副本，用一条命令生成完整证据：
 
 ```bash
-pptlint check before.pptx --output before
-pptlint check after.pptx --output after
-pptlint compare before.json after.json --output comparison
+pptlint proof before.pptx after.pptx --profile ai-generated --lang zh-CN --output comparison
 ```
 
-比较报告会分别显示已经解决、仍需处理和修改后新增的问题。
+命令会同时生成修改前报告、修改后报告和完整对比报告，分别显示已经处理、仍需处理和修改后新增的提醒。如果已经有两份 JSON 报告，原来的 `pptlint compare before.json after.json` 仍然可用。
 
 ## GitHub Actions
 
@@ -92,6 +90,6 @@ pptlint compare before.json after.json --output comparison
 - 修改前后比较：[`decklint-comparison/v1`](schema/decklint-comparison-v1.schema.json)
 - 退出码 `0`：完成；`1`：需要修改；`2`：文件或运行错误。
 
-旧 `decklint` 命令保留到 v0.4，旧报告仍可继续比较。
+旧 `decklint` 命令在 v0.4 中继续保留，旧报告仍可继续比较。
 
 PPTLint 本地运行、只读、不调用模型、不收集使用数据，采用 MIT 许可证。

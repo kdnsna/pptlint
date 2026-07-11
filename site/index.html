@@ -32,7 +32,7 @@
       <div class="hero-copy">
         <div class="eyebrow">LOCAL POWERPOINT PREFLIGHT</div>
         <h1>Is this PowerPoint ready to send?</h1>
-        <p><strong>See what breaks before your audience does.</strong> PPTLint finds the clipped text, overlaps, flattened slides, hidden notes and broken files that make an AI-generated deck unsafe to send.</p>
+        <p><strong>See the delivery risks before your audience does.</strong> PPTLint flags clipping risks, substantial overlaps, flattened slides, hidden notes and broken files that should be checked before an AI-generated deck is sent.</p>
         <div class="actions"><a class="button primary" href="#start">Check my PPTX</a><a class="button" href="proof-loop/comparison.html">See the real proof</a></div>
         <div class="trust-strip" aria-label="Privacy and product guarantees"><span>LOCAL</span><span>READ-ONLY</span><span>NO UPLOAD</span><span>NO MODEL</span></div>
       </div>
@@ -47,13 +47,15 @@
     <div id="start" class="quickstart">
       <div class="agent-prompt"><strong>Ask your coding agent</strong><p id="agent-command">Install PPTLint and check whether this PowerPoint is ready to send. Show me the slides I must fix first and the exact PowerPoint steps.</p><button class="copy-button" type="button" data-copy="agent-command">Copy agent prompt</button></div>
       <div class="command-wrap"><pre id="cli-command">uvx pptlint check output.pptx --profile ai-generated</pre><button class="copy-button" type="button" data-copy="cli-command">Copy command</button></div>
+      <p class="note">Already have the original and edited copy? Create the complete before/after evidence pack in one command.</p>
+      <div class="command-wrap"><pre id="proof-command">uvx pptlint proof before.pptx after.pptx --profile ai-generated --output comparison</pre><button class="copy-button" type="button" data-copy="proof-command">Copy proof command</button></div>
       <div class="actions"><a class="button" href="https://github.com/kdnsna/pptlint">GitHub &amp; install guide</a><a class="button" href="benchmark/">See how five AI PowerPoint tools will be checked</a></div>
       <aside class="creation-path"><strong>Need to create or repair the deck first?</strong><p>Ultimate PPT Master turns source material into editable PPTX or Web Decks; PPTLint independently checks the result before delivery.</p><a href="https://github.com/kdnsna/ultimate-ppt-master-skill">Create or repair with Ultimate PPT Master →</a></aside>
     </div>
   </header>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"PPTLint","applicationCategory":"DeveloperApplication","operatingSystem":"Windows, macOS, Linux","url":"https://kdnsna.github.io/pptlint/","downloadUrl":"https://pypi.org/project/pptlint/","codeRepository":"https://github.com/kdnsna/pptlint","description":"Local, read-only preflight checks for AI-generated PowerPoint files.","license":"https://opensource.org/licenses/MIT"}</script>
 
-  <h2>One answer, then the next three actions</h2>
+  <h2>Four delivery questions, then three distinct actions</h2>
   <section class="result">
     <article><strong>Ready to send</strong><span>No high-confidence delivery problem was found.</span></article>
     <article><strong>Check before sending</strong><span>Open the named slides and confirm the highlighted items.</span></article>

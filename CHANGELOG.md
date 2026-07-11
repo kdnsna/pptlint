@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.0 — 2026-07-12
+
+- Add `pptlint proof BEFORE.pptx AFTER.pptx` for a complete local before/after evidence pack.
+- Check both files with identical settings and write the two source reports plus one comparison report.
+- Summarize score change, resolved reminders, remaining reminders, new reminders, and new high-confidence problems in the terminal.
+- Keep the source presentations unchanged and state the score boundary in every proof run.
+
 ## 0.3.2 — 2026-07-12
 
 - Add `--lang zh-CN` for plain Chinese terminal guidance and action-first HTML reports.

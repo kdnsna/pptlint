@@ -155,3 +155,64 @@ def test_compare_cli_returns_two_without_partial_outputs(tmp_path: Path) -> None
     assert exit_code == 2
     assert not (tmp_path / "comparison.html").exists()
     assert not (tmp_path / "comparison.json").exists()
+
+
+def test_proof_cli_checks_two_pptx_files_and_writes_complete_evidence(
+    tmp_path: Path,
+    capsys,
+) -> None:
+    before = write_pptx(tmp_path / "before.pptx", broken_relationship=True)
+    after = write_pptx(tmp_path / "after.pptx")
+    output = tmp_path / "proof"
+
+    exit_code = main(
+        [
+            "proof",
+            str(before),
+            str(after),
+            "--renderer",
+            "wireframe",
+            "--lang",
+            "zh-CN",
+            "--output",
+            str(output),
+        ]
+    )
+
+    comparison = json.loads(output.with_suffix(".json").read_text(encoding="utf-8"))
+    terminal = capsys.readouterr().out
+    assert exit_code == 0
+    assert (tmp_path / "proof-before.html").is_file()
+    assert (tmp_path / "proof-before.json").is_file()
+    assert (tmp_path / "proof-after.html").is_file()
+    assert (tmp_path / "proof-after.json").is_file()
+    assert output.with_suffix(".html").is_file()
+    assert comparison["gate"]["passed"] is True
+    assert len(comparison["resolved"]) >= 1
+    assert "PPTLint 对比" in terminal
+    assert "新增高把握问题 0 项" in terminal
+    assert "不代表审美满分" in terminal
+
+
+def test_proof_cli_returns_two_without_outputs_when_an_input_is_invalid(tmp_path: Path) -> None:
+    before = write_pptx(tmp_path / "before.pptx")
+    after = tmp_path / "invalid.pptx"
+    after.write_text("not a zip", encoding="utf-8")
+    output = tmp_path / "proof"
+
+    exit_code = main(
+        [
+            "proof",
+            str(before),
+            str(after),
+            "--renderer",
+            "wireframe",
+            "--output",
+            str(output),
+        ]
+    )
+
+    assert exit_code == 2
+    assert not output.with_suffix(".json").exists()
+    assert not (tmp_path / "proof-before.json").exists()
+    assert not (tmp_path / "proof-after.json").exists()

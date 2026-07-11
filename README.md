@@ -62,15 +62,13 @@ The first screen answers four ordinary delivery questions and shows the three mo
 
 ## Check changes
 
-Keep the original file, check a separate edited copy, and compare the two reports:
+Keep the original file and a separate edited copy, then create the complete proof pack in one command:
 
 ```bash
-pptlint check before.pptx --output before
-pptlint check after.pptx --output after
-pptlint compare before.json after.json --output comparison
+pptlint proof before.pptx after.pptx --profile ai-generated --output comparison
 ```
 
-The comparison separates problems that were fixed, problems that remain, and problems introduced by the edit.
+This writes the before report, after report, and comparison report. The comparison separates reported items that were resolved, items that remain, and items introduced by the edit. The existing `compare` command remains available for already-generated JSON reports.
 
 ## Use it in GitHub Actions
 
@@ -102,7 +100,7 @@ Low-confidence hints never block delivery. PPTLint does not judge whether a pres
 - Comparison format: [`decklint-comparison/v1`](schema/decklint-comparison-v1.schema.json)
 - Exit code `0`: completed; `1`: changes required; `2`: file or runtime error.
 
-The previous `decklint` command remains available through v0.4. Existing v1 reports can still be compared.
+The previous `decklint` command remains available in v0.4. Existing v1 reports can still be compared.
 
 ## Development
 

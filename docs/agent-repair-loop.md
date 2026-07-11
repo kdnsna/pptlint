@@ -29,22 +29,17 @@ pptlint check before.pptx \
 
 生成器只修改被 finding 或人工 QA 明确命中的页面，输出 `after.pptx`，不得覆盖 `before.pptx`。
 
-## 4. 复审
+## 4. 复审并比较
 
 ```bash
-pptlint check after.pptx \
+pptlint proof before.pptx after.pptx \
   --profile ai-generated \
   --renderer auto \
-  --fail-on high \
-  --output after-report
-```
-
-## 5. 比较并阻断回归
-
-```bash
-pptlint compare before-report.json after-report.json \
-  --output decklint-comparison \
+  --lang zh-CN \
+  --output comparison \
   --fail-on-regression high
 ```
 
-只有 `gate.passed == true`、没有新的 high/critical finding 且目标维度未下降时，才能将改造描述为规则证据支持的改善。人工视觉润色必须单独列出。
+该命令会使用相同设置生成 `comparison-before`、`comparison-after` 和 `comparison` 三组 HTML/JSON。若已经分别生成两份 JSON，仍可使用 `pptlint compare before-report.json after-report.json`。
+
+只有 `gate.passed == true`、没有新的 high/critical finding 且目标维度未下降时，才能将改造描述为规则证据支持的改善。`resolved` 只表示对应提醒在修改后不再报告，不代表审美完美或绝对零风险。人工视觉润色必须单独列出。

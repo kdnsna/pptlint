@@ -243,14 +243,27 @@ def assess_readiness(
             item[0].rule_id,
         ),
     )
-    actions = [
-        {
-            "ruleId": finding.rule_id,
-            "slideIndex": finding.slide_index,
-            "disposition": detail["disposition"],
-            "impact": detail["impact"],
-            "fixSteps": detail["fixSteps"],
-        }
-        for finding, detail in ordered[:3]
-    ]
+    actions: list[dict[str, object]] = []
+    seen_rules: set[str] = set()
+    for finding, detail in ordered:
+        if finding.rule_id in seen_rules:
+            continue
+        seen_rules.add(finding.rule_id)
+        related = [item for item, _ in enriched if item.rule_id == finding.rule_id]
+        affected_slides = sorted(
+            {item.slide_index for item in related if item.slide_index is not None}
+        )
+        actions.append(
+            {
+                "ruleId": finding.rule_id,
+                "slideIndex": finding.slide_index,
+                "affectedSlides": affected_slides,
+                "findingCount": len(related),
+                "disposition": detail["disposition"],
+                "impact": detail["impact"],
+                "fixSteps": detail["fixSteps"],
+            }
+        )
+        if len(actions) == 3:
+            break
     return ReadinessResult(status=status, reasons=reasons, priority_actions=actions)

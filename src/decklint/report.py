@@ -148,6 +148,18 @@ def _escape(value: object) -> str:
     return html.escape(str(value), quote=True)
 
 
+def _action_location(action: dict[str, object], *, zh: bool) -> str:
+    slides = action.get("affectedSlides")
+    if isinstance(slides, list) and slides:
+        shown = [str(value) for value in slides[:5]]
+        suffix = "等" if zh and len(slides) > 5 else ("…" if len(slides) > 5 else "")
+        return f"第 {'、'.join(shown)} 页{suffix}" if zh else f"Slides {', '.join(shown)}{suffix}"
+    slide = action.get("slideIndex")
+    if slide:
+        return f"第 {slide} 页" if zh else f"Slide {slide}"
+    return "整个文件" if zh else "Whole file"
+
+
 def _render_html(report: dict[str, object]) -> str:
     file_info = report["file"]
     scores = report["scores"]
@@ -201,7 +213,7 @@ def _render_html(report: dict[str, object]) -> str:
     action_items = "".join(
         "<li>"
         f"<span>{_escape(disposition_labels[str(action['disposition'])])} · "
-        f"{_escape(('第 ' + str(action['slideIndex']) + ' 页') if zh and action.get('slideIndex') else ('整个文件' if zh else ('Slide ' + str(action['slideIndex']) if action.get('slideIndex') else 'Whole file')))}</span>"
+        f"{_escape(_action_location(action, zh=zh))}</span>"
         f"<strong>{_escape(action['impact'])}</strong>"
         + "<ol>"
         + "".join(f"<li>{_escape(step)}</li>" for step in action["fixSteps"])
