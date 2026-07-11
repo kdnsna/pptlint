@@ -1,0 +1,29 @@
+name: Add an AI presentation project
+description: Propose a generator for the open PowerPoint delivery check or request Action integration.
+title: "[Generator] "
+labels: [integration]
+body:
+  - type: input
+    id: repository
+    attributes:
+      label: Public repository
+      placeholder: https://github.com/owner/project
+    validations:
+      required: true
+  - type: dropdown
+    id: request
+    attributes:
+      label: Request
+      options:
+        - Add this project to the controlled benchmark
+        - Add PPTLint to this project's GitHub Actions
+        - Re-run an existing benchmark result
+    validations:
+      required: true
+  - type: textarea
+    id: instructions
+    attributes:
+      label: Recommended generation instructions
+      description: Link to the project's documented recommended model, provider, and export workflow.
+    validations:
+      required: true

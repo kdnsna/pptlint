@@ -52,6 +52,56 @@
       "expectedRule": ""
     },
     {
+      "file": "clean-11.pptx",
+      "label": "clean native deck",
+      "expectedRule": ""
+    },
+    {
+      "file": "clean-12.pptx",
+      "label": "clean native deck",
+      "expectedRule": ""
+    },
+    {
+      "file": "clean-13.pptx",
+      "label": "clean native deck",
+      "expectedRule": ""
+    },
+    {
+      "file": "clean-14.pptx",
+      "label": "clean native deck",
+      "expectedRule": ""
+    },
+    {
+      "file": "clean-15.pptx",
+      "label": "clean native deck",
+      "expectedRule": ""
+    },
+    {
+      "file": "clean-16.pptx",
+      "label": "clean native deck",
+      "expectedRule": ""
+    },
+    {
+      "file": "clean-17.pptx",
+      "label": "clean native deck",
+      "expectedRule": ""
+    },
+    {
+      "file": "clean-18.pptx",
+      "label": "clean native deck",
+      "expectedRule": ""
+    },
+    {
+      "file": "clean-19.pptx",
+      "label": "clean native deck",
+      "expectedRule": ""
+    },
+    {
+      "file": "clean-20.pptx",
+      "label": "clean native deck",
+      "expectedRule": ""
+    },
+    {
       "file": "small-font-01.pptx",
       "label": "explicit small text",
       "expectedRule": "readability.small-font"
@@ -73,6 +123,31 @@
     },
     {
       "file": "small-font-05.pptx",
+      "label": "explicit small text",
+      "expectedRule": "readability.small-font"
+    },
+    {
+      "file": "small-font-06.pptx",
+      "label": "explicit small text",
+      "expectedRule": "readability.small-font"
+    },
+    {
+      "file": "small-font-07.pptx",
+      "label": "explicit small text",
+      "expectedRule": "readability.small-font"
+    },
+    {
+      "file": "small-font-08.pptx",
+      "label": "explicit small text",
+      "expectedRule": "readability.small-font"
+    },
+    {
+      "file": "small-font-09.pptx",
+      "label": "explicit small text",
+      "expectedRule": "readability.small-font"
+    },
+    {
+      "file": "small-font-10.pptx",
       "label": "explicit small text",
       "expectedRule": "readability.small-font"
     },
@@ -102,6 +177,31 @@
       "expectedRule": "editability.full-slide-image"
     },
     {
+      "file": "flattened-06.pptx",
+      "label": "full-slide raster",
+      "expectedRule": "editability.full-slide-image"
+    },
+    {
+      "file": "flattened-07.pptx",
+      "label": "full-slide raster",
+      "expectedRule": "editability.full-slide-image"
+    },
+    {
+      "file": "flattened-08.pptx",
+      "label": "full-slide raster",
+      "expectedRule": "editability.full-slide-image"
+    },
+    {
+      "file": "flattened-09.pptx",
+      "label": "full-slide raster",
+      "expectedRule": "editability.full-slide-image"
+    },
+    {
+      "file": "flattened-10.pptx",
+      "label": "full-slide raster",
+      "expectedRule": "editability.full-slide-image"
+    },
+    {
       "file": "untitled-01.pptx",
       "label": "missing title placeholder",
       "expectedRule": "accessibility.missing-title"
@@ -117,6 +217,16 @@
       "expectedRule": "accessibility.missing-title"
     },
     {
+      "file": "untitled-04.pptx",
+      "label": "missing title placeholder",
+      "expectedRule": "accessibility.missing-title"
+    },
+    {
+      "file": "untitled-05.pptx",
+      "label": "missing title placeholder",
+      "expectedRule": "accessibility.missing-title"
+    },
+    {
       "file": "low-contrast-01.pptx",
       "label": "explicit low contrast",
       "expectedRule": "readability.low-contrast"
@@ -127,12 +237,27 @@
       "expectedRule": "readability.low-contrast"
     },
     {
+      "file": "low-contrast-03.pptx",
+      "label": "explicit low contrast",
+      "expectedRule": "readability.low-contrast"
+    },
+    {
+      "file": "low-contrast-04.pptx",
+      "label": "explicit low contrast",
+      "expectedRule": "readability.low-contrast"
+    },
+    {
+      "file": "low-contrast-05.pptx",
+      "label": "explicit low contrast",
+      "expectedRule": "readability.low-contrast"
+    },
+    {
       "file": "privacy-01.pptx",
       "label": "personal metadata",
       "expectedRule": "privacy.personal-metadata"
     },
     {
-      "file": "privacy-02.pptx",
+      "file": "comments-01.pptx",
       "label": "comments",
       "expectedRule": "privacy.comments"
     },
@@ -150,6 +275,231 @@
       "file": "off-canvas-01.pptx",
       "label": "text outside canvas",
       "expectedRule": "readability.off-canvas-text"
+    },
+    {
+      "file": "missing-content-type-01.pptx",
+      "label": "media content type missing",
+      "expectedRule": "integrity.missing-content-type"
+    },
+    {
+      "file": "blank-01.pptx",
+      "label": "blank slide",
+      "expectedRule": "readability.blank-slide"
+    },
+    {
+      "file": "overlap-01.pptx",
+      "label": "substantial text overlap",
+      "expectedRule": "readability.text-overlap"
+    },
+    {
+      "file": "clipping-01.pptx",
+      "label": "explicit text clipping risk",
+      "expectedRule": "readability.text-clipping-risk"
+    },
+    {
+      "file": "aspect-01.pptx",
+      "label": "unusual slide aspect ratio",
+      "expectedRule": "readability.unusual-aspect-ratio"
+    },
+    {
+      "file": "privacy-02.pptx",
+      "label": "personal metadata",
+      "expectedRule": "privacy.personal-metadata"
+    },
+    {
+      "file": "comments-02.pptx",
+      "label": "comments",
+      "expectedRule": "privacy.comments"
+    },
+    {
+      "file": "hidden-02.pptx",
+      "label": "hidden slide",
+      "expectedRule": "privacy.hidden-slide"
+    },
+    {
+      "file": "repeated-layout-02.pptx",
+      "label": "three repeated layouts",
+      "expectedRule": "consistency.repeated-layout"
+    },
+    {
+      "file": "off-canvas-02.pptx",
+      "label": "text outside canvas",
+      "expectedRule": "readability.off-canvas-text"
+    },
+    {
+      "file": "missing-content-type-02.pptx",
+      "label": "media content type missing",
+      "expectedRule": "integrity.missing-content-type"
+    },
+    {
+      "file": "blank-02.pptx",
+      "label": "blank slide",
+      "expectedRule": "readability.blank-slide"
+    },
+    {
+      "file": "overlap-02.pptx",
+      "label": "substantial text overlap",
+      "expectedRule": "readability.text-overlap"
+    },
+    {
+      "file": "clipping-02.pptx",
+      "label": "explicit text clipping risk",
+      "expectedRule": "readability.text-clipping-risk"
+    },
+    {
+      "file": "aspect-02.pptx",
+      "label": "unusual slide aspect ratio",
+      "expectedRule": "readability.unusual-aspect-ratio"
+    },
+    {
+      "file": "privacy-03.pptx",
+      "label": "personal metadata",
+      "expectedRule": "privacy.personal-metadata"
+    },
+    {
+      "file": "comments-03.pptx",
+      "label": "comments",
+      "expectedRule": "privacy.comments"
+    },
+    {
+      "file": "hidden-03.pptx",
+      "label": "hidden slide",
+      "expectedRule": "privacy.hidden-slide"
+    },
+    {
+      "file": "repeated-layout-03.pptx",
+      "label": "three repeated layouts",
+      "expectedRule": "consistency.repeated-layout"
+    },
+    {
+      "file": "off-canvas-03.pptx",
+      "label": "text outside canvas",
+      "expectedRule": "readability.off-canvas-text"
+    },
+    {
+      "file": "missing-content-type-03.pptx",
+      "label": "media content type missing",
+      "expectedRule": "integrity.missing-content-type"
+    },
+    {
+      "file": "blank-03.pptx",
+      "label": "blank slide",
+      "expectedRule": "readability.blank-slide"
+    },
+    {
+      "file": "overlap-03.pptx",
+      "label": "substantial text overlap",
+      "expectedRule": "readability.text-overlap"
+    },
+    {
+      "file": "clipping-03.pptx",
+      "label": "explicit text clipping risk",
+      "expectedRule": "readability.text-clipping-risk"
+    },
+    {
+      "file": "aspect-03.pptx",
+      "label": "unusual slide aspect ratio",
+      "expectedRule": "readability.unusual-aspect-ratio"
+    },
+    {
+      "file": "privacy-04.pptx",
+      "label": "personal metadata",
+      "expectedRule": "privacy.personal-metadata"
+    },
+    {
+      "file": "comments-04.pptx",
+      "label": "comments",
+      "expectedRule": "privacy.comments"
+    },
+    {
+      "file": "hidden-04.pptx",
+      "label": "hidden slide",
+      "expectedRule": "privacy.hidden-slide"
+    },
+    {
+      "file": "repeated-layout-04.pptx",
+      "label": "three repeated layouts",
+      "expectedRule": "consistency.repeated-layout"
+    },
+    {
+      "file": "off-canvas-04.pptx",
+      "label": "text outside canvas",
+      "expectedRule": "readability.off-canvas-text"
+    },
+    {
+      "file": "missing-content-type-04.pptx",
+      "label": "media content type missing",
+      "expectedRule": "integrity.missing-content-type"
+    },
+    {
+      "file": "blank-04.pptx",
+      "label": "blank slide",
+      "expectedRule": "readability.blank-slide"
+    },
+    {
+      "file": "overlap-04.pptx",
+      "label": "substantial text overlap",
+      "expectedRule": "readability.text-overlap"
+    },
+    {
+      "file": "clipping-04.pptx",
+      "label": "explicit text clipping risk",
+      "expectedRule": "readability.text-clipping-risk"
+    },
+    {
+      "file": "aspect-04.pptx",
+      "label": "unusual slide aspect ratio",
+      "expectedRule": "readability.unusual-aspect-ratio"
+    },
+    {
+      "file": "privacy-05.pptx",
+      "label": "personal metadata",
+      "expectedRule": "privacy.personal-metadata"
+    },
+    {
+      "file": "comments-05.pptx",
+      "label": "comments",
+      "expectedRule": "privacy.comments"
+    },
+    {
+      "file": "hidden-05.pptx",
+      "label": "hidden slide",
+      "expectedRule": "privacy.hidden-slide"
+    },
+    {
+      "file": "repeated-layout-05.pptx",
+      "label": "three repeated layouts",
+      "expectedRule": "consistency.repeated-layout"
+    },
+    {
+      "file": "off-canvas-05.pptx",
+      "label": "text outside canvas",
+      "expectedRule": "readability.off-canvas-text"
+    },
+    {
+      "file": "missing-content-type-05.pptx",
+      "label": "media content type missing",
+      "expectedRule": "integrity.missing-content-type"
+    },
+    {
+      "file": "blank-05.pptx",
+      "label": "blank slide",
+      "expectedRule": "readability.blank-slide"
+    },
+    {
+      "file": "overlap-05.pptx",
+      "label": "substantial text overlap",
+      "expectedRule": "readability.text-overlap"
+    },
+    {
+      "file": "clipping-05.pptx",
+      "label": "explicit text clipping risk",
+      "expectedRule": "readability.text-clipping-risk"
+    },
+    {
+      "file": "aspect-05.pptx",
+      "label": "unusual slide aspect ratio",
+      "expectedRule": "readability.unusual-aspect-ratio"
     }
   ]
 }

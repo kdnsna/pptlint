@@ -1,0 +1,410 @@
+{
+  "runs": [
+    {
+      "projectCommit": "02d489b095d7422c410785c3afbe522e1ffab173",
+      "projectId": "ppt-master",
+      "repetition": 1,
+      "runId": "ppt-master--qbr-cn--01",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "qbr-cn"
+    },
+    {
+      "projectCommit": "02d489b095d7422c410785c3afbe522e1ffab173",
+      "projectId": "ppt-master",
+      "repetition": 2,
+      "runId": "ppt-master--qbr-cn--02",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "qbr-cn"
+    },
+    {
+      "projectCommit": "02d489b095d7422c410785c3afbe522e1ffab173",
+      "projectId": "ppt-master",
+      "repetition": 3,
+      "runId": "ppt-master--qbr-cn--03",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "qbr-cn"
+    },
+    {
+      "projectCommit": "02d489b095d7422c410785c3afbe522e1ffab173",
+      "projectId": "ppt-master",
+      "repetition": 1,
+      "runId": "ppt-master--technical-en--01",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "technical-en"
+    },
+    {
+      "projectCommit": "02d489b095d7422c410785c3afbe522e1ffab173",
+      "projectId": "ppt-master",
+      "repetition": 2,
+      "runId": "ppt-master--technical-en--02",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "technical-en"
+    },
+    {
+      "projectCommit": "02d489b095d7422c410785c3afbe522e1ffab173",
+      "projectId": "ppt-master",
+      "repetition": 3,
+      "runId": "ppt-master--technical-en--03",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "technical-en"
+    },
+    {
+      "projectCommit": "02d489b095d7422c410785c3afbe522e1ffab173",
+      "projectId": "ppt-master",
+      "repetition": 1,
+      "runId": "ppt-master--launch-cn--01",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "launch-cn"
+    },
+    {
+      "projectCommit": "02d489b095d7422c410785c3afbe522e1ffab173",
+      "projectId": "ppt-master",
+      "repetition": 2,
+      "runId": "ppt-master--launch-cn--02",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "launch-cn"
+    },
+    {
+      "projectCommit": "02d489b095d7422c410785c3afbe522e1ffab173",
+      "projectId": "ppt-master",
+      "repetition": 3,
+      "runId": "ppt-master--launch-cn--03",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "launch-cn"
+    },
+    {
+      "projectCommit": "220e206458ec039abdc2a33b8253e89dc62d7daa",
+      "projectId": "presenton",
+      "repetition": 1,
+      "runId": "presenton--qbr-cn--01",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "qbr-cn"
+    },
+    {
+      "projectCommit": "220e206458ec039abdc2a33b8253e89dc62d7daa",
+      "projectId": "presenton",
+      "repetition": 2,
+      "runId": "presenton--qbr-cn--02",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "qbr-cn"
+    },
+    {
+      "projectCommit": "220e206458ec039abdc2a33b8253e89dc62d7daa",
+      "projectId": "presenton",
+      "repetition": 3,
+      "runId": "presenton--qbr-cn--03",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "qbr-cn"
+    },
+    {
+      "projectCommit": "220e206458ec039abdc2a33b8253e89dc62d7daa",
+      "projectId": "presenton",
+      "repetition": 1,
+      "runId": "presenton--technical-en--01",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "technical-en"
+    },
+    {
+      "projectCommit": "220e206458ec039abdc2a33b8253e89dc62d7daa",
+      "projectId": "presenton",
+      "repetition": 2,
+      "runId": "presenton--technical-en--02",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "technical-en"
+    },
+    {
+      "projectCommit": "220e206458ec039abdc2a33b8253e89dc62d7daa",
+      "projectId": "presenton",
+      "repetition": 3,
+      "runId": "presenton--technical-en--03",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "technical-en"
+    },
+    {
+      "projectCommit": "220e206458ec039abdc2a33b8253e89dc62d7daa",
+      "projectId": "presenton",
+      "repetition": 1,
+      "runId": "presenton--launch-cn--01",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "launch-cn"
+    },
+    {
+      "projectCommit": "220e206458ec039abdc2a33b8253e89dc62d7daa",
+      "projectId": "presenton",
+      "repetition": 2,
+      "runId": "presenton--launch-cn--02",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "launch-cn"
+    },
+    {
+      "projectCommit": "220e206458ec039abdc2a33b8253e89dc62d7daa",
+      "projectId": "presenton",
+      "repetition": 3,
+      "runId": "presenton--launch-cn--03",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "launch-cn"
+    },
+    {
+      "projectCommit": "2419d30b134a71486523e95ded60b32489fd3c61",
+      "projectId": "pptagent",
+      "repetition": 1,
+      "runId": "pptagent--qbr-cn--01",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "qbr-cn"
+    },
+    {
+      "projectCommit": "2419d30b134a71486523e95ded60b32489fd3c61",
+      "projectId": "pptagent",
+      "repetition": 2,
+      "runId": "pptagent--qbr-cn--02",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "qbr-cn"
+    },
+    {
+      "projectCommit": "2419d30b134a71486523e95ded60b32489fd3c61",
+      "projectId": "pptagent",
+      "repetition": 3,
+      "runId": "pptagent--qbr-cn--03",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "qbr-cn"
+    },
+    {
+      "projectCommit": "2419d30b134a71486523e95ded60b32489fd3c61",
+      "projectId": "pptagent",
+      "repetition": 1,
+      "runId": "pptagent--technical-en--01",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "technical-en"
+    },
+    {
+      "projectCommit": "2419d30b134a71486523e95ded60b32489fd3c61",
+      "projectId": "pptagent",
+      "repetition": 2,
+      "runId": "pptagent--technical-en--02",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "technical-en"
+    },
+    {
+      "projectCommit": "2419d30b134a71486523e95ded60b32489fd3c61",
+      "projectId": "pptagent",
+      "repetition": 3,
+      "runId": "pptagent--technical-en--03",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "technical-en"
+    },
+    {
+      "projectCommit": "2419d30b134a71486523e95ded60b32489fd3c61",
+      "projectId": "pptagent",
+      "repetition": 1,
+      "runId": "pptagent--launch-cn--01",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "launch-cn"
+    },
+    {
+      "projectCommit": "2419d30b134a71486523e95ded60b32489fd3c61",
+      "projectId": "pptagent",
+      "repetition": 2,
+      "runId": "pptagent--launch-cn--02",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "launch-cn"
+    },
+    {
+      "projectCommit": "2419d30b134a71486523e95ded60b32489fd3c61",
+      "projectId": "pptagent",
+      "repetition": 3,
+      "runId": "pptagent--launch-cn--03",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "launch-cn"
+    },
+    {
+      "projectCommit": "5eec4191427298bf4847fc55d4824248b8386be7",
+      "projectId": "codex-ppt-skill",
+      "repetition": 1,
+      "runId": "codex-ppt-skill--qbr-cn--01",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "qbr-cn"
+    },
+    {
+      "projectCommit": "5eec4191427298bf4847fc55d4824248b8386be7",
+      "projectId": "codex-ppt-skill",
+      "repetition": 2,
+      "runId": "codex-ppt-skill--qbr-cn--02",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "qbr-cn"
+    },
+    {
+      "projectCommit": "5eec4191427298bf4847fc55d4824248b8386be7",
+      "projectId": "codex-ppt-skill",
+      "repetition": 3,
+      "runId": "codex-ppt-skill--qbr-cn--03",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "qbr-cn"
+    },
+    {
+      "projectCommit": "5eec4191427298bf4847fc55d4824248b8386be7",
+      "projectId": "codex-ppt-skill",
+      "repetition": 1,
+      "runId": "codex-ppt-skill--technical-en--01",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "technical-en"
+    },
+    {
+      "projectCommit": "5eec4191427298bf4847fc55d4824248b8386be7",
+      "projectId": "codex-ppt-skill",
+      "repetition": 2,
+      "runId": "codex-ppt-skill--technical-en--02",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "technical-en"
+    },
+    {
+      "projectCommit": "5eec4191427298bf4847fc55d4824248b8386be7",
+      "projectId": "codex-ppt-skill",
+      "repetition": 3,
+      "runId": "codex-ppt-skill--technical-en--03",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "technical-en"
+    },
+    {
+      "projectCommit": "5eec4191427298bf4847fc55d4824248b8386be7",
+      "projectId": "codex-ppt-skill",
+      "repetition": 1,
+      "runId": "codex-ppt-skill--launch-cn--01",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "launch-cn"
+    },
+    {
+      "projectCommit": "5eec4191427298bf4847fc55d4824248b8386be7",
+      "projectId": "codex-ppt-skill",
+      "repetition": 2,
+      "runId": "codex-ppt-skill--launch-cn--02",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "launch-cn"
+    },
+    {
+      "projectCommit": "5eec4191427298bf4847fc55d4824248b8386be7",
+      "projectId": "codex-ppt-skill",
+      "repetition": 3,
+      "runId": "codex-ppt-skill--launch-cn--03",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "launch-cn"
+    },
+    {
+      "projectCommit": "5e0bd0d607fae101dfa74c7e5c78f5d6d39bc6eb",
+      "projectId": "ultimate-ppt-master",
+      "repetition": 1,
+      "runId": "ultimate-ppt-master--qbr-cn--01",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "qbr-cn"
+    },
+    {
+      "projectCommit": "5e0bd0d607fae101dfa74c7e5c78f5d6d39bc6eb",
+      "projectId": "ultimate-ppt-master",
+      "repetition": 2,
+      "runId": "ultimate-ppt-master--qbr-cn--02",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "qbr-cn"
+    },
+    {
+      "projectCommit": "5e0bd0d607fae101dfa74c7e5c78f5d6d39bc6eb",
+      "projectId": "ultimate-ppt-master",
+      "repetition": 3,
+      "runId": "ultimate-ppt-master--qbr-cn--03",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "qbr-cn"
+    },
+    {
+      "projectCommit": "5e0bd0d607fae101dfa74c7e5c78f5d6d39bc6eb",
+      "projectId": "ultimate-ppt-master",
+      "repetition": 1,
+      "runId": "ultimate-ppt-master--technical-en--01",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "technical-en"
+    },
+    {
+      "projectCommit": "5e0bd0d607fae101dfa74c7e5c78f5d6d39bc6eb",
+      "projectId": "ultimate-ppt-master",
+      "repetition": 2,
+      "runId": "ultimate-ppt-master--technical-en--02",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "technical-en"
+    },
+    {
+      "projectCommit": "5e0bd0d607fae101dfa74c7e5c78f5d6d39bc6eb",
+      "projectId": "ultimate-ppt-master",
+      "repetition": 3,
+      "runId": "ultimate-ppt-master--technical-en--03",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "technical-en"
+    },
+    {
+      "projectCommit": "5e0bd0d607fae101dfa74c7e5c78f5d6d39bc6eb",
+      "projectId": "ultimate-ppt-master",
+      "repetition": 1,
+      "runId": "ultimate-ppt-master--launch-cn--01",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "launch-cn"
+    },
+    {
+      "projectCommit": "5e0bd0d607fae101dfa74c7e5c78f5d6d39bc6eb",
+      "projectId": "ultimate-ppt-master",
+      "repetition": 2,
+      "runId": "ultimate-ppt-master--launch-cn--02",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "launch-cn"
+    },
+    {
+      "projectCommit": "5e0bd0d607fae101dfa74c7e5c78f5d6d39bc6eb",
+      "projectId": "ultimate-ppt-master",
+      "repetition": 3,
+      "runId": "ultimate-ppt-master--launch-cn--03",
+      "schemaVersion": "pptlint-benchmark-run/v1",
+      "status": "pending",
+      "taskId": "launch-cn"
+    }
+  ],
+  "schemaVersion": "pptlint-benchmark-plan/v1"
+}

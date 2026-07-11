@@ -141,6 +141,28 @@ def test_pages_home_uses_plain_language_and_new_repository_links() -> None:
     assert all(term not in hero.lower() for term in ("regression", "schema", "finding", "quality gate"))
 
 
+def test_benchmark_page_is_reproducible_and_does_not_claim_a_winner() -> None:
+    config = json.loads((ROOT / "benchmark/benchmark.json").read_text(encoding="utf-8"))
+    plan = json.loads((ROOT / "benchmark/run-plan.json").read_text(encoding="utf-8"))
+    page = (ROOT / "site/benchmark/index.html").read_text(encoding="utf-8")
+
+    assert len(config["projects"]) == 5
+    assert len(config["tasks"]) == 3
+    assert len(plan["runs"]) == 45
+    assert "No overall winner" in page
+    assert "Results will appear only after" in page
+    assert all(project["repository"] in page for project in config["projects"])
+
+
+def test_contribution_templates_cover_samples_integrations_and_rule_challenges() -> None:
+    templates = ROOT / ".github/ISSUE_TEMPLATE"
+    names = {path.name for path in templates.glob("*.yml")}
+
+    assert {"submit-sample.yml", "integrate-generator.yml", "challenge-check.yml"} <= names
+    for name in names:
+        assert yaml.safe_load((templates / name).read_text(encoding="utf-8"))
+
+
 def test_proof_loop_case_is_schema_valid_and_matches_public_claims() -> None:
     report_schema = json.loads((ROOT / "schema/decklint-report-v1.schema.json").read_text(encoding="utf-8"))
     comparison_schema = json.loads(
@@ -170,10 +192,10 @@ def test_version_is_030() -> None:
     assert decklint.__version__ == "0.3.0"
 
 
-def test_corpus_contains_thirty_public_synthetic_pptx_files() -> None:
+def test_corpus_contains_one_hundred_public_synthetic_pptx_files() -> None:
     manifest = json.loads((ROOT / "tests/fixtures/corpus/manifest.json").read_text(encoding="utf-8"))
 
-    assert len(manifest["cases"]) >= 30
+    assert len(manifest["cases"]) >= 100
     for case in manifest["cases"]:
         fixture = ROOT / "tests/fixtures/corpus" / case["file"]
         assert fixture.is_file(), case["file"]

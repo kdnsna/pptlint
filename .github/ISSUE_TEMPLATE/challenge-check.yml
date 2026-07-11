@@ -1,0 +1,30 @@
+name: Challenge a PPTLint check
+description: Report a false positive, false negative, unclear impact, or unhelpful repair step.
+title: "[Check challenge] "
+labels: [rule-review]
+body:
+  - type: dropdown
+    id: challenge
+    attributes:
+      label: What needs correction?
+      options:
+        - A correct slide was reported as a problem
+        - A real problem was missed
+        - The delivery impact is overstated
+        - The PowerPoint repair steps are unclear
+    validations:
+      required: true
+  - type: input
+    id: rule
+    attributes:
+      label: Reported check name
+      description: Copy the small rule identifier from the report if available.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Explain the expected behavior and provide a safe minimal PPTX or reproducible construction steps.
+    validations:
+      required: true

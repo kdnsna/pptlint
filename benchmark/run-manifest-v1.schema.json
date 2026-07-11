@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kdnsna/pptlint/blob/main/benchmark/run-manifest-v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "runId", "projectId", "taskId", "repetition", "status"],
+  "properties": {
+    "schemaVersion": {"const": "pptlint-benchmark-run/v1"},
+    "runId": {"type": "string", "pattern": "^[a-z0-9-]+--[a-z0-9-]+--[0-9]{2}$"},
+    "projectId": {"type": "string"},
+    "taskId": {"type": "string"},
+    "repetition": {"type": "integer", "minimum": 1, "maximum": 3},
+    "status": {"enum": ["pending", "running", "complete", "excluded"]},
+    "projectCommit": {"type": ["string", "null"], "pattern": "^[a-f0-9]{40}$"},
+    "model": {"type": "string"},
+    "provider": {"type": "string"},
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["os", "python", "notes"],
+      "properties": {
+        "os": {"type": "string"},
+        "python": {"type": "string"},
+        "notes": {"type": "string"}
+      }
+    },
+    "durationSeconds": {"type": "number", "minimum": 0},
+    "outputPptx": {"$ref": "#/$defs/file"},
+    "reportJson": {"$ref": "#/$defs/file"},
+    "metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["slides", "readiness", "highConfidenceIssues", "renderSucceeded", "nativeObjectRatio", "privacyIssues", "repairPassed"],
+      "properties": {
+        "slides": {"type": "integer", "minimum": 0},
+        "readiness": {"enum": ["ready", "review", "blocked"]},
+        "highConfidenceIssues": {"type": "integer", "minimum": 0},
+        "renderSucceeded": {"type": "boolean"},
+        "nativeObjectRatio": {"type": "number", "minimum": 0, "maximum": 1},
+        "privacyIssues": {"type": "integer", "minimum": 0},
+        "repairPassed": {"type": ["boolean", "null"]}
+      }
+    }
+  },
+  "$defs": {
+    "file": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"type": "string"},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "product": "澄明笔记",
+  "primaryColor": "#17324D",
+  "accentColor": "#E7763C",
+  "backgroundColor": "#F5F1E8",
+  "tone": "克制、清晰、可信",
+  "avoid": ["虚构数据", "霓虹渐变", "聊天式碎片文案"]
+}

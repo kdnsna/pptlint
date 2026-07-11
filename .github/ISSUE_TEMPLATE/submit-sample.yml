@@ -1,0 +1,29 @@
+name: Submit a PowerPoint sample
+description: Share a public or safely reduced PPTX that demonstrates a real delivery problem.
+title: "[Sample] "
+labels: [sample]
+body:
+  - type: markdown
+    attributes:
+      value: "Do not attach confidential files. Use an openly licensed or safely reduced example."
+  - type: input
+    id: source
+    attributes:
+      label: Public source or license
+      description: Link to the source and state why the file can be redistributed.
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What goes wrong for the recipient?
+      description: Describe what a person sees when opening, presenting, editing, or sending the file.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Safe reproduction
+      description: Provide the PPTLint command, version, page number, and report excerpt without private data.
+    validations:
+      required: true

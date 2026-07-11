@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "pptlint-benchmark/v1",
+  "title": "PPTLint Open AI PowerPoint Delivery Check",
+  "repetitions": 3,
+  "projects": [
+    {
+      "id": "ppt-master",
+      "repository": "hugohe3/ppt-master",
+      "commit": "02d489b095d7422c410785c3afbe522e1ffab173",
+      "license": "MIT",
+      "configuration": "project recommended default"
+    },
+    {
+      "id": "presenton",
+      "repository": "presenton/presenton",
+      "commit": "220e206458ec039abdc2a33b8253e89dc62d7daa",
+      "license": "Apache-2.0",
+      "configuration": "project recommended default"
+    },
+    {
+      "id": "pptagent",
+      "repository": "icip-cas/PPTAgent",
+      "commit": "2419d30b134a71486523e95ded60b32489fd3c61",
+      "license": "MIT",
+      "configuration": "project recommended default"
+    },
+    {
+      "id": "codex-ppt-skill",
+      "repository": "ningzimu/codex-ppt-skill",
+      "commit": "5eec4191427298bf4847fc55d4824248b8386be7",
+      "license": "MIT",
+      "configuration": "project recommended default"
+    },
+    {
+      "id": "ultimate-ppt-master",
+      "repository": "kdnsna/ultimate-ppt-master-skill",
+      "commit": "5e0bd0d607fae101dfa74c7e5c78f5d6d39bc6eb",
+      "license": "MIT",
+      "configuration": "project recommended default"
+    }
+  ],
+  "tasks": [
+    {"id": "qbr-cn", "source": "tasks/qbr-cn", "language": "zh-CN", "targetSlides": 10},
+    {"id": "technical-en", "source": "tasks/technical-en", "language": "en", "targetSlides": 12},
+    {"id": "launch-cn", "source": "tasks/launch-cn", "language": "zh-CN", "targetSlides": 8}
+  ]
+}
