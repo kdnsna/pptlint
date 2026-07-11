@@ -1,0 +1,47 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "decklint"
+version = "0.1.0"
+description = "Lighthouse for PowerPoint: deterministic, local-first PPTX quality reports."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Kdnsna" }]
+dependencies = [
+  "defusedxml>=0.7.1,<1",
+  "Pillow>=10,<13",
+  "pypdfium2>=4.30,<6",
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Office/Business :: Office Suites",
+]
+
+[project.scripts]
+decklint = "decklint.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/kdnsna/decklint"
+Repository = "https://github.com/kdnsna/decklint"
+Issues = "https://github.com/kdnsna/decklint/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/decklint"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+target-version = "py310"
+line-length = 110
+
