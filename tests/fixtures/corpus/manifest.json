@@ -1,0 +1,155 @@
+{
+  "schemaVersion": "decklint-fixture-corpus/v1",
+  "cases": [
+    {
+      "file": "clean-01.pptx",
+      "label": "clean native deck",
+      "expectedRule": ""
+    },
+    {
+      "file": "clean-02.pptx",
+      "label": "clean native deck",
+      "expectedRule": ""
+    },
+    {
+      "file": "clean-03.pptx",
+      "label": "clean native deck",
+      "expectedRule": ""
+    },
+    {
+      "file": "clean-04.pptx",
+      "label": "clean native deck",
+      "expectedRule": ""
+    },
+    {
+      "file": "clean-05.pptx",
+      "label": "clean native deck",
+      "expectedRule": ""
+    },
+    {
+      "file": "clean-06.pptx",
+      "label": "clean native deck",
+      "expectedRule": ""
+    },
+    {
+      "file": "clean-07.pptx",
+      "label": "clean native deck",
+      "expectedRule": ""
+    },
+    {
+      "file": "clean-08.pptx",
+      "label": "clean native deck",
+      "expectedRule": ""
+    },
+    {
+      "file": "clean-09.pptx",
+      "label": "clean native deck",
+      "expectedRule": ""
+    },
+    {
+      "file": "clean-10.pptx",
+      "label": "clean native deck",
+      "expectedRule": ""
+    },
+    {
+      "file": "small-font-01.pptx",
+      "label": "explicit small text",
+      "expectedRule": "readability.small-font"
+    },
+    {
+      "file": "small-font-02.pptx",
+      "label": "explicit small text",
+      "expectedRule": "readability.small-font"
+    },
+    {
+      "file": "small-font-03.pptx",
+      "label": "explicit small text",
+      "expectedRule": "readability.small-font"
+    },
+    {
+      "file": "small-font-04.pptx",
+      "label": "explicit small text",
+      "expectedRule": "readability.small-font"
+    },
+    {
+      "file": "small-font-05.pptx",
+      "label": "explicit small text",
+      "expectedRule": "readability.small-font"
+    },
+    {
+      "file": "flattened-01.pptx",
+      "label": "full-slide raster",
+      "expectedRule": "editability.full-slide-image"
+    },
+    {
+      "file": "flattened-02.pptx",
+      "label": "full-slide raster",
+      "expectedRule": "editability.full-slide-image"
+    },
+    {
+      "file": "flattened-03.pptx",
+      "label": "full-slide raster",
+      "expectedRule": "editability.full-slide-image"
+    },
+    {
+      "file": "flattened-04.pptx",
+      "label": "full-slide raster",
+      "expectedRule": "editability.full-slide-image"
+    },
+    {
+      "file": "flattened-05.pptx",
+      "label": "full-slide raster",
+      "expectedRule": "editability.full-slide-image"
+    },
+    {
+      "file": "untitled-01.pptx",
+      "label": "missing title placeholder",
+      "expectedRule": "accessibility.missing-title"
+    },
+    {
+      "file": "untitled-02.pptx",
+      "label": "missing title placeholder",
+      "expectedRule": "accessibility.missing-title"
+    },
+    {
+      "file": "untitled-03.pptx",
+      "label": "missing title placeholder",
+      "expectedRule": "accessibility.missing-title"
+    },
+    {
+      "file": "low-contrast-01.pptx",
+      "label": "explicit low contrast",
+      "expectedRule": "readability.low-contrast"
+    },
+    {
+      "file": "low-contrast-02.pptx",
+      "label": "explicit low contrast",
+      "expectedRule": "readability.low-contrast"
+    },
+    {
+      "file": "privacy-01.pptx",
+      "label": "personal metadata",
+      "expectedRule": "privacy.personal-metadata"
+    },
+    {
+      "file": "privacy-02.pptx",
+      "label": "comments",
+      "expectedRule": "privacy.comments"
+    },
+    {
+      "file": "hidden-01.pptx",
+      "label": "hidden slide",
+      "expectedRule": "privacy.hidden-slide"
+    },
+    {
+      "file": "repeated-layout-01.pptx",
+      "label": "three repeated layouts",
+      "expectedRule": "consistency.repeated-layout"
+    },
+    {
+      "file": "off-canvas-01.pptx",
+      "label": "text outside canvas",
+      "expectedRule": "readability.off-canvas-text"
+    }
+  ]
+}

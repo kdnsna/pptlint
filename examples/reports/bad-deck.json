@@ -1,0 +1,126 @@
+{
+  "file": {
+    "name": "bad-deck.pptx",
+    "sha256": "a4a7b1e00b3d58852227a82fc53ee11a63135a4b61e74df613288421699746da",
+    "slides": 1
+  },
+  "findings": [
+    {
+      "bbox": {
+        "h": 1.0,
+        "w": 1.0,
+        "x": 0.0,
+        "y": 0.0
+      },
+      "category": "accessibility",
+      "confidence": "high",
+      "evidence": "Hero has an empty descr/title attribute",
+      "id": "accessibility.missing-alt-text:s1-4",
+      "message": "An image has no alternative text.",
+      "remediation": "Add concise alt text or mark the image as decorative in PowerPoint.",
+      "rule_id": "accessibility.missing-alt-text",
+      "severity": "medium",
+      "shape_id": "4",
+      "slide_index": 1
+    },
+    {
+      "bbox": null,
+      "category": "accessibility",
+      "confidence": "high",
+      "evidence": "Slide 1 has no title or centered-title placeholder text",
+      "id": "accessibility.missing-title:s1-deck",
+      "message": "The slide has no populated title placeholder.",
+      "remediation": "Add a unique slide title using the title placeholder.",
+      "rule_id": "accessibility.missing-title",
+      "severity": "medium",
+      "shape_id": null,
+      "slide_index": 1
+    },
+    {
+      "bbox": {
+        "h": 1.0,
+        "w": 1.0,
+        "x": 0.0,
+        "y": 0.0
+      },
+      "category": "editability",
+      "confidence": "high",
+      "evidence": "image coverage=100.0%; native text boxes=1",
+      "id": "editability.full-slide-image:s1-4",
+      "message": "The slide is dominated by a full-canvas image and has little native text.",
+      "remediation": "Keep body text, charts, and key labels as native PowerPoint objects.",
+      "rule_id": "editability.full-slide-image",
+      "severity": "high",
+      "shape_id": "4",
+      "slide_index": 1
+    },
+    {
+      "bbox": {
+        "h": 0.466667,
+        "w": 0.85,
+        "x": 0.075,
+        "y": 0.266667
+      },
+      "category": "readability",
+      "confidence": "high",
+      "evidence": "text=['F8F8F8']; fill=FFFFFF",
+      "id": "readability.low-contrast:s1-3",
+      "message": "Explicit text and fill colors have a contrast ratio of 1.06:1.",
+      "remediation": "Use text and background colors with at least 3:1 contrast for large type.",
+      "rule_id": "readability.low-contrast",
+      "severity": "high",
+      "shape_id": "3",
+      "slide_index": 1
+    },
+    {
+      "bbox": {
+        "h": 0.466667,
+        "w": 0.85,
+        "x": 0.075,
+        "y": 0.266667
+      },
+      "category": "readability",
+      "confidence": "high",
+      "evidence": "Body 2: minimum explicit font size 9 pt",
+      "id": "readability.small-font:s1-3",
+      "message": "Text uses 9 pt type, below the 18 pt profile threshold.",
+      "remediation": "Increase the font size or split dense content across slides.",
+      "rule_id": "readability.small-font",
+      "severity": "high",
+      "shape_id": "3",
+      "slide_index": 1
+    }
+  ],
+  "profile": "ai-generated",
+  "renderer": {
+    "detail": "",
+    "requested": "wireframe",
+    "status": "ok",
+    "used": "wireframe"
+  },
+  "schemaVersion": "decklint-report/v1",
+  "scores": {
+    "categories": {
+      "accessibility": 90,
+      "consistency": 100,
+      "editability": 85,
+      "integrity": 100,
+      "readability": 70
+    },
+    "overall": 88
+  },
+  "slides": [
+    {
+      "index": 1,
+      "preview": "data:image/png;base64,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",
+      "title": "Evidence-backed summary"
+    }
+  ],
+  "summary": {
+    "critical": 0,
+    "high": 3,
+    "low": 0,
+    "medium": 2
+  },
+  "toolVersion": "0.1.0"
+}

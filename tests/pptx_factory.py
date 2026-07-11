@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import base64
 import zipfile
 from pathlib import Path
 
@@ -79,13 +80,22 @@ def write_pptx(
     slides: list[str] | None = None,
     creator: str | None = None,
     include_comments: bool = False,
+    notes_text: str | None = None,
+    external_url: str | None = None,
+    slide_order: list[int] | None = None,
 ) -> Path:
     slides = slides or [slide_xml(include_picture=include_picture)]
+    slide_order = slide_order or list(range(1, len(slides) + 1))
+    image_target = "../media/missing.png" if broken_relationship else "../media/image1.png"
+    relationship_items = []
+    if include_picture or broken_relationship:
+        relationship_items.append(f'<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="{image_target}"/>')
+    if notes_text:
+        relationship_items.append('<Relationship Id="rId9" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/notesSlide" Target="../notesSlides/notesSlide1.xml"/>')
+    if external_url:
+        relationship_items.append(f'<Relationship Id="rId10" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink" Target="{external_url}" TargetMode="External"/>')
     slide_rels = """<?xml version="1.0" encoding="UTF-8"?>
-<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
-  <Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="../media/missing.png"/>
-</Relationships>""" if (include_picture or broken_relationship) else """<?xml version="1.0" encoding="UTF-8"?>
-<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"/>"""
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">""" + "".join(relationship_items) + "</Relationships>"
     overrides = "\n".join(
         f'<Override PartName="/ppt/slides/slide{index}.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.slide+xml"/>'
         for index in range(1, len(slides) + 1)
@@ -94,7 +104,7 @@ def write_pptx(
         '  <Override PartName="/ppt/slides/slide1.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.slide+xml"/>',
         overrides,
     )
-    slide_ids = "".join(f'<p:sldId id="{255 + index}" r:id="rId{index}"/>' for index in range(1, len(slides) + 1))
+    slide_ids = "".join(f'<p:sldId id="{255 + index}" r:id="rId{slide_number}"/>' for index, slide_number in enumerate(slide_order, 1))
     presentation = PRESENTATION.replace('<p:sldId id="256" r:id="rId1"/>', slide_ids)
     presentation_rels = """<?xml version="1.0" encoding="UTF-8"?>
 <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">""" + "".join(
@@ -109,6 +119,11 @@ def write_pptx(
         for index, xml in enumerate(slides, 1):
             package.writestr(f"ppt/slides/slide{index}.xml", xml)
             package.writestr(f"ppt/slides/_rels/slide{index}.xml.rels", slide_rels if index == 1 else slide_rels.replace("rId2", f"rId{index + 1}"))
+        if include_picture and not broken_relationship:
+            package.writestr(
+                "ppt/media/image1.png",
+                base64.b64decode("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII="),
+            )
         if creator:
             package.writestr(
                 "docProps/core.xml",
@@ -116,4 +131,9 @@ def write_pptx(
             )
         if include_comments:
             package.writestr("ppt/comments/comment1.xml", "<p:cmLst xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\"/>")
+        if notes_text:
+            package.writestr(
+                "ppt/notesSlides/notesSlide1.xml",
+                f'''<?xml version="1.0" encoding="UTF-8"?><p:notes xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"><p:cSld><p:spTree><p:sp><p:txBody><a:p><a:r><a:t>{notes_text}</a:t></a:r></a:p></p:txBody></p:sp></p:spTree></p:cSld></p:notes>''',
+            )
     return path

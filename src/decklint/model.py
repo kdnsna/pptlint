@@ -159,6 +159,22 @@ def _resolved_target(source: str, target: str) -> str:
     return posixpath.normpath(posixpath.join(posixpath.dirname(source), target)).lstrip("/")
 
 
+def _relationship_items(package: zipfile.ZipFile, names: set[str], source: str) -> list[dict[str, str]]:
+    rel_name = _relationship_part(source)
+    if rel_name not in names:
+        return []
+    root = _read_xml(package, rel_name)
+    return [
+        {
+            "id": relationship.get("Id", ""),
+            "type": relationship.get("Type", ""),
+            "target": relationship.get("Target", ""),
+            "mode": relationship.get("TargetMode", ""),
+        }
+        for relationship in root.findall("rel:Relationship", NS)
+    ]
+
+
 def _scan_relationships(package: zipfile.ZipFile, names: set[str]) -> tuple[list[BrokenRelationship], list[str]]:
     broken: list[BrokenRelationship] = []
     external: list[str] = []
@@ -201,10 +217,24 @@ def load_deck(path: Path) -> DeckModel:
         slide_size = presentation.find("p:sldSz", NS)
         width = int(slide_size.get("cx", "12192000")) if slide_size is not None else 12_192_000
         height = int(slide_size.get("cy", "6858000")) if slide_size is not None else 6_858_000
-        slide_names = sorted(
+        fallback_slide_names = sorted(
             (name for name in names if re.fullmatch(r"ppt/slides/slide\d+\.xml", name)),
             key=lambda name: int(re.search(r"(\d+)", name).group(1)),
         )
+        presentation_relationships = {
+            relationship["id"]: relationship
+            for relationship in _relationship_items(package, names, "ppt/presentation.xml")
+        }
+        slide_names: list[str] = []
+        relationship_id_attribute = f"{{{NS['r']}}}id"
+        for slide_id in presentation.findall(".//p:sldId", NS):
+            relationship = presentation_relationships.get(slide_id.get(relationship_id_attribute, ""))
+            if relationship and relationship["mode"] != "External":
+                target = _resolved_target("ppt/presentation.xml", relationship["target"])
+                if target in names:
+                    slide_names.append(target)
+        if not slide_names:
+            slide_names = fallback_slide_names
         slides: list[Slide] = []
         for index, slide_name in enumerate(slide_names, 1):
             root = _read_xml(package, slide_name)
@@ -216,7 +246,28 @@ def load_deck(path: Path) -> DeckModel:
             ]
             title_candidates = [shape.text for shape in shapes if shape.placeholder_type in {"title", "ctrTitle"} and shape.text]
             title = title_candidates[0] if title_candidates else next((shape.text for shape in shapes if shape.text), "")
-            slides.append(Slide(index=index, part_name=slide_name, title=title, shapes=shapes, hidden=root.get("show") == "0"))
+            notes_text = ""
+            for relationship in _relationship_items(package, names, slide_name):
+                if relationship["type"].endswith("/notesSlide") and relationship["mode"] != "External":
+                    notes_part = _resolved_target(slide_name, relationship["target"])
+                    if notes_part in names:
+                        notes_root = _read_xml(package, notes_part)
+                        notes_text = " ".join(
+                            value.strip()
+                            for value in (node.text for node in notes_root.findall(".//a:t", NS))
+                            if value and value.strip()
+                        )
+                    break
+            slides.append(
+                Slide(
+                    index=index,
+                    part_name=slide_name,
+                    title=title,
+                    shapes=shapes,
+                    hidden=root.get("show") == "0",
+                    notes_text=notes_text,
+                )
+            )
         broken, external = _scan_relationships(package, names)
         metadata: dict[str, str] = {}
         if "docProps/core.xml" in names:
@@ -238,4 +289,3 @@ def load_deck(path: Path) -> DeckModel:
             metadata=metadata,
             comments_count=comments_count,
         )
-

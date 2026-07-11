@@ -86,6 +86,18 @@ def test_privacy_findings_do_not_depend_on_scoring_categories(tmp_path: Path) ->
     assert {"privacy.personal-metadata", "privacy.comments", "privacy.hidden-slide"} <= ids
 
 
+def test_privacy_rules_find_notes_and_external_relationships(tmp_path: Path) -> None:
+    source = write_pptx(
+        tmp_path / "external.pptx",
+        notes_text="Internal only",
+        external_url="https://intranet.example.test/file",
+    )
+
+    ids = rule_ids(source)
+
+    assert {"privacy.speaker-notes", "privacy.external-relationship"} <= ids
+
+
 def test_three_identical_slides_only_create_low_confidence_layout_warning(tmp_path: Path) -> None:
     source = write_pptx(tmp_path / "repeated.pptx", slides=[slide_xml(), slide_xml(), slide_xml()])
 
@@ -93,4 +105,3 @@ def test_three_identical_slides_only_create_low_confidence_layout_warning(tmp_pa
 
     repeated = next(finding for finding in findings if finding.rule_id == "consistency.repeated-layout")
     assert repeated.confidence == "low"
-

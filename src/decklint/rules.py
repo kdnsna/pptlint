@@ -232,6 +232,19 @@ def audit_deck(deck: DeckModel, *, profile: str = "baseline") -> list[Finding]:
                     slide=slide,
                 )
             )
+        if slide.notes_text:
+            findings.append(
+                _finding(
+                    "privacy.speaker-notes",
+                    "privacy",
+                    "medium",
+                    "high",
+                    "The slide contains speaker notes.",
+                    f"Slide {slide.index} contains {len(slide.notes_text)} note characters",
+                    "Review speaker notes and remove information that should not be shared.",
+                    slide=slide,
+                )
+            )
 
     font_counts = Counter(font for slide in deck.slides for shape in slide.shapes for font in shape.font_families)
     if len(font_counts) >= 3:
@@ -305,4 +318,3 @@ def audit_deck(deck: DeckModel, *, profile: str = "baseline") -> list[Finding]:
             )
         )
     return sorted(findings, key=lambda item: (item.slide_index or 0, item.rule_id, item.shape_id or ""))
-
