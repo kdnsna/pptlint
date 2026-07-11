@@ -45,6 +45,7 @@ uvx --from https://github.com/kdnsna/pptlint/releases/download/v0.3.0/pptlint-0.
 - [存在问题的示例](examples/reports/bad-deck.html)
 - [真实可编辑 PPT 修改前后对比：49 → 100](https://kdnsna.github.io/pptlint/proof-loop/comparison.html)
 - [修改前 PPTX](examples/proof-loop/before.pptx) 与 [修改后 PPTX](examples/proof-loop/after.pptx)
+- [五个 AI PPT 项目的公开检查方法](https://kdnsna.github.io/pptlint/benchmark/)
 
 ## 修改后再次检查
 

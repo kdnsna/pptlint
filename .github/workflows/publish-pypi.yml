@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       confirm-version:
-        description: Version to publish, for example 0.1.0.
+        description: Version to publish, for example 0.3.0.
         required: true
 permissions:
   contents: read
@@ -37,4 +37,3 @@ jobs:
           name: pypi-distributions
           path: dist/
       - uses: pypa/gh-action-pypi-publish@release/v1
-

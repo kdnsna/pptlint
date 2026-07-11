@@ -49,12 +49,12 @@ jobs:
           profile: ai-generated
           renderer: wireframe
           artifact-name: bad-deck-report
-      - name: Confirm the bad deck failed its gate
+      - name: Confirm the bad deck requires changes
         if: always()
         env:
           BAD_OUTCOME: ${{ steps.bad.outcome }}
         run: test "$BAD_OUTCOME" = failure
-      - name: Minimum score can fail independently
+      - name: Minimum secondary score can fail independently
         id: minimum
         continue-on-error: true
         uses: ./

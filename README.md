@@ -49,6 +49,7 @@ The first screen shows whether the file is ready and the three most important ac
 - [Problem example](examples/reports/bad-deck.html)
 - [Real editable PowerPoint improvement: 49 → 100](https://kdnsna.github.io/pptlint/proof-loop/comparison.html)
 - [Before PPTX](examples/proof-loop/before.pptx) and [after PPTX](examples/proof-loop/after.pptx)
+- [Open method for checking five AI PowerPoint projects](https://kdnsna.github.io/pptlint/benchmark/)
 
 ## Check changes
 
