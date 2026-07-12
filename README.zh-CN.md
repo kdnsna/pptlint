@@ -1,64 +1,117 @@
 # PPTLint
 
-> **AI 生成 PPT 后，发出去之前检查一次。**
+> **PPT 做完以后，别急着发。** 你电脑上看不出来的问题，往往会在领导、客户或会议室的电脑上暴露。
 
-[English](README.md) · [在线示例](https://kdnsna.github.io/pptlint/) · [修改前后对比](https://kdnsna.github.io/pptlint/proof-loop/comparison.html)
+[English](README.md) · [产品首页](https://kdnsna.github.io/pptlint/) · [12 个前后对比案例](https://kdnsna.github.io/pptlint/lab/) · [真实 49 → 100 报告](https://kdnsna.github.io/pptlint/proof-loop/comparison.html)
 
-[![存在问题的 AI PPT 与修改后可交付版本对比](site/assets/pptlint-before-after-hero.png)](https://kdnsna.github.io/pptlint/proof-loop/comparison.html)
+[![CI](https://github.com/kdnsna/pptlint/actions/workflows/ci.yml/badge.svg)](https://github.com/kdnsna/pptlint/actions/workflows/ci.yml)
+[![Pages](https://github.com/kdnsna/pptlint/actions/workflows/pages.yml/badge.svg)](https://kdnsna.github.io/pptlint/)
+[![PyPI](https://img.shields.io/pypi/v/pptlint.svg)](https://pypi.org/project/pptlint/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-10233f.svg)](LICENSE)
 
-AI 工具可以很快生成 PowerPoint，但也可能留下缺失文件、文字被裁掉、文字框互相遮挡、字号过小、整页变成图片、讲者备注、批注或个人信息。
+[![同一份可编辑 PPT 修改前后对比：49 分到 100 分](site/assets/pptlint-before-after-hero.png)](https://kdnsna.github.io/pptlint/lab/)
 
-PPTLint 在你的电脑上检查 `.pptx`，直接给出三种结果：
+## 它解决的不是“好不好看”，而是“能不能放心发”
 
-- **可以交付**：没有发现高置信的严重问题。
-- **建议检查**：文件可以打开，但请人工确认报告中指出的页面。
-- **暂勿交付**：先解决报告列出的必要修改，再发送文件。
+一份 PPT 在自己电脑上看着正常，并不代表已经适合交付：
 
-PPTLint 不上传 PPT、不调用 AI 模型，也不修改源文件。
+- **会上出丑**：字体替换后标题换行，最后一行被截掉，两个文本框压在一起；
+- **换电脑变样**：特殊字体、外部 Excel、音视频或动画离开原电脑后失效；
+- **别人无法接手**：整页其实是一张图，对方想改一个数字也选不中；
+- **内部内容被带出去**：讲者备注、隐藏页、批注、作者信息或本地链接仍留在文件里；
+- **文件本身不稳**：包内对象缺失、重复媒体过多，打开时弹出修复或等待很久。
 
-如果需要先生成或修复 PPT，请使用 [Ultimate PPT Master](https://github.com/kdnsna/ultimate-ppt-master-skill)，再用 PPTLint 做独立交付检查。
+PPTLint 在本机只读检查 `.pptx`，生成离线 HTML 与 JSON 报告。它**不上传文件、不调用模型、不修改源文件、不收集遥测数据**。
 
-## 直接交给 Agent
+## 一分钟开始
 
-把下面这句话发送给 Codex、Claude Code 或其他编程 Agent：
+把下面这句话发给 Codex、Claude Code 或其他 Coding Agent：
 
 ```text
-请安装 PPTLint，并检查这个 AI 生成的 PPT 是否适合交付。
-优先告诉我必须修改的页面，以及在 PowerPoint 中应该怎样操作。
+请安装 PPTLint，检查这份 PowerPoint 是否适合发给客户。
+按“必须修、建议看、可以忽略”告诉我先处理哪几页，
+并给出在 PowerPoint 里的具体操作。不要修改原文件。
 ```
 
-## 自己运行
-
-直接从 PyPI 安装并运行：
+或者直接运行：
 
 ```bash
-uvx pptlint check output.pptx --profile ai-generated --lang zh-CN
+uvx pptlint check output.pptx --scenario present --lang zh-CN
 ```
 
-运行后生成：
-
-- `pptlint-report.html`：普通用户可以离线打开；
-- `pptlint-report.json`：供 Agent 和自动化工具读取。
-
-报告第一屏先回答四个问题：文件能否正常打开、现场是否看得清、别人能否继续修改、是否带出隐藏内容，然后列出最多三项最应优先处理的修改。数字分数只用于观察同一份 PPT 修改前后的变化；100 分不代表审美满分，也不代表绝对没有风险。
-
-## 查看真实案例
-
-- [可以交付的示例](examples/reports/good-deck.html)
-- [存在问题的示例](examples/reports/bad-deck.html)
-- [真实可编辑 PPT 修改前后对比：49 → 100](https://kdnsna.github.io/pptlint/proof-loop/comparison.html)
-- [修改前 PPTX](examples/proof-loop/before.pptx) 与 [修改后 PPTX](examples/proof-loop/after.pptx)
-- [五个 AI PPT 项目的公开检查方法](https://kdnsna.github.io/pptlint/benchmark/)
-
-## 修改后再次检查
-
-保留原文件和修改后的独立副本，用一条命令生成完整证据：
+默认 `present` 代表会议室投屏。屏幕阅读或文档型 PPT 可改用：
 
 ```bash
-pptlint proof before.pptx after.pptx --profile ai-generated --lang zh-CN --output comparison
+uvx pptlint check output.pptx --scenario screen --lang zh-CN
+uvx pptlint check output.pptx --scenario document --lang zh-CN
 ```
 
-命令会同时生成修改前报告、修改后报告和完整对比报告，分别显示已经处理、仍需处理和修改后新增的提醒。如果已经有两份 JSON 报告，原来的 `pptlint compare before.json after.json` 仍然可用。
+每次检查都会生成：
+
+- `pptlint-report.html`：给人看的离线报告，先说后果，再说处理方法；
+- `pptlint-report.json`：给 Agent、CI 和其他工具读取的稳定数据。
+
+## 先看证据，再决定要不要用
+
+- [12 个交付风险前后对比](https://kdnsna.github.io/pptlint/lab/)：投屏、换电脑、隐私、可编辑交接、文件体积和团队规范；
+- [真实可编辑 PPT：49 → 100](https://kdnsna.github.io/pptlint/proof-loop/comparison.html)：修改前后文件、完整报告和机器可读数据全部公开；
+- [修改前 PPTX](examples/proof-loop/before.pptx) 与 [修改后 PPTX](examples/proof-loop/after.pptx)；
+- [检查方法档案](https://kdnsna.github.io/pptlint/benchmark/)：说明 PPTLint 如何面对不同 AI PPT 项目。
+
+真实 Proof Loop 使用同一份 9 页可编辑 PPT。报告中的 103 项问题和提醒得到处理，修改后没有新增高置信问题。**100 分只是规则检查结果，不是审美满分，也不是绝对零风险。**
+
+## 报告直接给出三种结论
+
+| 结论 | 普通用户该做什么 |
+|---|---|
+| 可以交付 | 没有发现高置信的交付问题，仍应做最终人工预览 |
+| 建议检查 | 打开报告点名的页面，确认低置信或需要业务判断的内容 |
+| 暂勿交付 | 先处理报告列出的阻断问题，再另存副本并复检 |
+
+同一条规则在 200 个对象上重复出现时，HTML 会合并成一个问题组；完整对象级证据仍保留在 JSON 中。PPTLint 不会用几百条重复提醒制造焦虑。
+
+## 修改后生成完整对比证据
+
+始终保留原文件，只修改独立副本：
+
+```bash
+uvx pptlint proof before.pptx after.pptx \
+  --scenario present --lang zh-CN --output comparison
+```
+
+它会生成修改前、修改后和对比报告，明确列出：已经处理、仍然存在、修改后新增的问题。
+
+如果要把修复工作交给 Agent：
+
+```bash
+uvx pptlint plan pptlint-report.json --lang zh-CN --output repair-brief.md
+```
+
+修复简报会提醒 Agent 保留原文件，也不会为了提高分数破坏现有设计。
+
+## 团队交付规范
+
+生成一份安全的 YAML 模板：
+
+```bash
+uvx pptlint policy init pptlint-policy.yml
+uvx pptlint check output.pptx --policy pptlint-policy.yml --lang zh-CN
+```
+
+策略可以约束批准字体、品牌色、最小字号、外部链接、备注、隐藏页和图片说明。未知字段会直接报错，不会悄悄忽略。
+
+## 检查范围与边界
+
+| 你真正关心的问题 | PPTLint 检查什么 |
+|---|---|
+| 文件能否正常打开 | PPTX 包结构、关系、内容类型、媒体、页面列表和真实渲染 |
+| 会议室里是否看得清 | 越界、实质重叠、裁切风险、字号、对比度和页面比例 |
+| 换电脑后是否稳定 | 字体、外部文件、动画、转场、音视频和备注关系 |
+| 别人能否继续编辑 | 原生文字、表格、图表、形状，以及整页图片覆盖 |
+| 是否把内部内容带出去 | 备注、批注、隐藏页、作者信息、本地文件和外部链接 |
+| 文件是否便于交接 | 文件体积、重复媒体、嵌入字体和动态内容事实 |
+
+PPTLint 不判断审美、论点、事实正确性或说服力；低置信提醒不会阻断交付。如果要先生成或人工修复 PPT，可以使用 [Ultimate PPT Master](https://github.com/kdnsna/ultimate-ppt-master-skill)，再由 PPTLint 独立复检。
 
 ## GitHub Actions
 
@@ -72,24 +125,20 @@ pptlint proof before.pptx after.pptx --profile ai-generated --lang zh-CN --outpu
 
 即使检查没有通过，HTML 和 JSON 报告仍会上传。
 
-## 检查内容
-
-| 你关心的问题 | PPTLint 检查什么 |
-|---|---|
-| 文件能否正常打开 | PPTX 内部文件、媒体、页面列表和实际渲染 |
-| 放映时是否容易出错 | 越界文字、明显遮挡、裁切风险、字号、对比度和页面比例 |
-| 后续是否方便修改 | 整页图片，以及原生文字、表格、图表和形状比例 |
-| 文件能否安全外发 | 备注、批注、隐藏页、作者信息、外部文件和链接 |
-
-低置信提示只会显示为“建议检查”，不会阻止交付。PPTLint 不判断 PPT 是否美观、论点是否正确或内容是否有说服力。
-
-## 开发者接口
+## 稳定接口与开发
 
 - 当前报告：[`pptlint-report/v2`](schema/pptlint-report-v2.schema.json)
 - 旧版报告：[`decklint-report/v1`](schema/decklint-report-v1.schema.json)
-- 修改前后比较：[`decklint-comparison/v1`](schema/decklint-comparison-v1.schema.json)
+- 前后对比：[`decklint-comparison/v1`](schema/decklint-comparison-v1.schema.json)
 - 退出码 `0`：完成；`1`：需要修改；`2`：文件或运行错误。
 
-旧 `decklint` 命令在 v0.4 中继续保留，旧报告仍可继续比较。
+```bash
+uv venv --python 3.13
+uv pip install -e '.[dev]'
+PYTHONPATH=src .venv/bin/python -m pytest
+.venv/bin/ruff check src tests tools
+```
 
-PPTLint 本地运行、只读、不调用模型、不收集使用数据，采用 MIT 许可证。
+`decklint` 作为兼容别名继续保留；所有新用户文档和命令统一使用 `pptlint`。
+
+MIT · Local · Read-only · No upload · No model · No telemetry

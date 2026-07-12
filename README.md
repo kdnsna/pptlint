@@ -1,76 +1,113 @@
 # PPTLint
 
-> **Check an AI-generated PowerPoint before you send or present it.**
+> **Do not send the PowerPoint yet.** Problems that stay invisible on your laptop often appear on your client's computer or in the meeting room.
 
-[简体中文](README.zh-CN.md) · [Live example](https://kdnsna.github.io/pptlint/) · [Before/after report](https://kdnsna.github.io/pptlint/proof-loop/comparison.html)
+[简体中文](README.zh-CN.md) · [Product site](https://kdnsna.github.io/pptlint/) · [12 before/after cases](https://kdnsna.github.io/pptlint/lab/) · [Real 49 → 100 proof](https://kdnsna.github.io/pptlint/proof-loop/comparison.html)
 
 [![CI](https://github.com/kdnsna/pptlint/actions/workflows/ci.yml/badge.svg)](https://github.com/kdnsna/pptlint/actions/workflows/ci.yml)
 [![Pages](https://github.com/kdnsna/pptlint/actions/workflows/pages.yml/badge.svg)](https://kdnsna.github.io/pptlint/)
+[![PyPI](https://img.shields.io/pypi/v/pptlint.svg)](https://pypi.org/project/pptlint/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-10233f.svg)](LICENSE)
 
-[![A risky AI-generated PowerPoint beside the repaired delivery-ready deck](site/assets/pptlint-before-after-hero.png)](https://kdnsna.github.io/pptlint/proof-loop/comparison.html)
+[![The same editable PowerPoint before and after delivery fixes, from 49 to 100](site/assets/pptlint-before-after-hero.png)](https://kdnsna.github.io/pptlint/lab/)
 
-AI tools can make a PowerPoint quickly. They can also leave behind missing files, clipped text, overlapping text boxes, unreadable type, flattened slides, speaker notes, comments, and personal information.
+## Not “is it beautiful?” — “is it safe to send?”
 
-PPTLint checks the `.pptx` on your computer and answers three questions:
+A deck can look finished and still fail at handoff:
 
-- **Ready to send** — no high-confidence delivery problem was found.
-- **Check before sending** — open the named slides and confirm the highlighted items.
-- **Fix before sending** — fix the listed problem before sending the file.
+- a substituted font wraps the title and clips the final line;
+- two text boxes overlap only on another computer;
+- the entire slide is one image, so a recipient cannot edit one number;
+- notes, hidden slides, comments, author data, or local file links leave with the deck;
+- a missing package part triggers a PowerPoint repair warning;
+- duplicated media turns nine slides into an 86 MB file.
 
-PPTLint does not upload the presentation, call an AI model, or change the source file.
+PPTLint runs locally, reads the `.pptx`, and writes offline HTML and JSON reports. It **does not upload the deck, call a model, modify the source, or collect telemetry**.
 
-Need to create or repair the presentation first? Use [Ultimate PPT Master](https://github.com/kdnsna/ultimate-ppt-master-skill), then run PPTLint as the independent delivery check.
+## Start in one minute
 
-## Ask your coding agent
-
-Copy this into Codex, Claude Code, or another coding agent:
+Give this to Codex, Claude Code, or another coding agent:
 
 ```text
-Install PPTLint and check whether this AI-generated PowerPoint is ready to send.
-Show me the slides I must fix first and the exact PowerPoint steps for each one.
+Install PPTLint and check whether this PowerPoint is ready to send to a client.
+Separate must-fix items from human-review suggestions, name the affected slides,
+and give me the exact PowerPoint steps. Do not modify the source file.
 ```
 
-## Run it yourself
-
-Install from PyPI and run:
+Or run it directly:
 
 ```bash
-uvx pptlint check output.pptx --profile ai-generated
+uvx pptlint check output.pptx --scenario present
 ```
 
-For plain Chinese guidance:
+`present` is the default meeting-room scenario. Use `screen` for close screen reading or `document` for report-like decks.
+
+Each run writes:
+
+- `pptlint-report.html` — an offline human report that explains consequences and next steps;
+- `pptlint-report.json` — stable evidence for agents, CI, and integrations.
+
+## Inspect the evidence first
+
+- [12 delivery-risk before/after cases](https://kdnsna.github.io/pptlint/lab/);
+- [real editable deck: 49 → 100](https://kdnsna.github.io/pptlint/proof-loop/comparison.html), with both PPTX files and full reports;
+- [before PPTX](examples/proof-loop/before.pptx) and [after PPTX](examples/proof-loop/after.pptx);
+- [evaluation-method archive](https://kdnsna.github.io/pptlint/benchmark/).
+
+In the published nine-slide Proof Loop, 103 reported items were resolved and the edited deck introduced no new high-confidence problem. **A score of 100 is a rule-check result, not an aesthetic grade or a zero-risk guarantee.**
+
+## Three outcomes people can act on
+
+| Result | What to do |
+|---|---|
+| Ready to send | No high-confidence delivery problem was found; still perform the final human preview |
+| Check before sending | Open the named slides and confirm suggestions that need context or human judgment |
+| Fix before sending | Resolve the listed blocker, save a separate delivery copy, and check again |
+
+Repeated object-level findings are grouped in HTML so 200 instances of one root cause do not become 200 noisy tasks. Full evidence remains in JSON.
+
+## Prove the edit
+
+Keep the original and edit a separate copy:
 
 ```bash
-uvx pptlint check output.pptx --profile ai-generated --lang zh-CN
+uvx pptlint proof before.pptx after.pptx \
+  --scenario present --output comparison
 ```
 
-PPTLint writes two files:
+The proof pack separates resolved, remaining, and newly introduced findings.
 
-- `pptlint-report.html` — an offline report for people;
-- `pptlint-report.json` — the same result for agents and automation.
-
-The first screen answers four ordinary delivery questions and shows the three most important actions. The numerical score is secondary and is intended only for comparing the same presentation before and after changes. A score of 100 is not an aesthetic grade or a zero-risk guarantee.
-
-## See real examples
-
-- [Ready example](examples/reports/good-deck.html)
-- [Problem example](examples/reports/bad-deck.html)
-- [Real editable PowerPoint improvement: 49 → 100](https://kdnsna.github.io/pptlint/proof-loop/comparison.html)
-- [Before PPTX](examples/proof-loop/before.pptx) and [after PPTX](examples/proof-loop/after.pptx)
-- [Open method for checking five AI PowerPoint projects](https://kdnsna.github.io/pptlint/benchmark/)
-
-## Check changes
-
-Keep the original file and a separate edited copy, then create the complete proof pack in one command:
+Create a repair brief for a coding agent:
 
 ```bash
-pptlint proof before.pptx after.pptx --profile ai-generated --output comparison
+uvx pptlint plan pptlint-report.json --output repair-brief.md
 ```
 
-This writes the before report, after report, and comparison report. The comparison separates reported items that were resolved, items that remain, and items introduced by the edit. The existing `compare` command remains available for already-generated JSON reports.
+The brief tells the agent to preserve the source and not damage an existing design merely to raise a score.
 
-## Use it in GitHub Actions
+## Team delivery policy
+
+```bash
+uvx pptlint policy init pptlint-policy.yml
+uvx pptlint check output.pptx --policy pptlint-policy.yml
+```
+
+Policies can define approved fonts and colors, minimum type size, and rules for external links, notes, hidden slides, and alt text. Unknown policy fields fail explicitly instead of being ignored.
+
+## Scope and boundaries
+
+| Delivery question | What PPTLint checks |
+|---|---|
+| Will the file open? | PPTX package structure, relationships, content types, media, slide list, and real rendering |
+| Will people see it? | Off-canvas text, substantial overlap, clipping risk, type size, contrast, and aspect ratio |
+| Will it survive another computer? | Fonts, external files, motion, transitions, audio, video, and notes relationships |
+| Can someone edit it? | Native text, tables, charts, shapes, and full-slide image coverage |
+| Is it safe to send? | Notes, comments, hidden slides, author data, local files, and external links |
+| Is handoff practical? | Package size, duplicated media, embedded fonts, and dynamic-content facts |
+
+PPTLint does not judge aesthetics, persuasion, or factual accuracy. Low-confidence hints never block delivery. Need to create or repair the deck first? Use [Ultimate PPT Master](https://github.com/kdnsna/ultimate-ppt-master-skill), then run PPTLint as the independent check.
+
+## GitHub Actions
 
 ```yaml
 - uses: kdnsna/pptlint@v0
@@ -80,29 +117,14 @@ This writes the before report, after report, and comparison report. The comparis
     renderer: wireframe
 ```
 
-The reports are uploaded even when the check fails.
+Reports are uploaded even when the check fails.
 
-## What PPTLint checks
-
-| User concern | Checks |
-|---|---|
-| Will it open correctly? | PPTX package, relationships, content types, media, slide list, real rendering |
-| Will it fail on screen? | Off-slide text, substantial text overlap, explicit clipping risk, small type, low contrast, unusual page size |
-| Can someone edit it later? | Full-slide images and native text, table, chart, shape coverage |
-| Is it safe to send? | Notes, comments, hidden slides, author information, external files and links |
-
-Low-confidence hints never block delivery. PPTLint does not judge whether a presentation is beautiful, persuasive, or factually correct.
-
-## Stable interfaces
+## Stable interfaces and development
 
 - Current report: [`pptlint-report/v2`](schema/pptlint-report-v2.schema.json)
 - Previous report: [`decklint-report/v1`](schema/decklint-report-v1.schema.json)
-- Comparison format: [`decklint-comparison/v1`](schema/decklint-comparison-v1.schema.json)
+- Comparison: [`decklint-comparison/v1`](schema/decklint-comparison-v1.schema.json)
 - Exit code `0`: completed; `1`: changes required; `2`: file or runtime error.
-
-The previous `decklint` command remains available in v0.4. Existing v1 reports can still be compared.
-
-## Development
 
 ```bash
 uv venv --python 3.13
@@ -111,4 +133,6 @@ PYTHONPATH=src .venv/bin/python -m pytest
 .venv/bin/ruff check src tests tools
 ```
 
-PPTLint is local, read-only, model-free, telemetry-free, and MIT licensed.
+`decklint` remains as a compatibility alias. All new documentation and commands use `pptlint`.
+
+MIT · Local · Read-only · No upload · No model · No telemetry

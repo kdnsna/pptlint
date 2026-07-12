@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.7.0 — 2026-07-12
+
+- Launch the Delivery Lab with 12 complete before/after risk demonstrations.
+- Separate controlled demonstrations from attributed audits of four public AI PowerPoint samples.
+- Add individual evidence pages for readability, portability, privacy, editability, package integrity, file size, and team policy cases.
+- Link the product homepage directly to the case lab and verify generated pages in CI and Pages deployment.
+
 ## 0.6.0 — 2026-07-12
 
 - Add package, media, animation, transition, audio, video, chart, and table handoff facts.

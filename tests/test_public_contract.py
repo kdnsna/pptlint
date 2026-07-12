@@ -109,14 +109,14 @@ def test_readme_leads_with_single_product_promise() -> None:
 
     assert readme.startswith("# PPTLint")
     first_screen = "\n".join(readme.splitlines()[:60]).lower()
-    assert "ai-generated powerpoint" in first_screen
-    assert "before you send" in first_screen
+    assert "do not send the powerpoint yet" in first_screen
+    assert "safe to send" in first_screen
     assert "pptlint check" in first_screen
     assert "does not upload" in first_screen
     assert not {"regression", "schema", "finding", "quality gate"} & set(first_screen.split())
     assert "README.zh-CN.md" in readme
-    assert "examples/reports/good-deck.html" in readme
-    assert "examples/reports/bad-deck.html" in readme
+    assert "https://kdnsna.github.io/pptlint/lab/" in readme
+    assert "proof-loop/comparison.html" in readme
 
 
 def test_v03_has_plain_language_chinese_home_and_keeps_compare() -> None:
@@ -124,11 +124,11 @@ def test_v03_has_plain_language_chinese_home_and_keeps_compare() -> None:
     first_screen = "\n".join(readme.splitlines()[:60])
     skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
 
-    assert "AI 生成 PPT" in first_screen
-    assert "发出去之前" in first_screen
+    assert "PPT 做完以后，别急着发" in first_screen
+    assert "能不能放心发" in first_screen
     assert "pptlint check" in first_screen
     assert not {"门禁", "回归", "Schema", "finding"} & set(first_screen.split())
-    assert "pptlint compare" in readme
+    assert "pptlint proof" in readme
     assert "pptlint compare" in skill
     assert len(skill.splitlines()) <= 100
 
@@ -191,8 +191,8 @@ def test_proof_loop_case_is_schema_valid_and_matches_public_claims() -> None:
     assert "http://" not in site and "https://" in site
 
 
-def test_version_is_060() -> None:
-    assert decklint.__version__ == "0.6.0"
+def test_version_is_070() -> None:
+    assert decklint.__version__ == "0.7.0"
 
 
 def test_homepage_leads_with_agent_instruction_before_cli() -> None:
@@ -202,7 +202,8 @@ def test_homepage_leads_with_agent_instruction_before_cli() -> None:
     command = "pptlint check output.pptx"
     assert agent_text in site
     assert site.index(agent_text) < site.index(command)
-    assert "See how five AI PowerPoint tools will be checked" in site
+    assert "Open the delivery case lab" in site
+    assert 'href="lab/"' in site
 
 
 def test_corpus_contains_one_hundred_public_synthetic_pptx_files() -> None:
