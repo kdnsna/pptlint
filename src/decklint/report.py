@@ -110,6 +110,7 @@ def build_report(
     profile: str,
     language: str = "en",
     scenario: str = "present",
+    policy_name: str | None = None,
 ) -> dict[str, object]:
     if language not in CHECK_COPY:
         raise ValueError(f"Unsupported report language: {language}")
@@ -121,8 +122,10 @@ def build_report(
     native_text_shapes = sum(1 for shape in all_shapes if shape.text.strip())
     pictures = sum(1 for shape in all_shapes if shape.kind == "picture")
     graphic_frames = sum(1 for shape in all_shapes if shape.kind == "graphic-frame")
-    content_objects = native_text_shapes + pictures + graphic_frames
-    native_objects = native_text_shapes + graphic_frames
+    charts = sum(1 for shape in all_shapes if shape.kind == "chart")
+    tables = sum(1 for shape in all_shapes if shape.kind == "table")
+    content_objects = native_text_shapes + pictures + graphic_frames + charts + tables
+    native_objects = native_text_shapes + graphic_frames + charts + tables
     flattened_slides = sum(
         1
         for slide in deck.slides
@@ -139,6 +142,7 @@ def build_report(
         "language": language,
         "profile": profile,
         "scenario": scenario,
+        "policy": {"applied": policy_name is not None, "name": policy_name or ""},
         "file": {"name": deck.filename, "sha256": deck.sha256, "slides": len(deck.slides)},
         "renderer": rendering.metadata(),
         "scores": scores.to_dict(),
@@ -152,9 +156,23 @@ def build_report(
                 "nativeTextShapes": native_text_shapes,
                 "pictures": pictures,
                 "graphicFrames": graphic_frames,
+                "charts": charts,
+                "tables": tables,
                 "nativeObjectRatio": round(native_objects / max(1, content_objects), 4),
                 "flattenedSlides": flattened_slides,
-            }
+            },
+            "package": {
+                "compressedBytes": deck.package_size,
+                "uncompressedBytes": deck.uncompressed_size,
+                "mediaBytes": deck.media_bytes,
+                "mediaFiles": deck.media_files,
+                "duplicateMediaFiles": deck.duplicate_media_files,
+                "embeddedFontFiles": deck.embedded_font_files,
+                "animationSlides": deck.animation_slides,
+                "transitionSlides": deck.transition_slides,
+                "audioFiles": deck.audio_files,
+                "videoFiles": deck.video_files,
+            },
         },
         "findings": [
             {
@@ -213,11 +231,13 @@ def _render_html(report: dict[str, object]) -> str:
     readiness = report["readiness"]
     priority_actions = report["priorityActions"]
     delivery_checklist = report["deliveryChecklist"]
+    metrics = report["metrics"]
     language = str(report.get("language", "en"))
     assert isinstance(file_info, dict) and isinstance(scores, dict) and isinstance(findings, list)
     assert isinstance(slides, list) and isinstance(renderer, dict)
     assert isinstance(readiness, dict) and isinstance(priority_actions, list)
     assert isinstance(delivery_checklist, list)
+    assert isinstance(metrics, dict)
     zh = language == "zh-CN"
     categories = scores["categories"]
     assert isinstance(categories, dict)
@@ -281,6 +301,21 @@ def _render_html(report: dict[str, object]) -> str:
         if isinstance(item, dict)
     )
     checklist_panel = f'<section class="checklist"><header><span class="eyebrow">{"四项交付体检" if zh else "Four delivery checks"}</span><h2>{"发出去之前，先回答这四个问题" if zh else "What happens when someone else opens it?"}</h2></header><div>{checklist_cards}</div></section>'
+    editability = metrics.get("editability", {})
+    package_metrics = metrics.get("package", {})
+    assert isinstance(editability, dict) and isinstance(package_metrics, dict)
+    size_mb = int(package_metrics.get("compressedBytes", 0)) / 1024 / 1024
+    handoff_cards = "".join(
+        [
+            f'<article><span>{"原生文字" if zh else "Native text"}</span><b>{_escape(editability.get("nativeTextShapes", 0))}</b></article>',
+            f'<article><span>{"图表 / 表格" if zh else "Charts / tables"}</span><b>{_escape(editability.get("charts", 0))} / {_escape(editability.get("tables", 0))}</b></article>',
+            f'<article><span>{"整页图片" if zh else "Flattened slides"}</span><b>{_escape(editability.get("flattenedSlides", 0))}</b></article>',
+            f'<article><span>{"文件大小" if zh else "File size"}</span><b>{size_mb:.1f} MB</b></article>',
+            f'<article><span>{"嵌入字体文件" if zh else "Embedded fonts"}</span><b>{_escape(package_metrics.get("embeddedFontFiles", 0))}</b></article>',
+            f'<article><span>{"动画 / 转场页" if zh else "Animation / transition slides"}</span><b>{_escape(package_metrics.get("animationSlides", 0))} / {_escape(package_metrics.get("transitionSlides", 0))}</b></article>',
+        ]
+    )
+    handoff_panel = f'<section class="handoff"><span class="eyebrow">{"交接事实" if zh else "Handoff facts"}</span><h2>{"这份文件里面到底有什么" if zh else "What is actually inside this file"}</h2><div>{handoff_cards}</div></section>'
     finding_groups: dict[int, list[dict[str, object]]] = {}
     for finding in findings:
         assert isinstance(finding, dict)
@@ -375,15 +410,17 @@ main{{max-width:1240px;margin:auto;padding:48px 24px 80px}}.hero{{display:grid;g
 .scores{{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:16px 0}}.score-card{{background:var(--panel);border:1px solid #d6d0c4;padding:16px}}.score-card span{{display:block;color:var(--muted);font-size:12px}}.score-card strong{{font-size:28px}}.secondary-score{{background:#ebe6dc;padding:14px 18px;margin:0 0 36px}}.secondary-score>summary{{font-weight:700;cursor:pointer}}.secondary-score>p{{color:var(--muted)}}
 .readiness{{display:grid;grid-template-columns:minmax(260px,.7fr) minmax(360px,1.3fr);gap:28px;margin:28px 0;background:var(--panel);border-left:8px solid #175cd3;padding:24px}}.readiness-blocked{{border-color:var(--critical)}}.readiness-review{{border-color:var(--medium)}}.readiness-ready{{border-color:#18794e}}.readiness h2{{font-size:44px;margin:4px 0}}.readiness p{{color:var(--muted)}}.priority h3{{margin-top:0}}.priority>ul>li{{padding:10px 0;border-top:1px solid #ded8cd}}.priority span{{font:700 11px ui-monospace,monospace;text-transform:uppercase;color:var(--muted)}}.priority strong{{display:block}}.priority ol,.fix-steps{{margin:6px 0 0;padding-left:20px;color:var(--muted)}}.impact{{font-weight:700;color:var(--ink)!important}}
 .checklist{{margin:28px 0}}.checklist>header h2{{font-size:clamp(26px,4vw,42px);margin:5px 0 18px}}.checklist>div{{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}}.check{{background:var(--panel);border-top:5px solid #18794e;padding:18px}}.check-review{{border-color:var(--medium)}}.check-fix{{border-color:var(--critical)}}.check span{{font-weight:800;font-size:12px}}.check h3{{margin:7px 0}}.check p{{color:var(--muted);min-height:68px}}.check small{{color:var(--muted)}}
+.handoff{{margin:28px 0}}.handoff h2{{font-size:clamp(25px,3vw,36px);margin:6px 0 16px}}.handoff>div{{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}}.handoff article{{background:var(--panel);padding:15px;border-top:3px solid var(--ink)}}.handoff span,.handoff b{{display:block}}.handoff span{{font-size:11px;color:var(--muted)}}.handoff b{{font-size:21px;margin-top:5px}}
 .notice{{padding:12px 16px;background:#fff3d6;border-left:4px solid var(--medium);margin-bottom:24px}}.slide-grid{{display:grid;gap:28px}}.slide-card{{display:grid;grid-template-columns:minmax(360px,1.1fr) minmax(300px,.9fr);gap:24px;background:var(--panel);border:1px solid #d6d0c4;padding:20px}}
 .slide-card header{{grid-column:1/-1;display:flex;align-items:baseline;gap:14px;border-bottom:1px solid #ded8cd}}.slide-card header h2{{margin:0 0 10px;flex:1}}.slide-card header span,.slide-card header b{{font:700 11px ui-monospace,monospace;color:var(--muted)}}
 .slide-preview{{position:relative;align-self:start;background:#ddd;box-shadow:0 12px 28px #17203320}}.slide-preview img{{width:100%;display:block}}.overlay{{position:absolute;border:3px solid var(--high);background:#d92d2015}}.overlay.severity-critical{{border-color:var(--critical)}}.overlay.severity-medium{{border-color:var(--medium)}}
 ul{{list-style:none;margin:0;padding:0;display:grid;gap:10px}}.finding{{border-left:4px solid var(--low);padding:12px;background:#f7f8fa}}.finding.severity-critical{{border-color:var(--critical)}}.finding.severity-high{{border-color:var(--high)}}.finding.severity-medium{{border-color:var(--medium)}}.finding code{{display:inline-block;color:var(--muted);font-size:11px}}.finding em{{float:right;color:var(--muted);font:700 11px ui-monospace,monospace}}.finding strong{{display:block;margin:0 0 3px}}.finding p,.finding small{{margin:0;color:var(--muted)}}.technical-details{{margin-top:10px;color:var(--muted)}}.technical-details summary{{cursor:pointer;font-size:12px}}.technical-details p{{clear:both}}.deck-findings{{margin:0 0 32px}}.scoring-policy{{border-left:4px solid #8a3d22;padding:10px 14px;margin:12px 0 0}}.scoring-policy p{{margin:6px 0 0;color:var(--muted)}}
-@media(max-width:800px){{.hero,.readiness{{grid-template-columns:1fr}}.checklist>div{{grid-template-columns:1fr 1fr}}.overall{{width:110px;height:110px}}.scores{{grid-template-columns:repeat(2,1fr)}}.slide-card{{grid-template-columns:1fr}}}}@media(max-width:480px){{.checklist>div{{grid-template-columns:1fr}}main{{padding-left:16px;padding-right:16px}}}}
+@media(max-width:800px){{.hero,.readiness{{grid-template-columns:1fr}}.checklist>div{{grid-template-columns:1fr 1fr}}.handoff>div{{grid-template-columns:repeat(2,1fr)}}.overall{{width:110px;height:110px}}.scores{{grid-template-columns:repeat(2,1fr)}}.slide-card{{grid-template-columns:1fr}}}}@media(max-width:480px){{.checklist>div{{grid-template-columns:1fr}}main{{padding-left:16px;padding-right:16px}}}}
 </style></head><body><main>
 <section class="hero"><div><span class="eyebrow">PPTLint · {"PPT 发送前体检" if zh else "PowerPoint delivery check"}</span><h1>{_escape(file_info["name"])}</h1><p>{("本地检查 · " + str(file_info["slides"]) + " 页 · 原文件未改动") if zh else ("Checked locally · " + str(file_info["slides"]) + (" slide" if int(file_info["slides"]) == 1 else " slides") + " · source file unchanged")}</p></div></section>
 {readiness_panel}
 {checklist_panel}
+{handoff_panel}
 <details class="secondary-score"><summary>Secondary score: {_escape(scores["overall"])}/100</summary><p>Use this only to compare the same presentation before and after changes.</p><section class="scores">{score_cards}</section>{scoring_policy}<details class="technical-details"><summary>Run details</summary><p>{_escape(report["profile"])} profile · {_escape(renderer["used"])} renderer</p></details></details>
 {f'<div class="notice">{_escape(renderer["detail"])}</div>' if renderer.get("detail") else ""}
 {f'<section class="deck-findings"><h2>Items that affect the whole file</h2><ul>{deck_items}</ul></section>' if deck_items else ""}

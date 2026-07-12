@@ -28,6 +28,19 @@ pptlint check input.pptx \
 
 向用户说明页码、实际影响和 `fixSteps`。不要先展示内部规则编号或总分。
 
+如需套用企业交付规范：
+
+```bash
+pptlint policy init company-ppt.yml
+pptlint check input.pptx --policy company-ppt.yml --lang zh-CN
+```
+
+如需交给 Coding Agent 修改：
+
+```bash
+pptlint plan pptlint-report.json --output repair-brief.md
+```
+
 ## 修改后复检
 
 生成独立副本后，用同一组设置检查修改前后文件并生成完整证据：

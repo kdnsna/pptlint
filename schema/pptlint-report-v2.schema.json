@@ -10,6 +10,15 @@
     "toolVersion": { "type": "string" },
     "language": { "enum": ["en", "zh-CN"] },
     "scenario": { "enum": ["present", "screen", "document"] },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["applied", "name"],
+      "properties": {
+        "applied": { "type": "boolean" },
+        "name": { "type": "string" }
+      }
+    },
     "profile": { "enum": ["baseline", "ai-generated"] },
     "file": {
       "type": "object",
@@ -69,8 +78,27 @@
             "nativeTextShapes": { "type": "integer", "minimum": 0 },
             "pictures": { "type": "integer", "minimum": 0 },
             "graphicFrames": { "type": "integer", "minimum": 0 },
+            "charts": { "type": "integer", "minimum": 0 },
+            "tables": { "type": "integer", "minimum": 0 },
             "nativeObjectRatio": { "type": "number", "minimum": 0, "maximum": 1 },
             "flattenedSlides": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "package": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["compressedBytes", "uncompressedBytes", "mediaBytes", "mediaFiles", "duplicateMediaFiles", "embeddedFontFiles", "animationSlides", "transitionSlides", "audioFiles", "videoFiles"],
+          "properties": {
+            "compressedBytes": { "type": "integer", "minimum": 0 },
+            "uncompressedBytes": { "type": "integer", "minimum": 0 },
+            "mediaBytes": { "type": "integer", "minimum": 0 },
+            "mediaFiles": { "type": "integer", "minimum": 0 },
+            "duplicateMediaFiles": { "type": "integer", "minimum": 0 },
+            "embeddedFontFiles": { "type": "integer", "minimum": 0 },
+            "animationSlides": { "type": "integer", "minimum": 0 },
+            "transitionSlides": { "type": "integer", "minimum": 0 },
+            "audioFiles": { "type": "integer", "minimum": 0 },
+            "videoFiles": { "type": "integer", "minimum": 0 }
           }
         }
       }

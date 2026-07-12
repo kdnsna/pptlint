@@ -13,6 +13,13 @@ BLOCKER_RULES = {
     "privacy.external-relationship",
     "readability.off-canvas-text",
     "readability.text-overlap",
+    "policy.notes-forbidden",
+    "policy.hidden-slide-forbidden",
+    "policy.external-link-forbidden",
+    "policy.font-not-allowed",
+    "policy.font-size-below-minimum",
+    "policy.color-not-allowed",
+    "policy.alt-text-required",
 }
 
 RULE_IMPACTS = {
@@ -41,6 +48,17 @@ RULE_IMPACTS = {
     "consistency.font-outlier": "An accidental font change can make the deck look unfinished or reflow elsewhere.",
     "consistency.repeated-layout": "Repeated structure may make the story difficult to scan and follow.",
     "integrity.orphan-slide-part": "Unused slide data remains in the package and should be reviewed before delivery.",
+    "integrity.large-package": "The file may be slow to send, open, or present on another computer.",
+    "integrity.duplicate-media": "Repeated media increases file size without improving the presentation.",
+    "readability.motion-portability-risk": "Animations or transitions may look different after export or in another app.",
+    "editability.media-portability-risk": "Audio or video may fail when codecs, links, or apps change.",
+    "policy.notes-forbidden": "The file violates the approved rule that delivery copies must not contain notes.",
+    "policy.hidden-slide-forbidden": "The file violates the approved rule that delivery copies must not contain hidden slides.",
+    "policy.external-link-forbidden": "The file violates the approved rule that delivery copies must not use external links.",
+    "policy.font-not-allowed": "The slide uses a font outside the approved brand or delivery set.",
+    "policy.font-size-below-minimum": "The slide uses text smaller than the approved minimum.",
+    "policy.color-not-allowed": "The slide uses a color outside the approved brand palette.",
+    "policy.alt-text-required": "The file does not meet the approved image-description requirement.",
 }
 
 RULE_FIX_STEPS = {
@@ -147,6 +165,17 @@ ZH_IMPACTS = {
     "consistency.font-outlier": "意外混入的字体会让页面显得没收尾，换电脑时也可能变形。",
     "consistency.repeated-layout": "页面结构过度重复，观众不容易抓住重点。",
     "integrity.orphan-slide-part": "文件包里留着未使用的页面数据，外发前应确认。",
+    "integrity.large-package": "文件过大时，发送、打开和现场播放都可能变慢。",
+    "integrity.duplicate-media": "同一媒体被重复保存，会让文件无意义地变大。",
+    "readability.motion-portability-risk": "动画或转场在导出后、换软件后可能和原来不同。",
+    "editability.media-portability-risk": "换电脑、编解码器或播放软件后，音视频可能无法播放。",
+    "policy.notes-forbidden": "交付规则明确禁止备注，但文件中仍然保留了备注。",
+    "policy.hidden-slide-forbidden": "交付规则明确禁止隐藏页，但文件中仍然存在隐藏页。",
+    "policy.external-link-forbidden": "交付规则明确禁止外部链接，但文件中仍然存在外链。",
+    "policy.font-not-allowed": "页面使用了品牌或交付规范之外的字体。",
+    "policy.font-size-below-minimum": "页面文字小于交付规范允许的最小字号。",
+    "policy.color-not-allowed": "页面使用了品牌规范之外的颜色。",
+    "policy.alt-text-required": "图片没有满足交付规范要求的替代文字。",
 }
 
 ZH_FIX_STEPS = {
@@ -163,6 +192,25 @@ ZH_FIX_STEPS = {
     "readability.small-font": ["按会议室实际观看距离查看这一页。", "放大字号，或减少页面文字。", "再运行一次 PPTLint，并查看页面预览。"],
     "readability.low-contrast": ["查看高亮文字与实际背景的对比。", "加深文字、提亮背景，或增加纯色底。", "再运行一次 PPTLint，并查看页面预览。"],
     "editability.full-slide-image": ["确认对方是否需要修改这一页的文字、数字、图表或形状。", "把需要修改的内容重建为 PowerPoint 原生对象。", "再运行一次 PPTLint，确认整页图片数量。"],
+    "accessibility.missing-alt-text": ["确认图片是信息内容还是纯装饰。", "为信息图片添加简洁替代文字；装饰图片标记为装饰。", "再运行一次 PPTLint，确认提醒消失。"],
+    "accessibility.missing-title": ["确认这一页的核心结论。", "使用标题占位符添加唯一且清楚的页面标题。", "再运行一次 PPTLint，确认页面可以被正确导航。"],
+    "accessibility.reading-order-risk": ["在 PowerPoint 的选择窗格中查看对象顺序。", "按标题、正文、图表和辅助说明的阅读顺序重新排列。", "使用辅助阅读检查再次确认。"],
+    "readability.dense-text": ["确认观众在现场需要记住的唯一结论。", "把细节移到备注或拆成多页。", "再运行一次 PPTLint，并按实际观看距离检查。"],
+    "readability.blank-slide": ["确认空白页是否有意保留。", "删除意外空白页，或恢复缺失内容。", "再运行一次 PPTLint。"],
+    "readability.unusual-aspect-ratio": ["确认最终屏幕、投影或打印尺寸。", "把交付副本调整为目标设备支持的页面比例。", "在实际设备上打开并再次检查。"],
+    "consistency.font-outlier": ["确认少量出现的字体是否有意使用。", "如非必要，替换为整套 PPT 的既定字体。", "再运行一次 PPTLint，确认字体体系稳定。"],
+    "consistency.repeated-layout": ["确认连续重复版式是否服务于叙事。", "必要时改变页面角色或主视觉，而不是只换装饰。", "缩略图浏览整套 PPT，确认节奏清楚。"],
+    "integrity.large-package": ["先另存一份交付副本。", "压缩过大的图片、音视频，并删除未使用的媒体。", "再运行一次 PPTLint，确认文件体积已经下降。"],
+    "integrity.duplicate-media": ["确认重复媒体是否确实为同一份内容。", "在交付副本中复用同一资源或删除多余副本。", "再运行一次 PPTLint，确认重复媒体数量下降。"],
+    "readability.motion-portability-risk": ["在最终使用的软件和设备上完整播放一次。", "把关键结论做成不依赖动画也能看懂的静态内容。", "另存交付副本，并再次检查。"],
+    "editability.media-portability-risk": ["确认音视频已经嵌入，并能在目标电脑上播放。", "准备通用格式或可替代的静态页面。", "在断网环境和另一台电脑上试播。"],
+    "policy.notes-forbidden": ["打开备注视图，检查全部页面。", "删除交付规范不允许保留的备注。", "另存交付副本，再按同一规范检查。"],
+    "policy.hidden-slide-forbidden": ["在幻灯片浏览视图中找出隐藏页。", "删除隐藏页，或把确需交付的页面取消隐藏。", "另存交付副本，再按同一规范检查。"],
+    "policy.external-link-forbidden": ["检查报告所示的外部网址或本地文件链接。", "把内容嵌入文件，或删除不允许的链接。", "另存交付副本，再按同一规范检查。"],
+    "policy.font-not-allowed": ["确认报告所示字体是否在批准清单内。", "替换为品牌或交付规范允许的字体。", "再按同一规范检查，确认字体统一。"],
+    "policy.font-size-below-minimum": ["查看报告所示文字在实际观看距离下是否清楚。", "放大字号、精简内容或拆成多页。", "再按同一规范检查，确认达到最小字号。"],
+    "policy.color-not-allowed": ["确认报告所示颜色是否有业务含义。", "替换为品牌规范允许的颜色。", "再按同一规范检查，确认配色合规。"],
+    "policy.alt-text-required": ["确认图片是信息内容还是纯装饰。", "为信息图片添加简洁替代文字；装饰图片标记为装饰。", "再按同一规范检查，确认图片说明完整。"],
 }
 
 

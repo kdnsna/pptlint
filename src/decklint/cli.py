@@ -7,6 +7,7 @@ from pathlib import Path
 from .comparison import ComparisonError, load_audit_report
 from .comparison_report import build_comparison_report, write_comparison_reports
 from .model import DeckLoadError, load_deck
+from .policy import POLICY_TEMPLATE, apply_policy, load_policy
 from .render import RenderError, render_deck
 from .report import build_report, write_reports
 from .rules import audit_deck
@@ -38,6 +39,7 @@ def _add_check_arguments(command: argparse.ArgumentParser, *, output: str, fail_
     command.add_argument("--fail-on", choices=("none", "low", "medium", "high", "critical"), default=fail_on)
     command.add_argument("--min-score", type=_score_value, default=None)
     command.add_argument("--lang", choices=("en", "zh-CN"), default="en", help="Report language")
+    command.add_argument("--policy", type=Path, default=None, help="Optional YAML delivery policy")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -78,11 +80,21 @@ def build_parser() -> argparse.ArgumentParser:
     proof.add_argument("--renderer", choices=("auto", "wireframe", "libreoffice"), default="auto")
     proof.add_argument("--soffice-path", help="Optional path to the LibreOffice soffice executable")
     proof.add_argument("--lang", choices=("en", "zh-CN"), default="en", help="Report language")
+    proof.add_argument("--policy", type=Path, default=None, help="Optional YAML delivery policy")
     proof.add_argument(
         "--fail-on-regression",
         choices=("none", "low", "medium", "high", "critical"),
         default="high",
     )
+    plan = subcommands.add_parser(
+        "plan", help="Turn a PPTLint JSON report into an agent-ready repair brief."
+    )
+    plan.add_argument("report", type=Path, help="PPTLint JSON report")
+    plan.add_argument("--output", type=Path, default=Path("pptlint-repair-brief.md"))
+    plan.add_argument("--lang", choices=("en", "zh-CN"), default=None)
+    policy = subcommands.add_parser("policy", help="Create a delivery policy template.")
+    policy.add_argument("action", choices=("init",))
+    policy.add_argument("output", type=Path, nargs="?", default=Path("pptlint-policy.yml"))
     return parser
 
 
@@ -116,10 +128,15 @@ def _build_audit_report(
     soffice_path: str | None,
     language: str,
     scenario: str,
+    policy_path: Path | None,
 ) -> tuple[dict[str, object], list[object]]:
     source = source.expanduser()
     deck = load_deck(source)
     findings = audit_deck(deck, profile=profile, scenario=scenario)
+    policy = load_policy(policy_path) if policy_path is not None else None
+    if policy is not None:
+        findings.extend(apply_policy(deck, policy))
+        findings.sort(key=lambda item: (item.slide_index or 0, item.rule_id, item.shape_id or ""))
     scores = score_findings(findings)
     rendering = render_deck(
         deck,
@@ -135,6 +152,7 @@ def _build_audit_report(
         profile=profile,
         language=language,
         scenario=scenario,
+        policy_name=policy.name if policy is not None else None,
     )
     return report, findings
 
@@ -148,6 +166,7 @@ def _run_audit(args: argparse.Namespace) -> int:
             soffice_path=args.soffice_path,
             language=args.lang,
             scenario=args.scenario,
+            policy_path=args.policy,
         )
         html_path, json_path = write_reports(args.output.expanduser(), report)
     except (DeckLoadError, RenderError, OSError, ValueError) as exc:
@@ -216,6 +235,7 @@ def _run_proof(args: argparse.Namespace) -> int:
             soffice_path=args.soffice_path,
             language=args.lang,
             scenario=args.scenario,
+            policy_path=args.policy,
         )
         after, _ = _build_audit_report(
             args.after,
@@ -224,6 +244,7 @@ def _run_proof(args: argparse.Namespace) -> int:
             soffice_path=args.soffice_path,
             language=args.lang,
             scenario=args.scenario,
+            policy_path=args.policy,
         )
         output = args.output.expanduser()
         before_paths = write_reports(Path(f"{output}-before"), before)
@@ -266,10 +287,90 @@ def _run_proof(args: argparse.Namespace) -> int:
     return 0 if comparison["gate"]["passed"] else 1
 
 
+def _run_plan(args: argparse.Namespace) -> int:
+    try:
+        report = load_audit_report(args.report.expanduser())
+        output = args.output.expanduser()
+        language = args.lang or str(report.get("language", "en"))
+        actions = report.get("priorityActions", [])
+        if not isinstance(actions, list):
+            raise ValueError("Report priorityActions must be an array")
+        file_info = report.get("file", {})
+        readiness = report.get("readiness", {})
+        if not isinstance(file_info, dict) or not isinstance(readiness, dict):
+            raise ValueError("Report file and readiness fields must be objects")
+        zh = language == "zh-CN"
+        lines = [
+            "# PPTLint 修复简报" if zh else "# PPTLint repair brief",
+            "",
+            (f"- 文件：`{file_info.get('name', '')}`" if zh else f"- File: `{file_info.get('name', '')}`"),
+            (f"- 交付结论：`{readiness.get('status', 'unknown')}`" if zh else f"- Readiness: `{readiness.get('status', 'unknown')}`"),
+            (f"- 使用场景：`{report.get('scenario', 'present')}`" if zh else f"- Scenario: `{report.get('scenario', 'present')}`"),
+            "- 原则：保留原文件，只修改独立副本；不要为了分数破坏已有设计。" if zh else "- Rule: preserve the source, edit a copy, and do not damage the design merely to increase a score.",
+            "",
+            "## 优先处理" if zh else "## Priority actions",
+            "",
+        ]
+        if not actions:
+            lines.append("当前没有优先修复动作。" if zh else "No priority repair action is required.")
+        for index, action in enumerate(actions, 1):
+            if not isinstance(action, dict):
+                continue
+            lines.extend(
+                [
+                    f"### {index}. {action.get('impact', '')}",
+                    "",
+                    (f"- 位置：{_action_location(action, zh=True)}" if zh else f"- Location: {_action_location(action, zh=False)}"),
+                    (f"- 规则：`{action.get('ruleId', '')}`" if zh else f"- Rule: `{action.get('ruleId', '')}`"),
+                ]
+            )
+            steps = action.get("fixSteps", [])
+            if isinstance(steps, list):
+                lines.extend(f"  {number}. {step}" for number, step in enumerate(steps, 1))
+            lines.append("")
+        source_name = str(file_info.get("name", "deck.pptx"))
+        lines.extend(
+            [
+                "## 复检" if zh else "## Recheck",
+                "",
+                "```bash",
+                f"pptlint check {source_name} --scenario {report.get('scenario', 'present')} --output pptlint-report",
+                "```",
+                "",
+                "100 分只代表规则检查结果，不代表审美满分或绝对零风险。" if zh else "A score of 100 is a rule-check result, not an aesthetic grade or a zero-risk guarantee.",
+            ]
+        )
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    except (ComparisonError, OSError, UnicodeError, ValueError) as exc:
+        print(f"PPTLint could not create the repair brief: {exc}", file=sys.stderr)
+        return 2
+    print(f"Repair brief: {output}")
+    return 0
+
+
+def _run_policy(args: argparse.Namespace) -> int:
+    output = args.output.expanduser()
+    try:
+        if output.exists():
+            raise ValueError(f"Policy file already exists: {output}")
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(POLICY_TEMPLATE, encoding="utf-8")
+    except (OSError, ValueError) as exc:
+        print(f"PPTLint could not create the policy: {exc}", file=sys.stderr)
+        return 2
+    print(f"Policy template: {output}")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     if args.command == "compare":
         return _run_compare(args)
     if args.command == "proof":
         return _run_proof(args)
+    if args.command == "plan":
+        return _run_plan(args)
+    if args.command == "policy":
+        return _run_policy(args)
     return _run_audit(args)

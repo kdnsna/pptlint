@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "pptlint"
-version = "0.5.0"
+version = "0.6.0"
 description = "Open-source PPT/PPTX preflight checks for AI-generated PowerPoint files."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -14,6 +14,7 @@ dependencies = [
   "defusedxml>=0.7.1,<1",
   "Pillow>=10,<13",
   "pypdfium2>=4.30,<6",
+  "PyYAML>=6,<7",
 ]
 classifiers = [
   "Development Status :: 3 - Alpha",
@@ -41,7 +42,6 @@ dev = [
   "build>=1.2,<2",
   "jsonschema>=4.23,<5",
   "pytest>=8,<10",
-  "PyYAML>=6,<7",
   "python-pptx>=1.0,<2",
   "ruff>=0.9,<1",
 ]

@@ -189,6 +189,54 @@ def audit_deck(
                 "Confirm the intended output device and page size before delivery.",
             )
         )
+    if deck.package_size > 50 * 1024 * 1024:
+        findings.append(
+            _finding(
+                "integrity.large-package",
+                "integrity",
+                "low",
+                "high",
+                "The PowerPoint file is unusually large for routine sharing.",
+                f"package={deck.package_size / 1024 / 1024:.1f} MiB; media={deck.media_bytes / 1024 / 1024:.1f} MiB",
+                "Compress oversized media in a delivery copy and confirm that quality remains acceptable.",
+            )
+        )
+    if deck.duplicate_media_files:
+        findings.append(
+            _finding(
+                "integrity.duplicate-media",
+                "integrity",
+                "low",
+                "high",
+                "The package stores identical media more than once.",
+                f"duplicate media files={deck.duplicate_media_files}; media files={deck.media_files}",
+                "Reuse or deduplicate repeated media when file size affects delivery.",
+            )
+        )
+    if deck.animation_slides or deck.transition_slides:
+        findings.append(
+            _finding(
+                "readability.motion-portability-risk",
+                "readability",
+                "medium",
+                "low",
+                "Animations or transitions may change when exported or opened in another presentation app.",
+                f"animation slides={deck.animation_slides}; transition slides={deck.transition_slides}",
+                "Rehearse the delivery copy in the actual presentation app and keep a static fallback.",
+            )
+        )
+    if deck.audio_files or deck.video_files:
+        findings.append(
+            _finding(
+                "editability.media-portability-risk",
+                "editability",
+                "medium",
+                "low",
+                "Audio or video playback may depend on codecs, links, or the presentation app.",
+                f"audio files={deck.audio_files}; video files={deck.video_files}",
+                "Test every media item on the delivery computer and keep a separate media fallback.",
+            )
+        )
 
     font_thresholds = {
         "present": (14, 18) if profile == "ai-generated" else (12, 14),
@@ -199,7 +247,8 @@ def audit_deck(
     canvas_tolerance = max(9_525, round(min(deck.width, deck.height) * 0.001))
     for slide in deck.slides:
         if not any(
-            shape.text.strip() or shape.kind in {"picture", "graphic-frame"} for shape in slide.shapes
+            shape.text.strip() or shape.kind in {"picture", "graphic-frame", "chart", "table"}
+            for shape in slide.shapes
         ):
             findings.append(
                 _finding(

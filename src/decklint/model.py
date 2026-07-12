@@ -183,6 +183,16 @@ class DeckModel:
     comments_count: int = 0
     orphan_slide_parts: list[str] = field(default_factory=list)
     missing_content_types: list[str] = field(default_factory=list)
+    package_size: int = 0
+    uncompressed_size: int = 0
+    media_bytes: int = 0
+    media_files: int = 0
+    duplicate_media_files: int = 0
+    embedded_font_files: int = 0
+    animation_slides: int = 0
+    transition_slides: int = 0
+    audio_files: int = 0
+    video_files: int = 0
 
 
 def _read_xml(package: zipfile.ZipFile, name: str):
@@ -314,7 +324,14 @@ def _colors(node, path: str) -> list[str]:
 
 
 def _parse_shape(node, z_order: int, transform: CoordinateTransform, id_prefix: str = "") -> Shape:
-    kind = "picture" if node.tag.endswith("}pic") else "graphic-frame" if node.tag.endswith("}graphicFrame") else "shape"
+    if node.tag.endswith("}pic"):
+        kind = "picture"
+    elif node.tag.endswith("}graphicFrame"):
+        graphic_data = node.find(".//a:graphicData", NS)
+        uri = graphic_data.get("uri", "") if graphic_data is not None else ""
+        kind = "chart" if uri.endswith("/chart") else "table" if uri.endswith("/table") else "graphic-frame"
+    else:
+        kind = "shape"
     c_nv_pr = node.find(".//p:cNvPr", NS)
     local_id = c_nv_pr.get("id", str(z_order + 1)) if c_nv_pr is not None else str(z_order + 1)
     shape_id = f"{id_prefix}{local_id}"
@@ -483,6 +500,13 @@ def load_deck(path: Path) -> DeckModel:
             and name not in override_content_types
             and name.rsplit(".", 1)[-1].lower() not in default_content_types
         )
+        media_infos = [info for info in infos if info.filename.startswith("ppt/media/")]
+        media_hashes: dict[str, int] = {}
+        for info in media_infos:
+            media_hash = hashlib.sha256(package.read(info.filename)).hexdigest()
+            media_hashes[media_hash] = media_hashes.get(media_hash, 0) + 1
+        duplicate_media_files = sum(count - 1 for count in media_hashes.values() if count > 1)
+        media_names = [info.filename.lower() for info in media_infos]
         declared_slide_parts = {
             override.get("PartName", "").lstrip("/")
             for override in content_types.findall("ct:Override", NS)
@@ -551,8 +575,12 @@ def load_deck(path: Path) -> DeckModel:
                 slide_names.append(target)
         orphan_slide_parts = sorted(set(package_slide_names) - set(slide_names))
         slides: list[Slide] = []
+        animation_slides = 0
+        transition_slides = 0
         for index, slide_name in enumerate(slide_names, 1):
             root = _read_xml(package, slide_name)
+            animation_slides += int(root.find(".//p:timing", NS) is not None)
+            transition_slides += int(root.find(".//p:transition", NS) is not None)
             shape_tree = root.find(".//p:spTree", NS)
             shapes = [] if shape_tree is None else _flatten_shapes(shape_tree)
             title_candidates = [shape.text for shape in shapes if shape.placeholder_type in {"title", "ctrTitle"} and shape.text]
@@ -610,4 +638,22 @@ def load_deck(path: Path) -> DeckModel:
             comments_count=comments_count,
             orphan_slide_parts=orphan_slide_parts,
             missing_content_types=missing_content_types,
+            package_size=path.stat().st_size,
+            uncompressed_size=sum(info.file_size for info in infos),
+            media_bytes=sum(info.file_size for info in media_infos),
+            media_files=len(media_infos),
+            duplicate_media_files=duplicate_media_files,
+            embedded_font_files=sum(
+                1
+                for name in names
+                if name.startswith("ppt/fonts/") or name.lower().endswith(".odttf")
+            ),
+            animation_slides=animation_slides,
+            transition_slides=transition_slides,
+            audio_files=sum(
+                name.endswith((".mp3", ".wav", ".m4a", ".aac", ".wma")) for name in media_names
+            ),
+            video_files=sum(
+                name.endswith((".mp4", ".mov", ".avi", ".wmv", ".m4v")) for name in media_names
+            ),
         )

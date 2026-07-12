@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.6.0 — 2026-07-12
+
+- Add package, media, animation, transition, audio, video, chart, and table handoff facts.
+- Flag large packages, duplicated media, and motion or media portability risks without judging aesthetics.
+- Add optional YAML delivery policies for approved fonts, colors, minimum type, privacy, links, and alt text.
+- Add `pptlint policy init` and `pptlint plan` for a safe policy template and an agent-ready repair brief.
+
 ## 0.5.0 — 2026-07-12
 
 - Add `--scenario present|screen|document` so readability checks match the real delivery setting.
