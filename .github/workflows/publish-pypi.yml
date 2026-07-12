@@ -74,12 +74,14 @@ jobs:
           "$RUNNER_TEMP/pptlint-published/bin/pip" install --no-cache-dir "pptlint==$VERSION"
           "$RUNNER_TEMP/pptlint-published/bin/pptlint" --version | grep "PPTLint $VERSION"
           "$RUNNER_TEMP/pptlint-published/bin/pptlint" check examples/good-deck.pptx --renderer wireframe --output "$RUNNER_TEMP/published-report"
-      - name: Create immutable release and update v0
+      - name: Create immutable release and update major Action tag
         env:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ inputs.confirm-version }}
         shell: bash
         run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           tag="v$VERSION"
           if ! git rev-parse "$tag" >/dev/null 2>&1; then
             git tag -a "$tag" -m "PPTLint $tag"
@@ -88,5 +90,6 @@ jobs:
           if ! gh release view "$tag" >/dev/null 2>&1; then
             gh release create "$tag" dist/* --title "PPTLint $tag" --generate-notes
           fi
-          git tag -f -a v0 -m "PPTLint v0" "$tag"
-          git push origin refs/tags/v0 --force
+          major="v${VERSION%%.*}"
+          git tag -f -a "$major" -m "PPTLint $major" "$tag"
+          git push origin "refs/tags/$major" --force

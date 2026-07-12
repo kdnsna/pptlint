@@ -31,7 +31,7 @@
   ],
   "file": {
     "name": "good-deck.pptx",
-    "sha256": "43bfd6fffa605419b66a027a42f4a0676473e486b43498a006a38f7525ada711",
+    "sha256": "967b52610daeddc3ede3d587193e76d2f82ae96821d9eceb8d9e21ffaac26797",
     "slides": 1
   },
   "findings": [],
@@ -76,6 +76,7 @@
     "status": "ok",
     "used": "wireframe"
   },
+  "reportMode": "full",
   "scenario": "present",
   "schemaVersion": "pptlint-report/v2",
   "scores": {
@@ -128,5 +129,5 @@
     "low": 0,
     "medium": 0
   },
-  "toolVersion": "0.7.1"
+  "toolVersion": "1.0.1"
 }

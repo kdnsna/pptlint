@@ -16,7 +16,7 @@ def test_cli_prints_current_version(capsys) -> None:
         main(["--version"])
 
     assert exc.value.code == 0
-    assert capsys.readouterr().out.strip() == "PPTLint 0.7.1"
+    assert capsys.readouterr().out.strip() == "PPTLint 1.0.1"
 
 
 def test_cli_writes_html_and_json_for_valid_deck(tmp_path: Path, monkeypatch) -> None:
@@ -71,14 +71,14 @@ def test_start_checks_and_opens_the_local_report(tmp_path: Path, monkeypatch) ->
 def test_doctor_and_version_expose_supportable_diagnostics(capsys) -> None:
     assert main(["doctor", "--json"]) == 0
     payload = json.loads(capsys.readouterr().out)
-    assert payload["version"] == "1.0.0"
+    assert payload["version"] == "1.0.1"
     assert payload["wireframeRenderer"] is True
     assert payload["supportedInput"] == [".pptx"]
 
     with pytest.raises(SystemExit) as exc:
         main(["--version"])
     assert exc.value.code == 0
-    assert "PPTLint 1.0.0" in capsys.readouterr().out
+    assert "PPTLint 1.0.1" in capsys.readouterr().out
 
 
 def test_cli_returns_one_when_high_confidence_finding_reaches_threshold(tmp_path: Path) -> None:

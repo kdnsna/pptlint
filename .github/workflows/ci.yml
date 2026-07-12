@@ -22,6 +22,8 @@ jobs:
           pptlint --version
           pptlint doctor --json
           python tools/build_case_lab.py --check
+          python tools/check_release_consistency.py
+          python tools/check_public_proof.py
   package:
     runs-on: ubuntu-latest
     steps:

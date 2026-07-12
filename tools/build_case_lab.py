@@ -416,6 +416,20 @@ INDEX_TMPL = '''<!doctype html>
     </div>
   </section>
 
+  <section class="section section--muted">
+    <div class="container">
+      <div class="case-cta reveal reveal--scale">
+        <div>
+          <h2 class="case-cta__title">真实九页 PPT：83 → 100</h2>
+          <p class="case-cta__sub">当前引擎处理 103 项，没有新增高把握问题；原文件、修改后文件和机器可读报告全部公开。</p>
+        </div>
+        <div class="case-cta__actions">
+          <a class="btn btn--primary" href="../proof-loop/comparison.html">查看完整证据</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <footer class="footer">
     <div class="container">
       <div class="footer__brand">PPTLINT</div>

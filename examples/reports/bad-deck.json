@@ -31,7 +31,7 @@
   ],
   "file": {
     "name": "bad-deck.pptx",
-    "sha256": "5568c357d1769ca055e2a0e533fc128530e4aacf8055d3471948e5b2c1648ce6",
+    "sha256": "7c74ef78e24f7a9776c9dc63b93d46506a70b2df4a4fd382a3a5f1d006a040ed",
     "slides": 1
   },
   "findings": [
@@ -335,6 +335,7 @@
     "status": "ok",
     "used": "wireframe"
   },
+  "reportMode": "full",
   "scenario": "present",
   "schemaVersion": "pptlint-report/v2",
   "scores": {
@@ -438,5 +439,5 @@
     "low": 0,
     "medium": 2
   },
-  "toolVersion": "0.7.1"
+  "toolVersion": "1.0.1"
 }

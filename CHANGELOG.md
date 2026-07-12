@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.1 — 2026-07-12
+
+- Restore a verifiable release path after the parallel 1.0 merge and keep the public package, source version, and generated proof in sync.
+- Make CI fail when committed Proof Loop metrics or public claims no longer match the current comparison JSON.
+- Publish immutable package artifacts and advance the matching major Action tag only after the public package passes smoke tests.
+
 ## 1.0.0 — 2026-07-12
 
 - Add `pptlint start` to check a deck and open its offline report in one command.
