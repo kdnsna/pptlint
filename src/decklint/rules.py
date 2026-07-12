@@ -106,9 +106,16 @@ def _overlap_ratio(first: Shape, second: Shape) -> float:
     return intersection / max(1, smaller)
 
 
-def audit_deck(deck: DeckModel, *, profile: str = "baseline") -> list[Finding]:
+def audit_deck(
+    deck: DeckModel,
+    *,
+    profile: str = "baseline",
+    scenario: str = "present",
+) -> list[Finding]:
     if profile not in {"baseline", "ai-generated"}:
         raise ValueError(f"Unsupported profile: {profile}")
+    if scenario not in {"present", "screen", "document"}:
+        raise ValueError(f"Unsupported scenario: {scenario}")
     findings: list[Finding] = []
 
     if not deck.slides:
@@ -136,15 +143,24 @@ def audit_deck(deck: DeckModel, *, profile: str = "baseline") -> list[Finding]:
             )
         )
     for relationship in deck.broken_relationships:
+        notes_only = relationship.source.startswith("ppt/notesSlides/")
         findings.append(
             _finding(
-                "integrity.broken-relationship",
+                "integrity.notes-relationship" if notes_only else "integrity.broken-relationship",
                 "integrity",
-                "critical",
+                "medium" if notes_only else "critical",
                 "high",
-                "A PPTX relationship points to a missing package part.",
+                (
+                    "A speaker-notes relationship points to a missing notes package part."
+                    if notes_only
+                    else "A PPTX relationship points to a missing package part."
+                ),
                 f"{relationship.source}#{relationship.relationship_id} -> {relationship.target}",
-                "Restore the missing media or remove the dangling relationship.",
+                (
+                    "Open the notes view, confirm notes still work, and recreate the notes master if needed."
+                    if notes_only
+                    else "Restore the missing media or remove the dangling relationship."
+                ),
             )
         )
     for part_name in deck.missing_content_types:
@@ -174,8 +190,13 @@ def audit_deck(deck: DeckModel, *, profile: str = "baseline") -> list[Finding]:
             )
         )
 
-    small_high = 14 if profile == "ai-generated" else 12
-    small_medium = 18 if profile == "ai-generated" else 14
+    font_thresholds = {
+        "present": (14, 18) if profile == "ai-generated" else (12, 14),
+        "screen": (12, 14) if profile == "ai-generated" else (10, 12),
+        "document": (10, 12) if profile == "ai-generated" else (8, 10),
+    }
+    small_high, small_medium = font_thresholds[scenario]
+    canvas_tolerance = max(9_525, round(min(deck.width, deck.height) * 0.001))
     for slide in deck.slides:
         if not any(
             shape.text.strip() or shape.kind in {"picture", "graphic-frame"} for shape in slide.shapes
@@ -239,7 +260,12 @@ def audit_deck(deck: DeckModel, *, profile: str = "baseline") -> list[Finding]:
                     )
                 right = shape.bbox.x + shape.bbox.w
                 bottom = shape.bbox.y + shape.bbox.h
-                if shape.bbox.x < 0 or shape.bbox.y < 0 or right > deck.width or bottom > deck.height:
+                if (
+                    shape.bbox.x < -canvas_tolerance
+                    or shape.bbox.y < -canvas_tolerance
+                    or right > deck.width + canvas_tolerance
+                    or bottom > deck.height + canvas_tolerance
+                ):
                     findings.append(
                         _finding(
                             "readability.off-canvas-text",
@@ -247,7 +273,10 @@ def audit_deck(deck: DeckModel, *, profile: str = "baseline") -> list[Finding]:
                             "high",
                             "high",
                             "A text box extends beyond the slide canvas.",
-                            f"bbox={shape.bbox}; canvas={deck.width}x{deck.height}",
+                            (
+                                f"bbox={shape.bbox}; canvas={deck.width}x{deck.height}; "
+                                f"tolerance={canvas_tolerance} EMU"
+                            ),
                             "Move or resize the text box so it remains inside the slide bounds.",
                             slide=slide,
                             shape=shape,

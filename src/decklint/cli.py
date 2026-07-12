@@ -27,6 +27,12 @@ def _add_check_arguments(command: argparse.ArgumentParser, *, output: str, fail_
     command.add_argument("input", type=Path, help="PPTX file to check")
     command.add_argument("--output", type=Path, default=Path(output), help="Report filename prefix")
     command.add_argument("--profile", choices=("baseline", "ai-generated"), default="baseline")
+    command.add_argument(
+        "--scenario",
+        choices=("present", "screen", "document"),
+        default="present",
+        help="Intended use: room presentation, screen reading, or document-style deck",
+    )
     command.add_argument("--renderer", choices=("auto", "wireframe", "libreoffice"), default="auto")
     command.add_argument("--soffice-path", help="Optional path to the LibreOffice soffice executable")
     command.add_argument("--fail-on", choices=("none", "low", "medium", "high", "critical"), default=fail_on)
@@ -66,6 +72,9 @@ def build_parser() -> argparse.ArgumentParser:
         "--output", type=Path, default=Path("pptlint-proof"), help="Proof report filename prefix"
     )
     proof.add_argument("--profile", choices=("baseline", "ai-generated"), default="baseline")
+    proof.add_argument(
+        "--scenario", choices=("present", "screen", "document"), default="present"
+    )
     proof.add_argument("--renderer", choices=("auto", "wireframe", "libreoffice"), default="auto")
     proof.add_argument("--soffice-path", help="Optional path to the LibreOffice soffice executable")
     proof.add_argument("--lang", choices=("en", "zh-CN"), default="en", help="Report language")
@@ -106,10 +115,11 @@ def _build_audit_report(
     renderer: str,
     soffice_path: str | None,
     language: str,
+    scenario: str,
 ) -> tuple[dict[str, object], list[object]]:
     source = source.expanduser()
     deck = load_deck(source)
-    findings = audit_deck(deck, profile=profile)
+    findings = audit_deck(deck, profile=profile, scenario=scenario)
     scores = score_findings(findings)
     rendering = render_deck(
         deck,
@@ -118,7 +128,13 @@ def _build_audit_report(
         soffice_path=soffice_path,
     )
     report = build_report(
-        deck, findings, scores, rendering, profile=profile, language=language
+        deck,
+        findings,
+        scores,
+        rendering,
+        profile=profile,
+        language=language,
+        scenario=scenario,
     )
     return report, findings
 
@@ -131,6 +147,7 @@ def _run_audit(args: argparse.Namespace) -> int:
             renderer=args.renderer,
             soffice_path=args.soffice_path,
             language=args.lang,
+            scenario=args.scenario,
         )
         html_path, json_path = write_reports(args.output.expanduser(), report)
     except (DeckLoadError, RenderError, OSError, ValueError) as exc:
@@ -198,6 +215,7 @@ def _run_proof(args: argparse.Namespace) -> int:
             renderer=args.renderer,
             soffice_path=args.soffice_path,
             language=args.lang,
+            scenario=args.scenario,
         )
         after, _ = _build_audit_report(
             args.after,
@@ -205,6 +223,7 @@ def _run_proof(args: argparse.Namespace) -> int:
             renderer=args.renderer,
             soffice_path=args.soffice_path,
             language=args.lang,
+            scenario=args.scenario,
         )
         output = args.output.expanduser()
         before_paths = write_reports(Path(f"{output}-before"), before)

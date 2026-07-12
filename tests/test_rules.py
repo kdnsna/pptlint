@@ -34,6 +34,28 @@ def test_readability_rules_find_small_and_off_canvas_text(tmp_path: Path) -> Non
     assert "readability.off-canvas-text" in ids
 
 
+def test_subpixel_rounding_at_canvas_edge_does_not_block(tmp_path: Path) -> None:
+    source = write_pptx(
+        tmp_path / "rounding.pptx",
+        slides=[slide_xml(body_x=-1, body_w=12_192_001)],
+    )
+
+    ids = rule_ids(source)
+
+    assert "readability.off-canvas-text" not in ids
+
+
+def test_scenario_changes_small_text_threshold_without_changing_profile(tmp_path: Path) -> None:
+    source = write_pptx(tmp_path / "scenario.pptx", slides=[slide_xml(body_size=1250)])
+    deck = load_deck(source)
+
+    present = audit_deck(deck, profile="ai-generated", scenario="present")
+    document = audit_deck(deck, profile="ai-generated", scenario="document")
+
+    assert any(item.rule_id == "readability.small-font" for item in present)
+    assert not any(item.rule_id == "readability.small-font" for item in document)
+
+
 def test_explicit_low_contrast_is_high_confidence(tmp_path: Path) -> None:
     source = write_pptx(
         tmp_path / "contrast.pptx",

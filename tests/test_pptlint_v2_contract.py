@@ -8,7 +8,7 @@ from pptlint.cli import main
 from pptlint.readiness import assess_readiness
 from pptlint.schema import Finding
 
-from .pptx_factory import write_pptx
+from .pptx_factory import slide_xml, write_pptx
 
 
 def finding(rule_id: str, *, confidence: str = "high") -> Finding:
@@ -90,6 +90,8 @@ def test_pptlint_check_writes_v2_report_with_actionable_findings(
     assert exit_code == 1
     assert payload["schemaVersion"] == "pptlint-report/v2"
     assert payload["language"] == "en"
+    assert payload["scenario"] == "present"
+    assert payload["issueGroups"]
     assert [item["id"] for item in payload["deliveryChecklist"]] == [
         "file",
         "presentation",
@@ -109,6 +111,40 @@ def test_pptlint_check_writes_v2_report_with_actionable_findings(
     assert "Whole file" in output_text
     assert "Open the HTML report for the highlighted slides" in output_text
     assert "not an aesthetic grade" in output_text
+
+
+def test_report_groups_repeated_findings_for_people(tmp_path: Path) -> None:
+    source = write_pptx(
+        tmp_path / "small.pptx",
+        slides=[
+            slide_xml(body_size=900, second_body=True),
+            slide_xml(body_size=900, second_body=True),
+        ],
+    )
+    output = tmp_path / "grouped"
+
+    main(
+        [
+            "check",
+            str(source),
+            "--profile",
+            "ai-generated",
+            "--renderer",
+            "wireframe",
+            "--lang",
+            "zh-CN",
+            "--output",
+            str(output),
+        ]
+    )
+
+    payload = json.loads(output.with_suffix(".json").read_text(encoding="utf-8"))
+    html = output.with_suffix(".html").read_text(encoding="utf-8")
+    small = next(group for group in payload["issueGroups"] if group["ruleId"] == "readability.small-font")
+    assert small["occurrenceCount"] == 4
+    assert small["affectedSlides"] == [1, 2]
+    assert html.count("<strong>Text uses 9 pt type") == 2
+    assert "本页 2 处" in html
 
 
 def test_pptlint_check_can_write_plain_chinese_delivery_guidance(

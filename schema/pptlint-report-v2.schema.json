@@ -9,6 +9,7 @@
     "schemaVersion": { "const": "pptlint-report/v2" },
     "toolVersion": { "type": "string" },
     "language": { "enum": ["en", "zh-CN"] },
+    "scenario": { "enum": ["present", "screen", "document"] },
     "profile": { "enum": ["baseline", "ai-generated"] },
     "file": {
       "type": "object",
@@ -51,6 +52,10 @@
       "maxItems": 4,
       "items": { "$ref": "#/$defs/deliveryCheck" }
     },
+    "issueGroups": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/issueGroup" }
+    },
     "metrics": {
       "type": "object",
       "additionalProperties": false,
@@ -89,6 +94,21 @@
     }
   },
   "$defs": {
+    "issueGroup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ruleId", "category", "severity", "confidence", "disposition", "impact", "occurrenceCount", "affectedSlides"],
+      "properties": {
+        "ruleId": { "type": "string" },
+        "category": { "enum": ["integrity", "readability", "editability", "consistency", "accessibility", "privacy"] },
+        "severity": { "enum": ["low", "medium", "high", "critical"] },
+        "confidence": { "enum": ["low", "high"] },
+        "disposition": { "enum": ["blocker", "review", "advisory"] },
+        "impact": { "type": "string" },
+        "occurrenceCount": { "type": "integer", "minimum": 1 },
+        "affectedSlides": { "type": "array", "items": { "type": "integer", "minimum": 1 }, "uniqueItems": true }
+      }
+    },
     "deliveryCheck": {
       "type": "object",
       "additionalProperties": false,

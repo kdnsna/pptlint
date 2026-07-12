@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.0 — 2026-07-12
+
+- Add `--scenario present|screen|document` so readability checks match the real delivery setting.
+- Ignore sub-pixel canvas rounding instead of blocking an otherwise valid deck.
+- Treat missing notes-only relationships as review items rather than broken-slide blockers.
+- Group repeated occurrences by rule in JSON and HTML so one root cause does not flood the report.
+
 ## 0.4.0 — 2026-07-12
 
 - Add `pptlint proof BEFORE.pptx AFTER.pptx` for a complete local before/after evidence pack.

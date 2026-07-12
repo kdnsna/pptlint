@@ -67,6 +67,40 @@ def _delivery_checklist(findings: list[Finding], *, language: str) -> list[dict[
     return result
 
 
+def _issue_groups(findings: list[Finding], *, language: str) -> list[dict[str, object]]:
+    grouped: dict[str, list[Finding]] = {}
+    for finding in findings:
+        grouped.setdefault(finding.rule_id, []).append(finding)
+    result: list[dict[str, object]] = []
+    for rule_id, items in grouped.items():
+        detail = classify_finding(items[0], language=language)
+        slides = sorted({item.slide_index for item in items if item.slide_index is not None})
+        result.append(
+            {
+                "ruleId": rule_id,
+                "category": items[0].category,
+                "severity": max(
+                    (item.severity for item in items),
+                    key={"low": 1, "medium": 2, "high": 3, "critical": 4}.__getitem__,
+                ),
+                "confidence": "high" if any(item.confidence == "high" for item in items) else "low",
+                "disposition": detail["disposition"],
+                "impact": detail["impact"],
+                "occurrenceCount": len(items),
+                "affectedSlides": slides,
+            }
+        )
+    rank = {"blocker": 3, "review": 2, "advisory": 1}
+    return sorted(
+        result,
+        key=lambda item: (
+            -rank[str(item["disposition"])],
+            -int(item["occurrenceCount"]),
+            str(item["ruleId"]),
+        ),
+    )
+
+
 def build_report(
     deck: DeckModel,
     findings: list[Finding],
@@ -75,6 +109,7 @@ def build_report(
     *,
     profile: str,
     language: str = "en",
+    scenario: str = "present",
 ) -> dict[str, object]:
     if language not in CHECK_COPY:
         raise ValueError(f"Unsupported report language: {language}")
@@ -103,12 +138,14 @@ def build_report(
         "toolVersion": __version__,
         "language": language,
         "profile": profile,
+        "scenario": scenario,
         "file": {"name": deck.filename, "sha256": deck.sha256, "slides": len(deck.slides)},
         "renderer": rendering.metadata(),
         "scores": scores.to_dict(),
         "summary": summary,
         "readiness": {"status": readiness.status, "reasons": readiness.reasons},
         "priorityActions": readiness.priority_actions,
+        "issueGroups": _issue_groups(findings, language=language),
         "deliveryChecklist": _delivery_checklist(findings, language=language),
         "metrics": {
             "editability": {
@@ -158,6 +195,13 @@ def _action_location(action: dict[str, object], *, zh: bool) -> str:
     if slide:
         return f"第 {slide} 页" if zh else f"Slide {slide}"
     return "整个文件" if zh else "Whole file"
+
+
+def _render_groups(items: list[dict[str, object]]) -> list[list[dict[str, object]]]:
+    grouped: dict[str, list[dict[str, object]]] = {}
+    for item in items:
+        grouped.setdefault(str(item["rule_id"]), []).append(item)
+    return list(grouped.values())
 
 
 def _render_html(report: dict[str, object]) -> str:
@@ -249,12 +293,6 @@ def _render_html(report: dict[str, object]) -> str:
         overlays = ""
         finding_items = ""
         for finding in slide_findings:
-            deduction = deduction_map.get(finding["id"], {"applied": 0, "reason": "unscored"})
-            points = (
-                f"-{deduction['applied']} points"
-                if deduction["applied"]
-                else f"0 points · {deduction['reason']}"
-            )
             bbox = finding.get("bbox")
             if isinstance(bbox, dict) and float(bbox.get("w", 0)) > 0 and float(bbox.get("h", 0)) > 0:
                 overlays += (
@@ -262,39 +300,67 @@ def _render_html(report: dict[str, object]) -> str:
                     f'style="left:{float(bbox["x"]) * 100:.3f}%;top:{float(bbox["y"]) * 100:.3f}%;'
                     f'width:{float(bbox["w"]) * 100:.3f}%;height:{float(bbox["h"]) * 100:.3f}%"></i>'
                 )
+        rendered_groups = _render_groups(slide_findings)
+        for group in rendered_groups:
+            finding = group[0]
+            deductions_for_group = [
+                deduction_map.get(item["id"], {"applied": 0, "reason": "unscored"})
+                for item in group
+            ]
+            applied = sum(int(item.get("applied", 0)) for item in deductions_for_group)
+            deduction = deductions_for_group[0]
+            points = (
+                f"-{applied} points"
+                if applied
+                else f"0 points · {deduction['reason']}"
+            )
+            count_label = (
+                f" · 本页 {len(group)} 处" if zh and len(group) > 1 else (f" · {len(group)} occurrences" if len(group) > 1 else "")
+            )
+            evidence = " | ".join(str(item["evidence"]) for item in group[:5])
+            if len(group) > 5:
+                evidence += f" | +{len(group) - 5} more"
             finding_items += (
                 f'<li class="finding severity-{_escape(finding["severity"])}" '
                 f'data-severity="{_escape(finding["severity"])}" data-category="{_escape(finding["category"])}">'
-                f"<strong>{_escape(finding['message'])}</strong>"
+                f"<strong>{_escape(finding['message'])}{_escape(count_label)}</strong>"
                 f'<p class="impact">Impact: {_escape(finding["impact"])}</p>'
                 '<ol class="fix-steps">'
                 + "".join(f"<li>{_escape(step)}</li>" for step in finding["fixSteps"])
                 + '</ol><details class="technical-details"><summary>Technical details</summary>'
                 f"<code>{_escape(finding['rule_id'])}</code><em>{_escape(points)}</em>"
-                f"<p>{_escape(finding['evidence'])}</p></details></li>"
+                f"<p>{_escape(evidence)}</p></details></li>"
             )
         slide_cards.append(
             f'<article class="slide-card" data-slide="{index}"><header><span>Slide {index:02d}</span>'
-            f"<h2>{_escape(slide.get('title') or 'Untitled slide')}</h2><b>{len(slide_findings)} items to check</b></header>"
+            f"<h2>{_escape(slide.get('title') or 'Untitled slide')}</h2><b>{len(rendered_groups)} groups · {len(slide_findings)} occurrences</b></header>"
             f'<div class="slide-preview"><img alt="Slide {index} preview" src="{_escape(slide.get("preview", ""))}">{overlays}</div>'
             f"<ul>{finding_items or '<li class=clean>No item to check on this slide.</li>'}</ul></article>"
         )
     deck_findings = finding_groups.get(0, [])
     deck_items = ""
-    for finding in deck_findings:
-        deduction = deduction_map.get(finding["id"], {"applied": 0, "reason": "unscored"})
+    for group in _render_groups(deck_findings):
+        finding = group[0]
+        deductions_for_group = [
+            deduction_map.get(item["id"], {"applied": 0, "reason": "unscored"}) for item in group
+        ]
+        applied = sum(int(item.get("applied", 0)) for item in deductions_for_group)
+        deduction = deductions_for_group[0]
         points = (
-            f"-{deduction['applied']} points" if deduction["applied"] else f"0 points · {deduction['reason']}"
+            f"-{applied} points" if applied else f"0 points · {deduction['reason']}"
+        )
+        count_label = (
+            f" · {len(group)} 处" if zh and len(group) > 1 else (f" · {len(group)} occurrences" if len(group) > 1 else "")
         )
         deck_items += (
             f'<li class="finding severity-{_escape(finding["severity"])}">'
-            f"<strong>{_escape(finding['message'])}</strong>"
+            f"<strong>{_escape(finding['message'])}{_escape(count_label)}</strong>"
             f'<p class="impact">Impact: {_escape(finding["impact"])}</p>'
             '<ol class="fix-steps">'
             + "".join(f"<li>{_escape(step)}</li>" for step in finding["fixSteps"])
             + '</ol><details class="technical-details"><summary>Technical details</summary>'
             f"<code>{_escape(finding['rule_id'])}</code><em>{_escape(points)}</em>"
-            f"<p>{_escape(finding['evidence'])}</p></details></li>"
+            f"<p>{_escape(' | '.join(str(item['evidence']) for item in group[:5]))}</p></details></li>"
         )
     raw_json = json.dumps(report, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
     safe_json = raw_json.replace("&", "\\u0026").replace("<", "\\u003c").replace(">", "\\u003e")

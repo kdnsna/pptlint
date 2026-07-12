@@ -19,6 +19,7 @@ RULE_IMPACTS = {
     "integrity.broken-relationship": "PowerPoint may repair the file, omit content, or refuse to open it.",
     "integrity.empty-deck": "The file contains no slide that can be presented.",
     "integrity.missing-content-type": "PowerPoint may repair or omit the undeclared package part.",
+    "integrity.notes-relationship": "Speaker notes may not behave consistently even when slides still render.",
     "privacy.comments": "Internal review comments can leave the organization with the file.",
     "privacy.external-relationship": "The presentation depends on or exposes an external URL or file.",
     "privacy.speaker-notes": "Speaker notes may contain information that was not intended for recipients.",
@@ -52,6 +53,11 @@ RULE_FIX_STEPS = {
         "Open the source project or template used to generate the presentation.",
         "Export at least one valid slide to a new PPTX.",
         "Run PPTLint again before delivery.",
+    ],
+    "integrity.notes-relationship": [
+        "Open Notes view and confirm that notes still appear on the affected slides.",
+        "Recreate the notes master or save a clean delivery copy when PowerPoint reports a repair.",
+        "Run PPTLint again and confirm the notes relationship is valid.",
     ],
     "privacy.comments": [
         "In PowerPoint, open Review and inspect every comment.",
@@ -119,6 +125,7 @@ ZH_IMPACTS = {
     "integrity.broken-relationship": "对方打开时，PowerPoint 可能修复文件、漏掉内容，甚至无法打开。",
     "integrity.empty-deck": "文件里没有可正常演示的页面。",
     "integrity.missing-content-type": "对方打开时，PowerPoint 可能修复或忽略这部分内容。",
+    "integrity.notes-relationship": "页面可能仍能放映，但讲者备注在其他电脑上可能工作不正常。",
     "privacy.comments": "内部修改意见可能跟着文件一起发给对方。",
     "privacy.external-relationship": "文件可能依赖外部网址或本地路径，也可能暴露不该外发的地址。",
     "privacy.speaker-notes": "讲者备注里可能留着只供内部使用的内容。",
@@ -143,6 +150,7 @@ ZH_IMPACTS = {
 }
 
 ZH_FIX_STEPS = {
+    "integrity.notes-relationship": ["打开备注视图，确认相关页面的备注仍然存在。", "如果 PowerPoint 提示修复，重建备注母版或另存干净副本。", "再运行一次 PPTLint，确认备注关系恢复正常。"],
     "privacy.comments": ["在 PowerPoint 的“审阅”中查看全部批注。", "删除不应外发的批注。", "另存交付副本，再运行一次 PPTLint。"],
     "privacy.external-relationship": ["在“文件 > 信息”中检查链接和外部内容。", "把内容嵌入文件、删除链接，或确认该链接可以外发。", "另存交付副本，再运行一次 PPTLint。"],
     "privacy.speaker-notes": ["打开报告所示页面的备注区。", "删除机密、草稿或只供内部使用的文字。", "再运行一次 PPTLint，确认提醒消失。"],
