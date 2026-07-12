@@ -32,7 +32,7 @@
         <strong>PPT 做完，先别急着点发送。</strong>PPTLint 会在你自己的电脑上把它过一遍——文字有没有被截掉、换台电脑会不会走样、整页是不是根本改不动，以及讲者备注和隐藏页会不会被一起带出去。
       </p>
       <div class="hero__actions reveal">
-        <a class="btn btn--primary" href="#start">检查我的 PPT</a>
+        <a class="btn btn--primary" href="#start">打开本地拖放版</a>
         <a class="btn btn--secondary" href="lab/">先看 12 个真实场景</a>
       </div>
       <div class="hero__trust reveal">
@@ -121,14 +121,14 @@
 
   <section id="start" class="section section--white">
     <div class="container">
-      <h2 class="section__title reveal">不懂代码也没关系，把这句话交给你的 AI 助手</h2>
-      <p class="section__desc reveal">只要你在用 Codex、Claude Code，或任何能读写本地文件的 AI 助手，把 PPT 连同下面这句话一起发给它就行。</p>
+      <h2 class="section__title reveal">不懂代码也没关系，让助手替你打开一次</h2>
+      <p class="section__desc reveal">打开后就是中文拖放页面：检查、清理授权、复制修复任务、修改后复检和导出证据都在同一个页面完成。</p>
       <div class="prompt-card reveal reveal--scale">
         <div class="prompt-card__label">复制下面这句话</div>
-        <p class="prompt-card__text">请安装 PPTLint，帮我检查这份 PowerPoint 适不适合发给领导或客户。先列出必须处理的页面，再告诉我在 PowerPoint 里具体该怎么改。不要改动原文件。</p>
+        <p class="prompt-card__text">请安装最新版 PPTLint，运行 `pptlint app`，帮我打开本地中文拖放页面。不要上传 PPT，不要修改原文件。</p>
         <button class="btn btn--primary" type="button" onclick="copyPrompt()">复制这句话</button>
       </div>
-      <p class="text-muted reveal" style="margin-top: 16px;">助手会在你本机完成检查，并生成一份可以直接打开的中文报告。整个过程，你的 PPT 都不会被上传到 PPTLint。</p>
+      <p class="text-muted reveal" style="margin-top: 16px;">也可直接运行 <code>uvx --refresh pptlint app</code>。页面只在本机随机端口打开，关闭后临时文件自动删除。</p>
     </div>
   </section>
 
@@ -247,7 +247,7 @@
   <script src="shared.js"></script>
   <script>
     function copyPrompt() {
-      const text = '请安装 PPTLint，帮我检查这份 PowerPoint 适不适合发给领导或客户。先列出必须处理的页面，再告诉我在 PowerPoint 里具体该怎么改。不要改动原文件。';
+      const text = '请安装最新版 PPTLint，运行 pptlint app，帮我打开本地中文拖放页面。不要上传 PPT，不要修改原文件。';
       navigator.clipboard.writeText(text).then(() => {
         const btn = document.querySelector('.prompt-card .btn');
         const original = btn.textContent;

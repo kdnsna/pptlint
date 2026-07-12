@@ -59,6 +59,14 @@ pptlint fix input.pptx --output input.delivery.pptx \
   --apply remove-speaker-notes
 ```
 
+普通 Office 用户优先打开本地拖放版：
+
+```bash
+pptlint app
+```
+
+页面只允许绑定 `127.0.0.1`。不得把它改为 `0.0.0.0`、云端上传版或无令牌服务。`PPTLint Verified` 只能在修复任务验证通过时生成。
+
 ## 修改后复检
 
 生成独立副本后，用同一组设置检查修改前后文件并生成完整证据：

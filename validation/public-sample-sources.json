@@ -1,0 +1,84 @@
+{
+  "version": 1,
+  "minimumSamples": 30,
+  "families": [
+    {
+      "id": "ppt-master",
+      "project": "PPT Master",
+      "repository": "https://github.com/hugohe3/ppt-master",
+      "revision": "1c87905f6de3f4d4480be3bc5e610bff38702450",
+      "rawBase": "https://raw.githubusercontent.com/hugohe3/ppt-master/1c87905f6de3f4d4480be3bc5e610bff38702450/",
+      "paths": [
+        "examples/ppt169_attention_is_all_you_need/exports/attention_is_all_you_need_narrated.pptx",
+        "examples/ppt169_brutalist_ai_newspaper_2026/exports/brutalist_ai_newspaper_2026.pptx",
+        "examples/ppt169_building_effective_agents/exports/building_effective_agents.pptx",
+        "examples/ppt169_cangzhuo/exports/cangzhuo.pptx",
+        "examples/ppt169_fashion_weekly_digest/exports/fashion-weekly-digest.pptx",
+        "examples/ppt169_general_dark_tech_claude_code_auto_mode/exports/claude-code-auto-mode_20260422_143501.pptx",
+        "examples/ppt169_glassmorphism_demo/exports/glassmorphism_demo.pptx",
+        "examples/ppt169_global_ai_capital_2026/exports/global_ai_capital_2026.pptx",
+        "examples/ppt169_high_rise_renewal/exports/high_rise_renewal.pptx",
+        "examples/ppt169_home_design_trends_2026/exports/home-design-trends-2026.pptx",
+        "examples/ppt169_image_text_showcase/exports/image-text-showcase.pptx",
+        "examples/ppt169_indie_bookstore_zine_guide/exports/indie_bookstore_zine_guide.pptx",
+        "examples/ppt169_kimsoong_loyalty_programme/exports/kimsoong_loyalty_programme.pptx",
+        "examples/ppt169_kubernetes_blueprint_2026/exports/kubernetes_blueprint_2026.pptx",
+        "examples/ppt169_lin_huiyin_architect/exports/lin-huiyin-architect.pptx",
+        "examples/ppt169_lin_huiyin_architect_revised/exports/lin-huiyin-architect-revised.pptx",
+        "examples/ppt169_liziqi_plant_dye_colors/exports/liziqi-plant-dye-colors.pptx",
+        "examples/ppt169_lora_hu_2021/exports/lora_hu_2021.pptx",
+        "examples/ppt169_pritzker_2026/exports/pritzker_2026.pptx",
+        "examples/ppt169_sugar_rush_memphis/exports/sugar_rush_memphis.pptx",
+        "examples/ppt169_swiss_grid_systems/exports/swiss_grid_systems.pptx"
+      ]
+    },
+    {
+      "id": "pptagent",
+      "project": "PPTAgent",
+      "repository": "https://github.com/icip-cas/PPTAgent",
+      "revision": "2419d30b134a71486523e95ded60b32489fd3c61",
+      "rawBase": "https://raw.githubusercontent.com/icip-cas/PPTAgent/2419d30b134a71486523e95ded60b32489fd3c61/",
+      "paths": [
+        "pptagent/templates/beamer/source.pptx",
+        "pptagent/templates/cip/source.pptx",
+        "pptagent/templates/default/source.pptx",
+        "pptagent/templates/hit/source.pptx",
+        "pptagent/templates/thu/source.pptx",
+        "pptagent/templates/ucas/source.pptx",
+        "pptagent/test/test.pptx",
+        "resource/build_effective_agents/build_effective_agents.pptx",
+        "resource/iphone16pro/Iphone16Pro.pptx"
+      ]
+    },
+    {
+      "id": "presenton",
+      "project": "Presenton",
+      "repository": "https://github.com/presenton/presenton",
+      "revision": "c3c1902ddd60d7434d92978907cabaa173cb1bf3",
+      "urls": [
+        {
+          "name": "public-presenton-export.pptx",
+          "url": "https://presenton-public.s3.ap-southeast-1.amazonaws.com/users/814cadab-dd31-46e0-b11b-fe3883b0f5da/exports/98590105-39ef-4b4d-b5de-4c6de4a7598d.pptx"
+        }
+      ],
+      "note": "The pinned repository revision contains no committed PPTX sample; this is a public Presenton export stored on the project's public export host."
+    },
+    {
+      "id": "ultimate-ppt-master",
+      "project": "Ultimate PPT Master",
+      "repository": "https://github.com/kdnsna/ultimate-ppt-master-skill",
+      "revision": "e6e0ea16c31b32966c435a40184472ae41a1e407",
+      "urls": [
+        {
+          "name": "ultimate-proof-before.pptx",
+          "url": "https://raw.githubusercontent.com/kdnsna/pptlint/v0.7.1/examples/proof-loop/before.pptx"
+        },
+        {
+          "name": "ultimate-proof-after.pptx",
+          "url": "https://raw.githubusercontent.com/kdnsna/pptlint/v0.7.1/examples/proof-loop/after.pptx"
+        }
+      ],
+      "note": "These two public proof assets were exported by Ultimate PPT Master and archived in the immutable PPTLint v0.7.1 release."
+    }
+  ]
+}

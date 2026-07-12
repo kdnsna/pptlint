@@ -1,0 +1,703 @@
+{
+  "schemaVersion": "pptlint-public-sample-validation/v1",
+  "toolVersion": "1.3.0",
+  "manifest": "public-sample-sources.json",
+  "summary": {
+    "declaredSamples": 33,
+    "auditedSamples": 33,
+    "failedSamples": 0,
+    "families": {
+      "ppt-master": 21,
+      "pptagent": 9,
+      "presenton": 1,
+      "ultimate-ppt-master": 2
+    },
+    "repairPlanCoveragePercent": 100.0,
+    "minimumSamplesMet": true
+  },
+  "results": [
+    {
+      "family": "ppt-master",
+      "project": "PPT Master",
+      "repository": "https://github.com/hugohe3/ppt-master",
+      "name": "attention_is_all_you_need_narrated.pptx",
+      "url": "https://raw.githubusercontent.com/hugohe3/ppt-master/1c87905f6de3f4d4480be3bc5e610bff38702450/examples/ppt169_attention_is_all_you_need/exports/attention_is_all_you_need_narrated.pptx",
+      "bytes": 7881693,
+      "sha256": "85e84a7463f67f52eb66d1cbdcf78fbb0a25a45f81fa37d311bcf7d0d1ce6b5e",
+      "slides": 16,
+      "readiness": "review",
+      "score": 88,
+      "findingCount": 458,
+      "repairTaskCount": 458,
+      "repairCoverage": true,
+      "repairModes": {
+        "agent-rebuild": 7,
+        "cleanup-copy": 17,
+        "guided-powerpoint": 416,
+        "human-decision": 18
+      }
+    },
+    {
+      "family": "ppt-master",
+      "project": "PPT Master",
+      "repository": "https://github.com/hugohe3/ppt-master",
+      "name": "brutalist_ai_newspaper_2026.pptx",
+      "url": "https://raw.githubusercontent.com/hugohe3/ppt-master/1c87905f6de3f4d4480be3bc5e610bff38702450/examples/ppt169_brutalist_ai_newspaper_2026/exports/brutalist_ai_newspaper_2026.pptx",
+      "bytes": 7774954,
+      "sha256": "a78701848dd76b4456636b764cdfa159cfe51d54d17ba1f9425957e08a92e1b9",
+      "slides": 10,
+      "readiness": "review",
+      "score": 81,
+      "findingCount": 434,
+      "repairTaskCount": 434,
+      "repairCoverage": true,
+      "repairModes": {
+        "agent-rebuild": 22,
+        "cleanup-copy": 11,
+        "guided-powerpoint": 390,
+        "human-decision": 11
+      }
+    },
+    {
+      "family": "ppt-master",
+      "project": "PPT Master",
+      "repository": "https://github.com/hugohe3/ppt-master",
+      "name": "building_effective_agents.pptx",
+      "url": "https://raw.githubusercontent.com/hugohe3/ppt-master/1c87905f6de3f4d4480be3bc5e610bff38702450/examples/ppt169_building_effective_agents/exports/building_effective_agents.pptx",
+      "bytes": 1002116,
+      "sha256": "cbeca28dd2c8bcb1b8d13103759712b93c76af8a1d03feb4d586fe7485dd1ad5",
+      "slides": 12,
+      "readiness": "review",
+      "score": 78,
+      "findingCount": 230,
+      "repairTaskCount": 230,
+      "repairCoverage": true,
+      "repairModes": {
+        "agent-rebuild": 15,
+        "cleanup-copy": 13,
+        "guided-powerpoint": 189,
+        "human-decision": 13
+      }
+    },
+    {
+      "family": "ppt-master",
+      "project": "PPT Master",
+      "repository": "https://github.com/hugohe3/ppt-master",
+      "name": "cangzhuo.pptx",
+      "url": "https://raw.githubusercontent.com/hugohe3/ppt-master/1c87905f6de3f4d4480be3bc5e610bff38702450/examples/ppt169_cangzhuo/exports/cangzhuo.pptx",
+      "bytes": 8210381,
+      "sha256": "6c574b08f04ca14b0dbd46450a0849f24324be15ba3bcc2766bd23cebdb85d8e",
+      "slides": 14,
+      "readiness": "review",
+      "score": 79,
+      "findingCount": 202,
+      "repairTaskCount": 202,
+      "repairCoverage": true,
+      "repairModes": {
+        "agent-rebuild": 18,
+        "cleanup-copy": 15,
+        "guided-powerpoint": 156,
+        "human-decision": 13
+      }
+    },
+    {
+      "family": "ppt-master",
+      "project": "PPT Master",
+      "repository": "https://github.com/hugohe3/ppt-master",
+      "name": "fashion-weekly-digest.pptx",
+      "url": "https://raw.githubusercontent.com/hugohe3/ppt-master/1c87905f6de3f4d4480be3bc5e610bff38702450/examples/ppt169_fashion_weekly_digest/exports/fashion-weekly-digest.pptx",
+      "bytes": 2988770,
+      "sha256": "b36b5432287c8afdda15cb0444bc89d462f43cb6272b9453a905f8695f46de19",
+      "slides": 16,
+      "readiness": "review",
+      "score": 78,
+      "findingCount": 356,
+      "repairTaskCount": 356,
+      "repairCoverage": true,
+      "repairModes": {
+        "agent-rebuild": 27,
+        "cleanup-copy": 17,
+        "guided-powerpoint": 295,
+        "human-decision": 17
+      }
+    },
+    {
+      "family": "ppt-master",
+      "project": "PPT Master",
+      "repository": "https://github.com/hugohe3/ppt-master",
+      "name": "claude-code-auto-mode_20260422_143501.pptx",
+      "url": "https://raw.githubusercontent.com/hugohe3/ppt-master/1c87905f6de3f4d4480be3bc5e610bff38702450/examples/ppt169_general_dark_tech_claude_code_auto_mode/exports/claude-code-auto-mode_20260422_143501.pptx",
+      "bytes": 1633860,
+      "sha256": "9c9c647867704570e6f91ff984d7dd4f8beca36c0d19d6e6f5e42a181461100d",
+      "slides": 10,
+      "readiness": "review",
+      "score": 80,
+      "findingCount": 198,
+      "repairTaskCount": 198,
+      "repairCoverage": true,
+      "repairModes": {
+        "agent-rebuild": 12,
+        "cleanup-copy": 11,
+        "guided-powerpoint": 164,
+        "human-decision": 11
+      }
+    },
+    {
+      "family": "ppt-master",
+      "project": "PPT Master",
+      "repository": "https://github.com/hugohe3/ppt-master",
+      "name": "glassmorphism_demo.pptx",
+      "url": "https://raw.githubusercontent.com/hugohe3/ppt-master/1c87905f6de3f4d4480be3bc5e610bff38702450/examples/ppt169_glassmorphism_demo/exports/glassmorphism_demo.pptx",
+      "bytes": 7843702,
+      "sha256": "291bdc5f8a203a7076d387bc667b67b074c2a9bd94d5e7ee0892d8b22b44b46b",
+      "slides": 12,
+      "readiness": "review",
+      "score": 79,
+      "findingCount": 366,
+      "repairTaskCount": 366,
+      "repairCoverage": true,
+      "repairModes": {
+        "agent-rebuild": 16,
+        "cleanup-copy": 13,
+        "guided-powerpoint": 324,
+        "human-decision": 13
+      }
+    },
+    {
+      "family": "ppt-master",
+      "project": "PPT Master",
+      "repository": "https://github.com/hugohe3/ppt-master",
+      "name": "global_ai_capital_2026.pptx",
+      "url": "https://raw.githubusercontent.com/hugohe3/ppt-master/1c87905f6de3f4d4480be3bc5e610bff38702450/examples/ppt169_global_ai_capital_2026/exports/global_ai_capital_2026.pptx",
+      "bytes": 3486177,
+      "sha256": "2a323935de5a736e301e46b00707521026c31b1436663d7d7ebdec3166991972",
+      "slides": 20,
+      "readiness": "blocked",
+      "score": 72,
+      "findingCount": 597,
+      "repairTaskCount": 597,
+      "repairCoverage": true,
+      "repairModes": {
+        "agent-rebuild": 48,
+        "cleanup-copy": 21,
+        "guided-powerpoint": 509,
+        "human-decision": 19
+      }
+    },
+    {
+      "family": "ppt-master",
+      "project": "PPT Master",
+      "repository": "https://github.com/hugohe3/ppt-master",
+      "name": "high_rise_renewal.pptx",
+      "url": "https://raw.githubusercontent.com/hugohe3/ppt-master/1c87905f6de3f4d4480be3bc5e610bff38702450/examples/ppt169_high_rise_renewal/exports/high_rise_renewal.pptx",
+      "bytes": 22532490,
+      "sha256": "2df2e9748047b7223e60b63597ebae1c7ebec2878d99332006aa4692674bd5ae",
+      "slides": 15,
+      "readiness": "review",
+      "score": 78,
+      "findingCount": 300,
+      "repairTaskCount": 300,
+      "repairCoverage": true,
+      "repairModes": {
+        "agent-rebuild": 23,
+        "cleanup-copy": 16,
+        "guided-powerpoint": 246,
+        "human-decision": 15
+      }
+    },
+    {
+      "family": "ppt-master",
+      "project": "PPT Master",
+      "repository": "https://github.com/hugohe3/ppt-master",
+      "name": "home-design-trends-2026.pptx",
+      "url": "https://raw.githubusercontent.com/hugohe3/ppt-master/1c87905f6de3f4d4480be3bc5e610bff38702450/examples/ppt169_home_design_trends_2026/exports/home-design-trends-2026.pptx",
+      "bytes": 10245281,
+      "sha256": "81e9b0b94e1ddea80d2602a1d189626df06bf158dd6d2a42b0f796ba6c9b4279",
+      "slides": 12,
+      "readiness": "review",
+      "score": 78,
+      "findingCount": 227,
+      "repairTaskCount": 227,
+      "repairCoverage": true,
+      "repairModes": {
+        "agent-rebuild": 14,
+        "cleanup-copy": 13,
+        "guided-powerpoint": 188,
+        "human-decision": 12
+      }
+    },
+    {
+      "family": "ppt-master",
+      "project": "PPT Master",
+      "repository": "https://github.com/hugohe3/ppt-master",
+      "name": "image-text-showcase.pptx",
+      "url": "https://raw.githubusercontent.com/hugohe3/ppt-master/1c87905f6de3f4d4480be3bc5e610bff38702450/examples/ppt169_image_text_showcase/exports/image-text-showcase.pptx",
+      "bytes": 36755135,
+      "sha256": "1e682a73e398921cd7e4a0dfdbeb94d3c8ae25d66cc8d115fa3d72534e1394a8",
+      "slides": 20,
+      "readiness": "review",
+      "score": 78,
+      "findingCount": 471,
+      "repairTaskCount": 471,
+      "repairCoverage": true,
+      "repairModes": {
+        "agent-rebuild": 37,
+        "cleanup-copy": 21,
+        "guided-powerpoint": 394,
+        "human-decision": 19
+      }
+    },
+    {
+      "family": "ppt-master",
+      "project": "PPT Master",
+      "repository": "https://github.com/hugohe3/ppt-master",
+      "name": "indie_bookstore_zine_guide.pptx",
+      "url": "https://raw.githubusercontent.com/hugohe3/ppt-master/1c87905f6de3f4d4480be3bc5e610bff38702450/examples/ppt169_indie_bookstore_zine_guide/exports/indie_bookstore_zine_guide.pptx",
+      "bytes": 17112798,
+      "sha256": "7231ffd6c00fd93d0d824bc539d8101cb6d94a04b9f5c9be57ebefb377f45f26",
+      "slides": 18,
+      "readiness": "review",
+      "score": 79,
+      "findingCount": 571,
+      "repairTaskCount": 571,
+      "repairCoverage": true,
+      "repairModes": {
+        "agent-rebuild": 69,
+        "cleanup-copy": 19,
+        "guided-powerpoint": 464,
+        "human-decision": 19
+      }
+    },
+    {
+      "family": "ppt-master",
+      "project": "PPT Master",
+      "repository": "https://github.com/hugohe3/ppt-master",
+      "name": "kimsoong_loyalty_programme.pptx",
+      "url": "https://raw.githubusercontent.com/hugohe3/ppt-master/1c87905f6de3f4d4480be3bc5e610bff38702450/examples/ppt169_kimsoong_loyalty_programme/exports/kimsoong_loyalty_programme.pptx",
+      "bytes": 3888022,
+      "sha256": "584a90994a0121b79a830cc659c16d2cd786340773295fe507bce6afc21a7e2b",
+      "slides": 10,
+      "readiness": "blocked",
+      "score": 72,
+      "findingCount": 357,
+      "repairTaskCount": 357,
+      "repairCoverage": true,
+      "repairModes": {
+        "agent-rebuild": 27,
+        "cleanup-copy": 11,
+        "guided-powerpoint": 308,
+        "human-decision": 11
+      }
+    },
+    {
+      "family": "ppt-master",
+      "project": "PPT Master",
+      "repository": "https://github.com/hugohe3/ppt-master",
+      "name": "kubernetes_blueprint_2026.pptx",
+      "url": "https://raw.githubusercontent.com/hugohe3/ppt-master/1c87905f6de3f4d4480be3bc5e610bff38702450/examples/ppt169_kubernetes_blueprint_2026/exports/kubernetes_blueprint_2026.pptx",
+      "bytes": 105402,
+      "sha256": "ddcaef381c298e0c5f4d1c636731044ed513e30166c07e79dae70ff5896227a3",
+      "slides": 10,
+      "readiness": "review",
+      "score": 80,
+      "findingCount": 444,
+      "repairTaskCount": 444,
+      "repairCoverage": true,
+      "repairModes": {
+        "agent-rebuild": 17,
+        "cleanup-copy": 11,
+        "guided-powerpoint": 405,
+        "human-decision": 11
+      }
+    },
+    {
+      "family": "ppt-master",
+      "project": "PPT Master",
+      "repository": "https://github.com/hugohe3/ppt-master",
+      "name": "lin-huiyin-architect.pptx",
+      "url": "https://raw.githubusercontent.com/hugohe3/ppt-master/1c87905f6de3f4d4480be3bc5e610bff38702450/examples/ppt169_lin_huiyin_architect/exports/lin-huiyin-architect.pptx",
+      "bytes": 8125810,
+      "sha256": "262a9c7b7cda35ec60390198ec872387cccb6feece9691eb2760f18e8c0527c8",
+      "slides": 10,
+      "readiness": "review",
+      "score": 79,
+      "findingCount": 234,
+      "repairTaskCount": 234,
+      "repairCoverage": true,
+      "repairModes": {
+        "agent-rebuild": 13,
+        "cleanup-copy": 11,
+        "guided-powerpoint": 200,
+        "human-decision": 10
+      }
+    },
+    {
+      "family": "ppt-master",
+      "project": "PPT Master",
+      "repository": "https://github.com/hugohe3/ppt-master",
+      "name": "lin-huiyin-architect-revised.pptx",
+      "url": "https://raw.githubusercontent.com/hugohe3/ppt-master/1c87905f6de3f4d4480be3bc5e610bff38702450/examples/ppt169_lin_huiyin_architect_revised/exports/lin-huiyin-architect-revised.pptx",
+      "bytes": 7674441,
+      "sha256": "1be3c9a3de906d702dc0c18978da62f269e33262cb646e434cf6a48172b1721f",
+      "slides": 9,
+      "readiness": "blocked",
+      "score": 85,
+      "findingCount": 159,
+      "repairTaskCount": 159,
+      "repairCoverage": true,
+      "repairModes": {
+        "agent-rebuild": 7,
+        "cleanup-copy": 10,
+        "guided-powerpoint": 132,
+        "human-decision": 10
+      }
+    },
+    {
+      "family": "ppt-master",
+      "project": "PPT Master",
+      "repository": "https://github.com/hugohe3/ppt-master",
+      "name": "liziqi-plant-dye-colors.pptx",
+      "url": "https://raw.githubusercontent.com/hugohe3/ppt-master/1c87905f6de3f4d4480be3bc5e610bff38702450/examples/ppt169_liziqi_plant_dye_colors/exports/liziqi-plant-dye-colors.pptx",
+      "bytes": 9214255,
+      "sha256": "3c59831b814e21c80c57b260207c668e7b461a1fe4be00f0549fc928173a0008",
+      "slides": 12,
+      "readiness": "review",
+      "score": 80,
+      "findingCount": 310,
+      "repairTaskCount": 310,
+      "repairCoverage": true,
+      "repairModes": {
+        "agent-rebuild": 25,
+        "cleanup-copy": 13,
+        "guided-powerpoint": 259,
+        "human-decision": 13
+      }
+    },
+    {
+      "family": "ppt-master",
+      "project": "PPT Master",
+      "repository": "https://github.com/hugohe3/ppt-master",
+      "name": "lora_hu_2021.pptx",
+      "url": "https://raw.githubusercontent.com/hugohe3/ppt-master/1c87905f6de3f4d4480be3bc5e610bff38702450/examples/ppt169_lora_hu_2021/exports/lora_hu_2021.pptx",
+      "bytes": 4185258,
+      "sha256": "3e59fc1d20136f3f2ec0eb50f3ae1b5d1b8a5f81fd93c21460b40b6efe191c56",
+      "slides": 15,
+      "readiness": "review",
+      "score": 79,
+      "findingCount": 327,
+      "repairTaskCount": 327,
+      "repairCoverage": true,
+      "repairModes": {
+        "agent-rebuild": 27,
+        "cleanup-copy": 16,
+        "guided-powerpoint": 269,
+        "human-decision": 15
+      }
+    },
+    {
+      "family": "ppt-master",
+      "project": "PPT Master",
+      "repository": "https://github.com/hugohe3/ppt-master",
+      "name": "pritzker_2026.pptx",
+      "url": "https://raw.githubusercontent.com/hugohe3/ppt-master/1c87905f6de3f4d4480be3bc5e610bff38702450/examples/ppt169_pritzker_2026/exports/pritzker_2026.pptx",
+      "bytes": 15854611,
+      "sha256": "095f9085bd12d03e10cb537078e3a903047e710af85fdb7301f7297e2674f625",
+      "slides": 11,
+      "readiness": "blocked",
+      "score": 71,
+      "findingCount": 245,
+      "repairTaskCount": 245,
+      "repairCoverage": true,
+      "repairModes": {
+        "agent-rebuild": 30,
+        "cleanup-copy": 12,
+        "guided-powerpoint": 191,
+        "human-decision": 12
+      }
+    },
+    {
+      "family": "ppt-master",
+      "project": "PPT Master",
+      "repository": "https://github.com/hugohe3/ppt-master",
+      "name": "sugar_rush_memphis.pptx",
+      "url": "https://raw.githubusercontent.com/hugohe3/ppt-master/1c87905f6de3f4d4480be3bc5e610bff38702450/examples/ppt169_sugar_rush_memphis/exports/sugar_rush_memphis.pptx",
+      "bytes": 8015514,
+      "sha256": "38b3190f6b475f2a423c6aa09e87d6c360f0f39937bfc20f556ad681aa0d04f5",
+      "slides": 14,
+      "readiness": "review",
+      "score": 80,
+      "findingCount": 293,
+      "repairTaskCount": 293,
+      "repairCoverage": true,
+      "repairModes": {
+        "agent-rebuild": 28,
+        "cleanup-copy": 15,
+        "guided-powerpoint": 235,
+        "human-decision": 15
+      }
+    },
+    {
+      "family": "ppt-master",
+      "project": "PPT Master",
+      "repository": "https://github.com/hugohe3/ppt-master",
+      "name": "swiss_grid_systems.pptx",
+      "url": "https://raw.githubusercontent.com/hugohe3/ppt-master/1c87905f6de3f4d4480be3bc5e610bff38702450/examples/ppt169_swiss_grid_systems/exports/swiss_grid_systems.pptx",
+      "bytes": 1555342,
+      "sha256": "8082dcb4d6c9ff93c60912daa417d62b1b31a3744fe2dd9d9f3b5e68a3e0745d",
+      "slides": 14,
+      "readiness": "blocked",
+      "score": 75,
+      "findingCount": 428,
+      "repairTaskCount": 428,
+      "repairCoverage": true,
+      "repairModes": {
+        "agent-rebuild": 34,
+        "cleanup-copy": 15,
+        "guided-powerpoint": 367,
+        "human-decision": 12
+      }
+    },
+    {
+      "family": "pptagent",
+      "project": "PPTAgent",
+      "repository": "https://github.com/icip-cas/PPTAgent",
+      "name": "source.pptx",
+      "url": "https://raw.githubusercontent.com/icip-cas/PPTAgent/2419d30b134a71486523e95ded60b32489fd3c61/pptagent/templates/beamer/source.pptx",
+      "bytes": 129900,
+      "sha256": "0902ae1bffc7e69ff007a5872d91dc62bb56f4f79a5436e487edbc67b73e22f9",
+      "slides": 6,
+      "readiness": "review",
+      "score": 98,
+      "findingCount": 8,
+      "repairTaskCount": 8,
+      "repairCoverage": true,
+      "repairModes": {
+        "cleanup-copy": 5,
+        "guided-powerpoint": 3
+      }
+    },
+    {
+      "family": "pptagent",
+      "project": "PPTAgent",
+      "repository": "https://github.com/icip-cas/PPTAgent",
+      "name": "source.pptx",
+      "url": "https://raw.githubusercontent.com/icip-cas/PPTAgent/2419d30b134a71486523e95ded60b32489fd3c61/pptagent/templates/cip/source.pptx",
+      "bytes": 583653,
+      "sha256": "2c2b802d3fc12419f53a459d8466adfbb1d56ae6745a083436e080e058938a52",
+      "slides": 9,
+      "readiness": "blocked",
+      "score": 95,
+      "findingCount": 4,
+      "repairTaskCount": 4,
+      "repairCoverage": true,
+      "repairModes": {
+        "agent-rebuild": 1,
+        "cleanup-copy": 1,
+        "guided-powerpoint": 2
+      }
+    },
+    {
+      "family": "pptagent",
+      "project": "PPTAgent",
+      "repository": "https://github.com/icip-cas/PPTAgent",
+      "name": "source.pptx",
+      "url": "https://raw.githubusercontent.com/icip-cas/PPTAgent/2419d30b134a71486523e95ded60b32489fd3c61/pptagent/templates/default/source.pptx",
+      "bytes": 2470447,
+      "sha256": "80c97d990caec1b12b34d3b9c3edcc9130cdbc956b90c189fc212ee23eec0054",
+      "slides": 13,
+      "readiness": "blocked",
+      "score": 94,
+      "findingCount": 23,
+      "repairTaskCount": 23,
+      "repairCoverage": true,
+      "repairModes": {
+        "agent-rebuild": 6,
+        "cleanup-copy": 1,
+        "guided-powerpoint": 11,
+        "human-decision": 5
+      }
+    },
+    {
+      "family": "pptagent",
+      "project": "PPTAgent",
+      "repository": "https://github.com/icip-cas/PPTAgent",
+      "name": "source.pptx",
+      "url": "https://raw.githubusercontent.com/icip-cas/PPTAgent/2419d30b134a71486523e95ded60b32489fd3c61/pptagent/templates/hit/source.pptx",
+      "bytes": 389677,
+      "sha256": "4fb3e83bfd182efec78f32566590324917b62892438efc1c9b42478152908995",
+      "slides": 10,
+      "readiness": "review",
+      "score": 98,
+      "findingCount": 8,
+      "repairTaskCount": 8,
+      "repairCoverage": true,
+      "repairModes": {
+        "cleanup-copy": 4,
+        "guided-powerpoint": 3,
+        "human-decision": 1
+      }
+    },
+    {
+      "family": "pptagent",
+      "project": "PPTAgent",
+      "repository": "https://github.com/icip-cas/PPTAgent",
+      "name": "source.pptx",
+      "url": "https://raw.githubusercontent.com/icip-cas/PPTAgent/2419d30b134a71486523e95ded60b32489fd3c61/pptagent/templates/thu/source.pptx",
+      "bytes": 1090387,
+      "sha256": "cd565df0b7aeba03012bcc63b3613824e9607a9287eabd17d172cbc38b52284f",
+      "slides": 10,
+      "readiness": "review",
+      "score": 98,
+      "findingCount": 6,
+      "repairTaskCount": 6,
+      "repairCoverage": true,
+      "repairModes": {
+        "cleanup-copy": 2,
+        "guided-powerpoint": 3,
+        "human-decision": 1
+      }
+    },
+    {
+      "family": "pptagent",
+      "project": "PPTAgent",
+      "repository": "https://github.com/icip-cas/PPTAgent",
+      "name": "source.pptx",
+      "url": "https://raw.githubusercontent.com/icip-cas/PPTAgent/2419d30b134a71486523e95ded60b32489fd3c61/pptagent/templates/ucas/source.pptx",
+      "bytes": 191123,
+      "sha256": "1a51f302acd0b2e889635b270e1ee8e92e8bd0478b242e5525a1ba5ab18fea5f",
+      "slides": 9,
+      "readiness": "review",
+      "score": 100,
+      "findingCount": 5,
+      "repairTaskCount": 5,
+      "repairCoverage": true,
+      "repairModes": {
+        "cleanup-copy": 1,
+        "guided-powerpoint": 1,
+        "human-decision": 3
+      }
+    },
+    {
+      "family": "pptagent",
+      "project": "PPTAgent",
+      "repository": "https://github.com/icip-cas/PPTAgent",
+      "name": "test.pptx",
+      "url": "https://raw.githubusercontent.com/icip-cas/PPTAgent/2419d30b134a71486523e95ded60b32489fd3c61/pptagent/test/test.pptx",
+      "bytes": 626365,
+      "sha256": "1b6bd541794c0ee5076f20cb00aca2d5474d6abf59eaa7b1c0b41462888ca532",
+      "slides": 1,
+      "readiness": "review",
+      "score": 100,
+      "findingCount": 2,
+      "repairTaskCount": 2,
+      "repairCoverage": true,
+      "repairModes": {
+        "cleanup-copy": 1,
+        "human-decision": 1
+      }
+    },
+    {
+      "family": "pptagent",
+      "project": "PPTAgent",
+      "repository": "https://github.com/icip-cas/PPTAgent",
+      "name": "build_effective_agents.pptx",
+      "url": "https://raw.githubusercontent.com/icip-cas/PPTAgent/2419d30b134a71486523e95ded60b32489fd3c61/resource/build_effective_agents/build_effective_agents.pptx",
+      "bytes": 404135,
+      "sha256": "217bd88104b68f927901ac29e2a61ab057fd2b820d96b842f222bb1d3a7eb382",
+      "slides": 10,
+      "readiness": "review",
+      "score": 99,
+      "findingCount": 4,
+      "repairTaskCount": 4,
+      "repairCoverage": true,
+      "repairModes": {
+        "cleanup-copy": 1,
+        "guided-powerpoint": 2,
+        "human-decision": 1
+      }
+    },
+    {
+      "family": "pptagent",
+      "project": "PPTAgent",
+      "repository": "https://github.com/icip-cas/PPTAgent",
+      "name": "Iphone16Pro.pptx",
+      "url": "https://raw.githubusercontent.com/icip-cas/PPTAgent/2419d30b134a71486523e95ded60b32489fd3c61/resource/iphone16pro/Iphone16Pro.pptx",
+      "bytes": 690750,
+      "sha256": "5f953e8a2799ee63789ef6983a954f0c9183a0436cacb9eb3e329c49cc951908",
+      "slides": 9,
+      "readiness": "review",
+      "score": 95,
+      "findingCount": 6,
+      "repairTaskCount": 6,
+      "repairCoverage": true,
+      "repairModes": {
+        "cleanup-copy": 1,
+        "guided-powerpoint": 4,
+        "human-decision": 1
+      }
+    },
+    {
+      "family": "presenton",
+      "project": "Presenton",
+      "repository": "https://github.com/presenton/presenton",
+      "name": "public-presenton-export.pptx",
+      "url": "https://presenton-public.s3.ap-southeast-1.amazonaws.com/users/814cadab-dd31-46e0-b11b-fe3883b0f5da/exports/98590105-39ef-4b4d-b5de-4c6de4a7598d.pptx",
+      "bytes": 5911399,
+      "sha256": "b2b23e863c9c31480e7b296066e9dd939c0a36dac022bb812f9c18b1d5c23631",
+      "slides": 8,
+      "readiness": "review",
+      "score": 92,
+      "findingCount": 43,
+      "repairTaskCount": 43,
+      "repairCoverage": true,
+      "repairModes": {
+        "cleanup-copy": 9,
+        "guided-powerpoint": 26,
+        "human-decision": 8
+      }
+    },
+    {
+      "family": "ultimate-ppt-master",
+      "project": "Ultimate PPT Master",
+      "repository": "https://github.com/kdnsna/ultimate-ppt-master-skill",
+      "name": "ultimate-proof-before.pptx",
+      "url": "https://raw.githubusercontent.com/kdnsna/pptlint/v0.7.1/examples/proof-loop/before.pptx",
+      "bytes": 77122,
+      "sha256": "ae222237daff012bc819cb03b2541650dd3d25b57d38ed27695f0a1d2f0cec8f",
+      "slides": 9,
+      "readiness": "review",
+      "score": 83,
+      "findingCount": 124,
+      "repairTaskCount": 124,
+      "repairCoverage": true,
+      "repairModes": {
+        "agent-rebuild": 10,
+        "cleanup-copy": 10,
+        "guided-powerpoint": 94,
+        "human-decision": 10
+      }
+    },
+    {
+      "family": "ultimate-ppt-master",
+      "project": "Ultimate PPT Master",
+      "repository": "https://github.com/kdnsna/ultimate-ppt-master-skill",
+      "name": "ultimate-proof-after.pptx",
+      "url": "https://raw.githubusercontent.com/kdnsna/pptlint/v0.7.1/examples/proof-loop/after.pptx",
+      "bytes": 80281,
+      "sha256": "3ca4cbaaa819cd0191f7f392ab6d193920638e1a561b5dad067709486355e651",
+      "slides": 9,
+      "readiness": "review",
+      "score": 100,
+      "findingCount": 24,
+      "repairTaskCount": 24,
+      "repairCoverage": true,
+      "repairModes": {
+        "agent-rebuild": 4,
+        "cleanup-copy": 9,
+        "guided-powerpoint": 1,
+        "human-decision": 10
+      }
+    }
+  ],
+  "failures": []
+}

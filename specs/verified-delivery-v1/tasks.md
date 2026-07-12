@@ -9,9 +9,9 @@
 - [x] 3. Add explicit cleanup copies
   - Implement three approved operations, atomic output, receipt, proof mapping, and failure semantics.
   - _Requirements: 4, 5, 7_
-- [ ] 4. Add the local app
+- [x] 4. Add the local app
   - Implement loopback service, drag/drop audit, cleanup selection, agent instructions, repaired-copy verification, and downloads.
   - _Requirements: 6, 7_
-- [ ] 5. Complete release validation
+- [x] 5. Complete release validation
   - Run unit, contract, packaging, real-sample, browser, offline, and published-package smoke tests.
   - _Requirements: 1-8_

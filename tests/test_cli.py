@@ -75,11 +75,23 @@ def test_doctor_and_version_expose_supportable_diagnostics(capsys) -> None:
     assert payload["version"] == __version__
     assert payload["wireframeRenderer"] is True
     assert payload["supportedInput"] == [".pptx"]
+    assert payload["localApp"] is True
 
     with pytest.raises(SystemExit) as exc:
         main(["--version"])
     assert exc.value.code == 0
     assert f"PPTLint {__version__}" in capsys.readouterr().out
+
+
+def test_cli_app_delegates_to_loopback_server(monkeypatch) -> None:
+    called: list[tuple[int, bool]] = []
+    monkeypatch.setattr(
+        "decklint.local_app.run_app",
+        lambda *, port, open_browser: called.append((port, open_browser)) or 0,
+    )
+
+    assert main(["app", "--port", "43210", "--no-open"]) == 0
+    assert called == [(43210, False)]
 
 
 def test_cli_returns_one_when_high_confidence_finding_reaches_threshold(tmp_path: Path) -> None:

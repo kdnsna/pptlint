@@ -31,7 +31,7 @@
   ],
   "file": {
     "name": "bad-deck.pptx",
-    "sha256": "a69b009bdb2465b8f677296b389fa8575027233a3e4f55657cdf9a4f5b04875e",
+    "sha256": "341991d4bfe02a3a726cfdf1aadfad4f2d40033d5020b2b45caf44b664a8ebf4",
     "slides": 1
   },
   "findings": [
@@ -439,5 +439,5 @@
     "low": 0,
     "medium": 2
   },
-  "toolVersion": "1.2.0"
+  "toolVersion": "1.3.0"
 }

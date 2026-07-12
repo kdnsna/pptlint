@@ -153,7 +153,8 @@ def test_pages_home_uses_plain_language_and_new_repository_links() -> None:
     assert "到了会议室可能已经散了" in hero
     assert "文字有没有被截掉" in hero
     assert "https://github.com/kdnsna/pptlint" in hero
-    assert "请安装 PPTLint" in site
+    assert "请安装最新版 PPTLint" in site
+    assert "pptlint app" in site
     assert all(term not in hero.lower() for term in ("regression", "schema", "finding", "quality gate"))
 
 

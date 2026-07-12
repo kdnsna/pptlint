@@ -29,6 +29,7 @@ jobs:
           "$RUNNER_TEMP/pptlint-smoke/bin/pptlint" --version | grep "PPTLint ${{ inputs.confirm-version }}"
           "$RUNNER_TEMP/pptlint-smoke/bin/pptlint" plan --help
           "$RUNNER_TEMP/pptlint-smoke/bin/pptlint" fix --help
+          "$RUNNER_TEMP/pptlint-smoke/bin/pptlint" app --help
           "$RUNNER_TEMP/pptlint-smoke/bin/pptlint" policy init --help
       - uses: actions/upload-artifact@v4
         with:

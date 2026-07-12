@@ -61,7 +61,8 @@ def _add_check_arguments(command: argparse.ArgumentParser, *, output: str, fail_
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="pptlint", description="Local, read-only preflight checks for PowerPoint delivery."
+        prog="pptlint",
+        description="Local PowerPoint preflight, explicit cleanup copies, and repair verification.",
     )
     parser.add_argument("--version", action="version", version=f"PPTLint {__version__}")
     subcommands = parser.add_subparsers(dest="command", required=True)
@@ -134,6 +135,9 @@ def build_parser() -> argparse.ArgumentParser:
     policy.add_argument("output", type=Path, nargs="?", default=Path("pptlint-policy.yml"))
     doctor = subcommands.add_parser("doctor", help="Show local PPTLint capabilities.")
     doctor.add_argument("--json", action="store_true", dest="as_json")
+    app = subcommands.add_parser("app", help="Open the token-protected local drag-and-drop app.")
+    app.add_argument("--port", type=int, default=0, help="Loopback port; 0 chooses a random port")
+    app.add_argument("--no-open", action="store_true", help="Do not open the browser automatically")
     return parser
 
 
@@ -513,6 +517,7 @@ def _run_doctor(args: argparse.Namespace) -> int:
         "wireframeRenderer": True,
         "supportedInput": [".pptx"],
         "localOnly": True,
+        "localApp": True,
     }
     if args.as_json:
         print(json.dumps(result, ensure_ascii=False, sort_keys=True))
@@ -528,6 +533,10 @@ def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     if args.command == "doctor":
         return _run_doctor(args)
+    if args.command == "app":
+        from .local_app import run_app
+
+        return run_app(port=args.port, open_browser=not args.no_open)
     if args.command == "compare":
         return _run_compare(args)
     if args.command == "proof":

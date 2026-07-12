@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.3.0 — 2026-07-12
+
+- Add `pptlint app`, a Chinese drag-and-drop workflow bound only to a random `127.0.0.1` port with a per-session token.
+- Keep uploads and artifacts in a permission-restricted temporary session directory and delete it when the app closes.
+- Support local check, explicit cleanup selection, complete Agent brief copy, repaired-copy verification, and Proof Pack download without external requests or telemetry.
+- Generate `pptlint-verified/v1` JSON and a linked SVG badge only when every repair task is verified and no high-confidence regression appears.
+- Validate the complete workflow at desktop and 390 px mobile widths with no horizontal overflow.
+
 ## 1.2.0 — 2026-07-12
 
 - Add `pptlint fix` for three explicitly authorized operations: clear author metadata, remove comments, and remove speaker-note text.

@@ -108,6 +108,14 @@ uvx pptlint start output.pptx --scenario present --lang zh-CN
 
 排查安装、Python 或真实渲染器问题时运行 `uvx pptlint doctor`；反馈问题时优先附上该诊断结果，不要上传原 PPT。
 
+### 不想看命令：打开本地拖放版
+
+```bash
+uvx --refresh pptlint app
+```
+
+它会在本机随机端口打开中文页面。你可以拖入原 PPT、勾选允许清理的隐私内容、复制完整 Agent 任务，再拖入修改后副本导出 Proof Pack。页面只绑定 `127.0.0.1`，每次启动都有新令牌；关闭后临时文件自动删除，也不会请求外部字体、统计、模型或接口。
+
 默认 `present` 代表会议室投屏。屏幕阅读或文档型 PPT 可改用：
 
 ```bash
@@ -240,6 +248,8 @@ PPTLint 不判断审美、论点、事实正确性或说服力；低置信提醒
 - 修复计划：[`pptlint-repair-plan/v1`](schema/pptlint-repair-plan-v1.schema.json)
 - 清理回执：[`pptlint-repair-receipt/v1`](schema/pptlint-repair-receipt-v1.schema.json)
 - 修复验证：[`pptlint-repair-verification/v1`](schema/pptlint-repair-verification-v1.schema.json)
+- 验证凭证：[`pptlint-verified/v1`](schema/pptlint-verified-v1.schema.json)
+- 公开 AI-PPT 兼容性验证：[33 份真实 PPTX 的来源和结果](validation/README.md)
 - 退出码 `0`：完成；`1`：需要修改；`2`：文件或运行错误。
 
 ```bash

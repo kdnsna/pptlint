@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kdnsna/pptlint/blob/main/schema/pptlint-verified-v1.schema.json",
+  "title": "PPTLint Verified Credential v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "toolVersion", "status", "sourceSha256", "outputSha256", "verificationSha256", "proof"],
+  "properties": {
+    "schemaVersion": { "const": "pptlint-verified/v1" },
+    "toolVersion": { "type": "string" },
+    "status": { "const": "verified" },
+    "sourceSha256": { "$ref": "#/$defs/hash" },
+    "outputSha256": { "$ref": "#/$defs/hash" },
+    "verificationSha256": { "$ref": "#/$defs/hash" },
+    "proof": {
+      "type": "object", "additionalProperties": false,
+      "required": ["comparison", "verification"],
+      "properties": {
+        "comparison": { "type": "string", "pattern": "\\.json$" },
+        "verification": { "type": "string", "pattern": "\\.json$" }
+      }
+    }
+  },
+  "$defs": {
+    "hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+  }
+}

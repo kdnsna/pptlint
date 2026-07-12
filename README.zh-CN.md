@@ -92,6 +92,14 @@ uvx pptlint check output.pptx --scenario present
 
 Use `uvx pptlint start output.pptx` to check the deck and open the offline report. Run `uvx pptlint doctor` for a safe local diagnostic before filing an issue.
 
+### Local drag-and-drop app
+
+```bash
+uvx --refresh pptlint app
+```
+
+The Chinese local app supports check, explicit privacy cleanup, complete Agent brief copy, repaired-copy verification, and Proof Pack export. It binds only to `127.0.0.1` on a random port, uses a fresh session token, deletes temporary files on close, and requests no external font, analytics, model, or API.
+
 `present` is the default meeting-room scenario. Use `screen` for close screen reading or `document` for report-like decks.
 
 Each run writes:
@@ -206,6 +214,8 @@ Reports are uploaded even when the check fails.
 - Repair plan: [`pptlint-repair-plan/v1`](schema/pptlint-repair-plan-v1.schema.json)
 - Cleanup receipt: [`pptlint-repair-receipt/v1`](schema/pptlint-repair-receipt-v1.schema.json)
 - Repair verification: [`pptlint-repair-verification/v1`](schema/pptlint-repair-verification-v1.schema.json)
+- Verified credential: [`pptlint-verified/v1`](schema/pptlint-verified-v1.schema.json)
+- Public AI-PPT compatibility: [sources and results for 33 real PPTX files](validation/README.md)
 - Exit code `0`: completed; `1`: changes required; `2`: file or runtime error.
 
 ```bash
