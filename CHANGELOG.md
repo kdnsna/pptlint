@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.0 — 2026-07-12
+
+- Add `pptlint fix` for three explicitly authorized operations: clear author metadata, remove comments, and remove speaker-note text.
+- Always write a new output file through a reserved path and validated temporary PPTX; never overwrite the source or an existing output.
+- Generate `pptlint-repair-receipt/v1`, before/after reports, and a comparison report for every successful cleanup copy.
+- Add `pptlint proof --plan` and `pptlint-repair-verification/v1` to classify completed, remaining, unconfirmed, and regressed repair tasks.
+- Return `1` when a requested operation did not apply, the output remains blocked, or repair verification fails; reserve `2` for file and runtime errors.
+
 ## 1.1.0 — 2026-07-12
 
 - Add the complete `pptlint-repair-plan/v1` protocol with stable task IDs, source identity, locations, repair modes, risk, executors, and machine-verifiable acceptance criteria.

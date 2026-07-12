@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kdnsna/pptlint/blob/main/schema/pptlint-repair-receipt-v1.schema.json",
+  "title": "PPTLint Repair Receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "toolVersion", "source", "output", "requestedOperations", "operations", "verification", "artifacts"],
+  "properties": {
+    "schemaVersion": { "const": "pptlint-repair-receipt/v1" },
+    "toolVersion": { "type": "string" },
+    "source": { "$ref": "#/$defs/file" },
+    "output": { "$ref": "#/$defs/file" },
+    "requestedOperations": {
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": { "$ref": "#/$defs/operationName" }
+    },
+    "operations": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["operation", "status", "changedParts", "changeCount"],
+        "properties": {
+          "operation": { "$ref": "#/$defs/operationName" },
+          "status": { "const": "applied" },
+          "changedParts": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string" } },
+          "changeCount": { "type": "integer", "minimum": 1 }
+        }
+      }
+    },
+    "verification": {
+      "type": "object", "additionalProperties": false,
+      "required": ["passed", "sourceHashUnchanged", "outputOpened", "outputReadiness", "comparisonGatePassed", "incompleteOperations"],
+      "properties": {
+        "passed": { "type": "boolean" },
+        "sourceHashUnchanged": { "type": "boolean" },
+        "outputOpened": { "type": "boolean" },
+        "outputReadiness": { "enum": ["ready", "review", "blocked", "unknown"] },
+        "comparisonGatePassed": { "type": "boolean" },
+        "incompleteOperations": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/operationName" } }
+      }
+    },
+    "artifacts": {
+      "type": "object", "additionalProperties": false,
+      "required": ["beforeHtml", "beforeJson", "afterHtml", "afterJson", "comparisonHtml", "comparisonJson"],
+      "properties": {
+        "beforeHtml": { "type": "string" }, "beforeJson": { "type": "string" },
+        "afterHtml": { "type": "string" }, "afterJson": { "type": "string" },
+        "comparisonHtml": { "type": "string" }, "comparisonJson": { "type": "string" }
+      }
+    }
+  },
+  "$defs": {
+    "operationName": { "enum": ["clear-personal-metadata", "remove-comments", "remove-speaker-notes"] },
+    "file": {
+      "type": "object", "additionalProperties": false,
+      "required": ["name", "sha256"],
+      "properties": {
+        "name": { "type": "string" },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    }
+  }
+}

@@ -23,7 +23,7 @@
         </div>
         <div style="padding:18px 18px 22px;">
           <h3 style="margin:0 0 8px;color:#0A1628;font-size:18px;">Product site</h3>
-          <p style="margin:0 0 16px;color:#6B7280;font-size:14px;line-height:1.6;">See what PPTLint blocks before delivery, and why it never modifies your file.</p>
+          <p style="margin:0 0 16px;color:#6B7280;font-size:14px;line-height:1.6;">See what PPTLint blocks before delivery, and why it never modifies the source file.</p>
           <a href="https://kdnsna.github.io/pptlint/" style="display:inline-block;padding:9px 20px;background:#E85D2C;color:#ffffff;border-radius:9px;text-decoration:none;font-weight:600;font-size:14px;">Visit →</a>
         </div>
       </div>
@@ -72,7 +72,7 @@ A deck can look finished and still fail at handoff:
 - a missing package part triggers a PowerPoint repair warning;
 - duplicated media turns nine slides into an 86 MB file.
 
-PPTLint runs locally, reads the `.pptx`, and writes offline HTML and JSON reports. It **does not upload the deck, call a model, modify the source, or collect telemetry**.
+PPTLint checks locally in read-only mode and writes offline HTML and JSON reports. It **does not upload the deck, call a model, modify the source, or collect telemetry**. Only an explicitly authorized `fix` command writes a new cleanup copy.
 
 ## Start in one minute
 
@@ -146,6 +146,20 @@ uvx pptlint plan pptlint-report.json --adapter powerpoint-copilot --output copil
 
 The plan covers every finding rather than only the first three. Each task names the location, consequence, safe repair mode, recommended executors, and verification criteria. Unknown rules always require a human decision.
 
+### Explicit privacy cleanup copies
+
+PPTLint can perform only three low-risk operations, and every operation must be named separately:
+
+```bash
+uvx pptlint fix input.pptx \
+  --output input.delivery.pptx \
+  --apply clear-personal-metadata \
+  --apply remove-comments \
+  --apply remove-speaker-notes
+```
+
+The source and existing outputs are never overwritten. A successful run creates a receipt, before/after reports, and comparison evidence. Hidden slides, external links, layout, type, overlap, flattened slides, and brand changes remain human or agent decisions.
+
 ## Team delivery policy
 
 ```bash
@@ -189,6 +203,9 @@ Reports are uploaded even when the check fails.
 - Current report: [`pptlint-report/v2`](schema/pptlint-report-v2.schema.json)
 - Previous report: [`decklint-report/v1`](schema/decklint-report-v1.schema.json)
 - Comparison: [`decklint-comparison/v1`](schema/decklint-comparison-v1.schema.json)
+- Repair plan: [`pptlint-repair-plan/v1`](schema/pptlint-repair-plan-v1.schema.json)
+- Cleanup receipt: [`pptlint-repair-receipt/v1`](schema/pptlint-repair-receipt-v1.schema.json)
+- Repair verification: [`pptlint-repair-verification/v1`](schema/pptlint-repair-verification-v1.schema.json)
 - Exit code `0`: completed; `1`: changes required; `2`: file or runtime error.
 
 ```bash
@@ -200,4 +217,4 @@ PYTHONPATH=src .venv/bin/python -m pytest
 
 `decklint` remains as a compatibility alias. All new documentation and commands use `pptlint`.
 
-MIT · Local · Read-only · No upload · No model · No telemetry
+MIT · Local · Read-only by default · Source never modified · No upload · No model · No telemetry

@@ -5,7 +5,7 @@ description: Use when a user wants to check whether an existing PowerPoint PPTX 
 
 # PPTLint
 
-检查已有 `.pptx` 是否适合交付。PPTLint 只读取文件，不上传、不调用模型，也不修改原文件。
+检查已有 `.pptx` 是否适合交付。默认检查只读，不上传、不调用模型，也永不修改原文件。
 
 ## 第一次检查
 
@@ -49,6 +49,15 @@ pptlint plan pptlint-report.json --adapter generic-agent --output repair-brief.m
 ```
 
 优先把 JSON 修复计划作为任务真相源；适配后的 Markdown 只是执行简报。必须处理全部任务，对 `human-decision` 任务先向用户确认。
+
+只在用户明确授权时使用 `pptlint fix`，且必须指定新的输出路径和每一项 `--apply`。不得自行扩大为隐藏页、外链、字体、位置或版式修改。
+
+```bash
+pptlint fix input.pptx --output input.delivery.pptx \
+  --apply clear-personal-metadata \
+  --apply remove-comments \
+  --apply remove-speaker-notes
+```
 
 ## 修改后复检
 

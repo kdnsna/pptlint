@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kdnsna/pptlint/blob/main/schema/pptlint-repair-verification-v1.schema.json",
+  "title": "PPTLint Repair Verification v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "toolVersion", "planSourceSha256", "beforeSha256", "afterSha256", "sourceHashMatched", "passed", "completedTaskIds", "remainingTaskIds", "unableToConfirmTaskIds", "regressions"],
+  "properties": {
+    "schemaVersion": { "const": "pptlint-repair-verification/v1" },
+    "toolVersion": { "type": "string" },
+    "planSourceSha256": { "$ref": "#/$defs/hash" },
+    "beforeSha256": { "$ref": "#/$defs/hash" },
+    "afterSha256": { "$ref": "#/$defs/hash" },
+    "sourceHashMatched": { "type": "boolean" },
+    "passed": { "type": "boolean" },
+    "completedTaskIds": { "$ref": "#/$defs/taskIds" },
+    "remainingTaskIds": { "$ref": "#/$defs/taskIds" },
+    "unableToConfirmTaskIds": { "$ref": "#/$defs/taskIds" },
+    "regressions": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["findingId", "ruleId", "slideIndex", "severity", "confidence"],
+        "properties": {
+          "findingId": { "type": "string" }, "ruleId": { "type": "string" },
+          "slideIndex": { "type": ["integer", "null"], "minimum": 1 },
+          "severity": { "enum": ["high", "critical"] }, "confidence": { "const": "high" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "taskIds": {
+      "type": "array", "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^repair-[a-f0-9]{16}$" }
+    }
+  }
+}

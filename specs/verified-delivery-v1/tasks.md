@@ -6,7 +6,7 @@
 - [x] 2. Add the open repair-plan contract
   - Build the catalog, schemas, complete plan generator, adapters, report actions, and Action artifact.
   - _Requirements: 2, 3, 7, 8_
-- [ ] 3. Add explicit cleanup copies
+- [x] 3. Add explicit cleanup copies
   - Implement three approved operations, atomic output, receipt, proof mapping, and failure semantics.
   - _Requirements: 4, 5, 7_
 - [ ] 4. Add the local app

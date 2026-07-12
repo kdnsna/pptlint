@@ -261,10 +261,28 @@ def _repair_controls(finding: dict[str, object], *, zh: bool) -> str:
         "agent-rebuild": "复制给助手处理" if zh else "Copy for an assistant",
         "human-decision": "需要你先确认，不建议自动修改" if zh else "Confirm first; automatic changes are not recommended",
     }[recipe.mode]
+    cleanup_operation = {
+        "privacy.personal-metadata": "clear-personal-metadata",
+        "privacy.comments": "remove-comments",
+        "privacy.speaker-notes": "remove-speaker-notes",
+        "policy.notes-forbidden": "remove-speaker-notes",
+    }.get(str(finding.get("rule_id", "")), "remove-speaker-notes")
+    cleanup_command = (
+        "pptlint fix input.pptx --output input.delivery.pptx "
+        f"--apply {cleanup_operation}"
+    )
+    cleanup_button = (
+        f'<button type="button" class="repair-copy" data-copy="{_escape(cleanup_command)}">'
+        f"{_escape(label)}</button>"
+    )
     primary = (
         copy_button
         if recipe.mode == "agent-rebuild"
-        else f'<span class="repair-choice repair-{_escape(recipe.mode)}">{_escape(label)}</span>'
+        else (
+            cleanup_button
+            if recipe.mode == "cleanup-copy"
+            else f'<span class="repair-choice repair-{_escape(recipe.mode)}">{_escape(label)}</span>'
+        )
     )
     secondary = copy_button if recipe.mode in {"cleanup-copy", "guided-powerpoint"} else ""
     return f'<div class="repair-controls" data-repair-mode="{_escape(recipe.mode)}">{primary}{secondary}</div>'

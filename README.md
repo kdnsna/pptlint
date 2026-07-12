@@ -82,7 +82,7 @@
 - **内部内容被带出去**：讲者备注、隐藏页、批注、作者信息或本地链接仍留在文件里；
 - **文件本身不稳**：包内对象缺失、重复媒体过多，打开时弹出修复或等待很久。
 
-PPTLint 在本机只读检查 `.pptx`，生成离线 HTML 与 JSON 报告。它**不上传文件、不调用模型、不修改源文件、不收集遥测数据**。
+PPTLint 默认在本机只读检查 `.pptx`，生成离线 HTML 与 JSON 报告。它**不上传文件、不调用模型、永不修改源文件、不收集遥测数据**。只有你逐项授权 `fix` 操作时，它才会写入一份新的清理副本。
 
 ## 一分钟开始
 
@@ -170,6 +170,20 @@ uvx pptlint plan pptlint-report.json --adapter powerpoint-copilot --lang zh-CN -
 
 修复计划会覆盖报告中的全部问题，而不是只取前三项。每项都说清位置、实际后果、谁适合处理以及复检条件；未知规则一律要求人工判断，不会擅自编造修改指令。
 
+### 明确授权后清理隐私副本
+
+PPTLint 只能自动处理三类低风险内容，而且每一项都必须单独写 `--apply`：
+
+```bash
+uvx pptlint fix input.pptx \
+  --output input.delivery.pptx \
+  --apply clear-personal-metadata \
+  --apply remove-comments \
+  --apply remove-speaker-notes
+```
+
+源文件不会被覆盖，已存在的输出也不会被覆盖。成功后会同时生成清理回执、修改前后报告和对比证据。隐藏页、外部链接、字号、位置、遮挡、整页图片和品牌字体都不会被自动修改。
+
 ## 团队交付规范
 
 生成一份安全的 YAML 模板：
@@ -223,6 +237,9 @@ PPTLint 不判断审美、论点、事实正确性或说服力；低置信提醒
 - 当前报告：[`pptlint-report/v2`](schema/pptlint-report-v2.schema.json)
 - 旧版报告：[`decklint-report/v1`](schema/decklint-report-v1.schema.json)
 - 前后对比：[`decklint-comparison/v1`](schema/decklint-comparison-v1.schema.json)
+- 修复计划：[`pptlint-repair-plan/v1`](schema/pptlint-repair-plan-v1.schema.json)
+- 清理回执：[`pptlint-repair-receipt/v1`](schema/pptlint-repair-receipt-v1.schema.json)
+- 修复验证：[`pptlint-repair-verification/v1`](schema/pptlint-repair-verification-v1.schema.json)
 - 退出码 `0`：完成；`1`：需要修改；`2`：文件或运行错误。
 
 ```bash
@@ -237,5 +254,5 @@ PYTHONPATH=src .venv/bin/python -m pytest
 ---
 
 <p align="center">
-  <strong>MIT · 本地 · 只读 · 不上传 · 不调用模型 · 不收集遥测</strong>
+  <strong>MIT · 本地 · 默认只读 · 永不改原文件 · 不上传 · 不调用模型 · 不收集遥测</strong>
 </p>

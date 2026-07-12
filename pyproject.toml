@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "pptlint"
-version = "1.1.0"
-description = "Local, read-only preflight checks for PowerPoint delivery."
+version = "1.2.0"
+description = "Local PowerPoint preflight, explicit cleanup copies, and repair verification."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }

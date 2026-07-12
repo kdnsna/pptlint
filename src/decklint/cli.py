@@ -8,12 +8,18 @@ import webbrowser
 from pathlib import Path
 
 from . import __version__
+from .cleanup import CleanupError, CleanupNotApplicable, OPERATIONS, create_cleanup_copy, sha256_path
 from .comparison import ComparisonError, load_audit_report
 from .comparison_report import build_comparison_report, write_comparison_reports
 from .model import DeckLoadError, load_deck
 from .policy import POLICY_TEMPLATE, apply_exceptions, apply_policy, load_policy
 from .render import RenderError, render_deck
 from .repair_plan import ADAPTERS, build_repair_plan, render_repair_brief, write_repair_plan
+from .repair_verification import (
+    build_repair_verification,
+    load_repair_plan,
+    write_repair_verification,
+)
 from .report import build_report, write_reports
 from .rules import audit_deck
 from .scoring import score_findings
@@ -97,6 +103,7 @@ def build_parser() -> argparse.ArgumentParser:
     proof.add_argument("--lang", choices=("en", "zh-CN"), default="en", help="Report language")
     proof.add_argument("--report-mode", choices=("full", "shareable"), default="full")
     proof.add_argument("--policy", type=Path, default=None, help="Optional YAML delivery policy")
+    proof.add_argument("--plan", type=Path, default=None, help="Optional pptlint-repair-plan/v1 JSON")
     proof.add_argument(
         "--fail-on-regression",
         choices=("none", "low", "medium", "high", "critical"),
@@ -110,6 +117,18 @@ def build_parser() -> argparse.ArgumentParser:
     plan.add_argument("--lang", choices=("en", "zh-CN"), default=None)
     plan.add_argument("--format", choices=("markdown", "json"), default="markdown")
     plan.add_argument("--adapter", choices=ADAPTERS, default="generic-agent")
+    fix = subcommands.add_parser(
+        "fix", help="Create a separate copy with explicitly approved privacy cleanup."
+    )
+    fix.add_argument("input", type=Path, help="Source PPTX; it is never modified")
+    fix.add_argument("--output", type=Path, required=True, help="New cleaned PPTX path")
+    fix.add_argument("--apply", action="append", choices=OPERATIONS, required=True)
+    fix.add_argument("--profile", choices=("baseline", "ai-generated"), default="baseline")
+    fix.add_argument("--scenario", choices=("present", "screen", "document"), default="present")
+    fix.add_argument("--renderer", choices=("wireframe", "libreoffice"), default="wireframe")
+    fix.add_argument("--soffice-path", default=None)
+    fix.add_argument("--lang", choices=("en", "zh-CN"), default="en")
+    fix.add_argument("--policy", type=Path, default=None)
     policy = subcommands.add_parser("policy", help="Create a delivery policy template.")
     policy.add_argument("action", choices=("init",))
     policy.add_argument("output", type=Path, nargs="?", default=Path("pptlint-policy.yml"))
@@ -253,6 +272,8 @@ def _run_compare(args: argparse.Namespace) -> int:
 
 
 def _run_proof(args: argparse.Namespace) -> int:
+    verification: dict[str, object] | None = None
+    verification_path: Path | None = None
     try:
         before, _ = _build_audit_report(
             args.before,
@@ -283,6 +304,12 @@ def _run_proof(args: argparse.Namespace) -> int:
             threshold=args.fail_on_regression,
         )
         comparison_paths = write_comparison_reports(output, comparison)
+        if args.plan is not None:
+            plan = load_repair_plan(args.plan.expanduser())
+            verification = build_repair_verification(plan, comparison)
+            verification_path = write_repair_verification(
+                Path(f"{output}-verification.json"), verification
+            )
     except (DeckLoadError, RenderError, ComparisonError, OSError, ValueError) as exc:
         message = f"PPTLint 无法生成对比证据：{exc}" if args.lang == "zh-CN" else f"PPTLint could not create the proof: {exc}"
         print(message, file=sys.stderr)
@@ -304,6 +331,8 @@ def _run_proof(args: argparse.Namespace) -> int:
         print(f"修改前报告：{before_paths[0]}")
         print(f"修改后报告：{after_paths[0]}")
         print(f"完整对比：{comparison_paths[0]}")
+        if verification_path is not None:
+            print(f"修复任务验证：{verification_path}")
         print("说明：分数只用于比较同一份文件，不代表审美满分或绝对零风险。")
     else:
         print(f"PPTLint proof: {overall['before']} -> {overall['after']} ({int(overall['delta']):+d})")
@@ -311,8 +340,133 @@ def _run_proof(args: argparse.Namespace) -> int:
         print(f"Before report: {before_paths[0]}")
         print(f"After report: {after_paths[0]}")
         print(f"Complete comparison: {comparison_paths[0]}")
+        if verification_path is not None:
+            print(f"Repair verification: {verification_path}")
         print("Note: the score compares this deck before and after; it is not an aesthetic or zero-risk guarantee.")
-    return 0 if comparison["gate"]["passed"] else 1
+    passed = bool(comparison["gate"]["passed"])
+    if verification is not None:
+        passed = passed and bool(verification["passed"])
+    return 0 if passed else 1
+
+
+def _fix_artifact_paths(output: Path) -> dict[str, Path]:
+    stem = output.with_suffix("")
+    return {
+        "before": Path(f"{stem}.pptlint-before"),
+        "after": Path(f"{stem}.pptlint-after"),
+        "comparison": Path(f"{stem}.pptlint-comparison"),
+        "receipt": Path(f"{stem}.pptlint-repair-receipt.json"),
+    }
+
+
+def _run_fix(args: argparse.Namespace) -> int:
+    source = args.input.expanduser()
+    output = args.output.expanduser()
+    artifacts = _fix_artifact_paths(output)
+    occupied = [
+        path
+        for key, stem in artifacts.items()
+        for path in ([stem] if key == "receipt" else [Path(f"{stem}.html"), Path(f"{stem}.json")])
+        if path.exists()
+    ]
+    if occupied:
+        print(f"PPTLint could not create the cleaned copy: artifact already exists: {occupied[0].name}", file=sys.stderr)
+        return 2
+    try:
+        before, _ = _build_audit_report(
+            source,
+            profile=args.profile,
+            renderer=args.renderer,
+            soffice_path=args.soffice_path,
+            language=args.lang,
+            scenario=args.scenario,
+            policy_path=args.policy,
+            report_mode="full",
+        )
+        source_sha256 = str(before["file"]["sha256"])
+        cleanup = create_cleanup_copy(source, output, list(args.apply))
+        if cleanup.source_sha256 != source_sha256 or sha256_path(source.resolve()) != source_sha256:
+            raise CleanupError("Source file hash changed; verification stopped")
+        after, _ = _build_audit_report(
+            output,
+            profile=args.profile,
+            renderer=args.renderer,
+            soffice_path=args.soffice_path,
+            language=args.lang,
+            scenario=args.scenario,
+            policy_path=args.policy,
+            report_mode="full",
+        )
+        before_paths = write_reports(artifacts["before"], before)
+        after_paths = write_reports(artifacts["after"], after)
+        comparison = build_comparison_report(before, after, threshold="high")
+        comparison_paths = write_comparison_reports(artifacts["comparison"], comparison)
+
+        operation_rules = {
+            "clear-personal-metadata": {"privacy.personal-metadata"},
+            "remove-comments": {"privacy.comments"},
+            "remove-speaker-notes": {"privacy.speaker-notes", "policy.notes-forbidden"},
+        }
+        after_rules = {
+            str(item.get("rule_id", ""))
+            for item in after.get("findings", [])
+            if isinstance(item, dict)
+        }
+        incomplete = [
+            operation
+            for operation in args.apply
+            if operation_rules[operation] & after_rules
+        ]
+        readiness = after.get("readiness", {})
+        blocked = isinstance(readiness, dict) and readiness.get("status") == "blocked"
+        source_unchanged = sha256_path(source.resolve()) == source_sha256
+        passed = bool(comparison["gate"]["passed"]) and not incomplete and not blocked and source_unchanged
+        receipt = {
+            "schemaVersion": "pptlint-repair-receipt/v1",
+            "toolVersion": __version__,
+            "source": {"name": source.name, "sha256": source_sha256},
+            "output": {"name": output.name, "sha256": cleanup.output_sha256},
+            "requestedOperations": list(args.apply),
+            "operations": [
+                {
+                    "operation": item.operation,
+                    "status": "applied",
+                    "changedParts": list(item.changed_parts),
+                    "changeCount": item.change_count,
+                }
+                for item in cleanup.operations
+            ],
+            "verification": {
+                "passed": passed,
+                "sourceHashUnchanged": source_unchanged,
+                "outputOpened": True,
+                "outputReadiness": str(readiness.get("status", "unknown")) if isinstance(readiness, dict) else "unknown",
+                "comparisonGatePassed": bool(comparison["gate"]["passed"]),
+                "incompleteOperations": incomplete,
+            },
+            "artifacts": {
+                "beforeHtml": before_paths[0].name,
+                "beforeJson": before_paths[1].name,
+                "afterHtml": after_paths[0].name,
+                "afterJson": after_paths[1].name,
+                "comparisonHtml": comparison_paths[0].name,
+                "comparisonJson": comparison_paths[1].name,
+            },
+        }
+        artifacts["receipt"].write_text(
+            json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+        )
+    except CleanupNotApplicable as exc:
+        print(f"PPTLint did not create a cleaned copy: {exc}", file=sys.stderr)
+        return 1
+    except (CleanupError, DeckLoadError, RenderError, ComparisonError, OSError, ValueError) as exc:
+        print(f"PPTLint could not create the cleaned copy: {exc}", file=sys.stderr)
+        return 2
+
+    print(f"Cleaned copy: {output}")
+    print(f"Repair receipt: {artifacts['receipt']}")
+    print(f"Before/after proof: {artifacts['comparison']}.html")
+    return 0 if passed else 1
 
 
 def _run_plan(args: argparse.Namespace) -> int:
@@ -380,6 +534,8 @@ def main(argv: list[str] | None = None) -> int:
         return _run_proof(args)
     if args.command == "plan":
         return _run_plan(args)
+    if args.command == "fix":
+        return _run_fix(args)
     if args.command == "policy":
         return _run_policy(args)
     result = _run_audit(args)
