@@ -114,6 +114,58 @@ def test_html_leads_with_delivery_readiness_and_priority_actions(tmp_path: Path)
     assert "ai-generated profile" not in html.split("</section>", 1)[0]
 
 
+def test_chinese_html_is_localized_and_actionable(tmp_path: Path) -> None:
+    source = write_pptx(tmp_path / "broken.pptx", broken_relationship=True)
+    deck = load_deck(source)
+    findings = audit_deck(deck, profile="ai-generated")
+    rendering = render_deck(deck, source=source, renderer="wireframe")
+    report = build_report(
+        deck,
+        findings,
+        score_findings(findings),
+        rendering,
+        profile="ai-generated",
+        language="zh-CN",
+    )
+
+    html_path, _ = write_reports(tmp_path / "report", report)
+    markup = html_path.read_text(encoding="utf-8")
+    assert '<html lang="zh-CN">' in markup
+    assert "PPTX 中有关系指向缺失的文件对象" in markup
+    assert "影响整个文件的问题" in markup
+    assert "技术证据" in markup
+    assert "报告可能包含幻灯片预览" in markup
+    assert 'data-filter="blocker"' in markup
+    assert "Impact:" not in markup
+
+
+def test_shareable_report_redacts_sensitive_content(tmp_path: Path) -> None:
+    source = write_pptx(tmp_path / "confidential-client-name.pptx", broken_relationship=True)
+    deck = load_deck(source)
+    findings = audit_deck(deck, profile="ai-generated")
+    rendering = render_deck(deck, source=source, renderer="wireframe")
+    report = build_report(
+        deck,
+        findings,
+        score_findings(findings),
+        rendering,
+        profile="ai-generated",
+        language="zh-CN",
+        report_mode="shareable",
+    )
+
+    html_path, json_path = write_reports(tmp_path / "shareable", report)
+    markup = html_path.read_text(encoding="utf-8")
+    payload = json.loads(json_path.read_text(encoding="utf-8"))
+    assert payload["reportMode"] == "shareable"
+    assert payload["file"]["name"] == "presentation.pptx"
+    assert all(slide["preview"] == "" and slide["title"] == "" for slide in payload["slides"])
+    assert all(finding["evidence"].startswith("[redacted") for finding in payload["findings"])
+    assert "data:image/png;base64," not in markup
+    assert "confidential-client-name" not in markup
+    assert "安全分享报告" in markup
+
+
 def test_v2_report_exposes_editability_metrics(tmp_path: Path) -> None:
     source = write_pptx(
         tmp_path / "mixed.pptx",

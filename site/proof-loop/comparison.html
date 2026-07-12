@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Ultimate PPT Master 生成、PPTLint 审计、定向修复并比较：49 → 100 的真实 Proof Loop。">
+  <meta name="description" content="Ultimate PPT Master 生成、PPTLint 审计、定向修复并比较：83 → 100 的真实 Proof Loop。">
   <link rel="canonical" href="https://kdnsna.github.io/pptlint/proof-loop/comparison.html">
-  <title>49 → 100 · PPTLint 真实 Proof Loop</title>
+  <title>83 → 100 · PPTLint 真实 Proof Loop</title>
   <link rel="icon" href="../favicon.svg">
   <link rel="stylesheet" href="../shared.css">
 </head>
@@ -24,7 +24,7 @@
   <header class="comp-hero">
     <div class="container">
       <p class="hero__eyebrow reveal">真实 Proof Loop · 全程可复现</p>
-      <h1 class="comp-hero__value reveal">49 → 100</h1>
+      <h1 class="comp-hero__value reveal">83 → 100</h1>
       <p class="hero__subtitle reveal" style="max-width: 720px;">由 Ultimate PPT Master 生成，经 PPTLint 审计、定向修复再复检对比。这是同一份 9 页可编辑 PPT 的完整改造证据链。</p>
       <span class="comp-hero__meta reveal">profile: ai-generated · scenario: present · lang: zh-CN · high 回归门禁：通过</span>
     </div>
@@ -38,7 +38,7 @@
           <span class="metric__label">已解决 finding</span>
         </div>
         <div class="metric">
-          <span class="metric__value" data-count="18">18</span>
+          <span class="metric__value" data-count="21">21</span>
           <span class="metric__label">持续存在（低置信/提示）</span>
         </div>
         <div class="metric metric--success">
@@ -84,16 +84,16 @@
             </tr>
             <tr>
               <td>可编辑性 Editability</td>
-              <td class="mono" style="color: var(--error);">70</td>
               <td class="mono" style="color: var(--success);">100</td>
-              <td class="mono up">+30</td>
+              <td class="mono" style="color: var(--success);">100</td>
+              <td class="mono">0</td>
               <td class="mono">20%</td>
             </tr>
             <tr>
               <td>一致性 Consistency</td>
-              <td class="mono" style="color: var(--error);">70</td>
               <td class="mono" style="color: var(--success);">100</td>
-              <td class="mono up">+30</td>
+              <td class="mono" style="color: var(--success);">100</td>
+              <td class="mono">0</td>
               <td class="mono">15%</td>
             </tr>
             <tr>
@@ -106,7 +106,7 @@
           </tbody>
         </table>
       </div>
-      <p class="note">持续存在的 18 项为 9 个低置信阅读顺序提示，以及 9 页主动保留的讲者备注隐私提示。二者均不参与评分。</p>
+      <p class="note">持续存在 21 项，包括阅读顺序、讲者备注、字体、动效和一处低置信重叠提示；另有 3 项新增重叠提示，均为低置信，不触发回归门禁。</p>
     </div>
   </section>
 

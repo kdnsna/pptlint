@@ -277,7 +277,7 @@ def render_case(case: dict) -> str:
         <div class="step reveal">
           <div class="step__num">03 · 同场景复检</div>
           <h3 class="step__title">复检命令</h3>
-          <p class="step__body"><code>pptlint check deck.pptx --rule {esc(case['rule'])}</code></p>
+          <p class="step__body"><code>pptlint check deck.pptx --scenario present --lang zh-CN</code></p>
         </div>
       </div>
       <div class="disclosure reveal" style="margin-top:24px;">
@@ -430,8 +430,6 @@ INDEX_TMPL = '''<!doctype html>
   </footer>
 
   <script src="../shared.js"></script>
-</body>
-</html>
 '''
 
 FILTER_JS = '''  <script>

@@ -79,11 +79,23 @@ def test_committed_proof_reports_match_schema_and_scoring_contract() -> None:
 def test_github_action_exposes_the_cli_contract() -> None:
     action = yaml.safe_load((ROOT / "action.yml").read_text(encoding="utf-8"))
 
-    assert {"path", "profile", "fail-on", "min-score", "renderer"} <= set(action["inputs"])
+    assert {
+        "path",
+        "profile",
+        "fail-on",
+        "min-score",
+        "renderer",
+        "scenario",
+        "language",
+        "report-mode",
+        "policy",
+    } <= set(action["inputs"])
     assert {"readiness", "score", "html-report", "json-report"} <= set(action["outputs"])
     run_scripts = "\n".join(step.get("run", "") for step in action["runs"]["steps"])
     assert "pip install" in run_scripts
     assert "pptlint check" in run_scripts
+    assert "--report-mode" in run_scripts
+    assert action["inputs"]["report-mode"]["default"] == "shareable"
     assert "upload-artifact" in json.dumps(action)
     assert "mktemp -d" in run_scripts
     assert "$RUNNER_TEMP" in run_scripts
@@ -107,27 +119,26 @@ def test_agent_skill_is_short_and_delegates_to_cli() -> None:
 def test_readme_leads_with_single_product_promise() -> None:
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
 
-    assert readme.startswith("# PPTLint")
-    first_screen = "\n".join(readme.splitlines()[:60]).lower()
-    assert "do not send the powerpoint yet" in first_screen
-    assert "safe to send" in first_screen
-    assert "pptlint check" in first_screen
-    assert "does not upload" in first_screen
-    assert not {"regression", "schema", "finding", "quality gate"} & set(first_screen.split())
+    first_screen = "\n".join(readme.splitlines()[:100])
+    assert "PPT 做完以后，别急着发" in first_screen
+    assert "能不能放心发" in first_screen
+    assert "uvx pptlint check" in readme
+    assert "不上传文件" in readme
+    assert not {"门禁", "回归", "Schema", "finding"} & set(first_screen.split())
     assert "README.zh-CN.md" in readme
     assert "https://kdnsna.github.io/pptlint/lab/" in readme
     assert "proof-loop/comparison.html" in readme
 
 
-def test_v03_has_plain_language_chinese_home_and_keeps_compare() -> None:
+def test_english_readme_and_skill_keep_the_full_workflow() -> None:
     readme = (ROOT / "README.zh-CN.md").read_text(encoding="utf-8")
-    first_screen = "\n".join(readme.splitlines()[:60])
+    first_screen = "\n".join(readme.splitlines()[:100])
     skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
 
-    assert "PPT 做完以后，别急着发" in first_screen
-    assert "能不能放心发" in first_screen
+    assert "Do not send the PowerPoint yet" in first_screen
+    assert "safe to send" in readme
     assert "pptlint check" in first_screen
-    assert not {"门禁", "回归", "Schema", "finding"} & set(first_screen.split())
+    assert not {"regression", "schema", "finding", "quality gate"} & set(first_screen.lower().split())
     assert "pptlint proof" in readme
     assert "pptlint compare" in skill
     assert len(skill.splitlines()) <= 100
@@ -138,10 +149,11 @@ def test_pages_home_uses_plain_language_and_new_repository_links() -> None:
     hero = site.split("</header>", 1)[0]
 
     assert '<html lang="zh-CN">' in site
-    assert "你电脑上正常，到了会议室可能已经坏了" in hero
-    assert "文字被截掉" in hero
+    assert "在你电脑上好好的" in hero
+    assert "到了会议室可能已经散了" in hero
+    assert "文字有没有被截掉" in hero
     assert "https://github.com/kdnsna/pptlint" in hero
-    assert "pptlint check" in site
+    assert "请安装 PPTLint" in site
     assert all(term not in hero.lower() for term in ("regression", "schema", "finding", "quality gate"))
 
 
@@ -179,31 +191,30 @@ def test_proof_loop_case_is_schema_valid_and_matches_public_claims() -> None:
     jsonschema.validate(before, report_schema)
     jsonschema.validate(after, report_schema)
     jsonschema.validate(comparison, comparison_schema)
-    assert before["scores"]["overall"] == 49
+    assert before["scores"]["overall"] == 83
     assert after["scores"]["overall"] == 100
-    assert comparison["scores"]["overall"] == {"before": 49, "after": 100, "delta": 51}
+    assert comparison["scores"]["overall"] == {"before": 83, "after": 100, "delta": 17}
     assert len(comparison["resolved"]) == 103
     assert len(comparison["new"]) == 3
     assert all(item["confidence"] == "low" for item in comparison["new"])
     assert comparison["gate"]["passed"] is True
 
     site = (ROOT / "site/index.html").read_text(encoding="utf-8")
-    assert "49 → 100" in site
+    assert "83 → 100" in site
     assert "proof-loop/comparison.html" in site
     assert "http://" not in site and "https://" in site
 
 
-def test_version_is_070() -> None:
-    assert decklint.__version__ == "0.7.0"
+def test_version_is_100() -> None:
+    assert decklint.__version__ == "1.0.0"
 
 
-def test_homepage_leads_with_agent_instruction_before_cli() -> None:
+def test_homepage_leads_with_agent_instruction_and_real_evidence() -> None:
     site = (ROOT / "site" / "index.html").read_text(encoding="utf-8")
 
     agent_text = "不懂代码也没关系"
-    command = "pptlint check output.pptx"
     assert agent_text in site
-    assert site.index(agent_text) < site.index(command)
+    assert site.index(agent_text) < site.index("不是漂亮的演示数字")
     assert "看 12 个前后对比案例" in site
     assert 'href="lab/"' in site
 

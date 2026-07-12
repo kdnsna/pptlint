@@ -213,6 +213,37 @@ ZH_FIX_STEPS = {
     "policy.alt-text-required": ["确认图片是信息内容还是纯装饰。", "为信息图片添加简洁替代文字；装饰图片标记为装饰。", "再按同一规范检查，确认图片说明完整。"],
 }
 
+ZH_MESSAGES = {
+    "integrity.broken-relationship": "PPTX 中有关系指向缺失的文件对象。",
+    "integrity.empty-deck": "文件中没有可演示的幻灯片。",
+    "integrity.missing-content-type": "PPTX 中有对象缺少内容类型声明。",
+    "integrity.notes-relationship": "讲者备注关系不完整。",
+    "integrity.large-package": "文件体积较大，可能影响发送和打开。",
+    "integrity.duplicate-media": "文件中包含重复媒体资源。",
+    "privacy.comments": "文件中仍保留批注。",
+    "privacy.external-relationship": "文件中包含外部网址或本地文件关系。",
+    "privacy.speaker-notes": "页面中仍保留讲者备注。",
+    "privacy.hidden-slide": "文件中仍保留隐藏页。",
+    "privacy.personal-metadata": "文件中仍保留作者或编辑者信息。",
+    "readability.off-canvas-text": "有文字超出幻灯片画布。",
+    "readability.text-overlap": "页面中有文字区域可能互相遮挡。",
+    "readability.text-clipping-risk": "文本框存在末行被截断的风险。",
+    "readability.font-portability-risk": "所用字体在其他电脑上可能被替换。",
+    "readability.small-font": "页面文字小于当前场景建议字号。",
+    "readability.low-contrast": "文字与背景的对比度不足。",
+    "readability.dense-text": "页面文字较密，现场可能来不及阅读。",
+    "readability.blank-slide": "文件中存在可能非预期的空白页。",
+    "readability.unusual-aspect-ratio": "页面比例不属于常见演示比例。",
+    "readability.motion-portability-risk": "动画或转场在其他环境中可能发生变化。",
+    "editability.full-slide-image": "页面主要由整页图片构成，关键内容难以编辑。",
+    "editability.media-portability-risk": "音视频在其他电脑或软件中可能无法播放。",
+    "accessibility.missing-alt-text": "图片缺少替代文字。",
+    "accessibility.missing-title": "页面缺少可识别的标题。",
+    "accessibility.reading-order-risk": "对象顺序可能不符合自然阅读顺序。",
+    "consistency.font-outlier": "少量字体与整套演示文稿不一致。",
+    "consistency.repeated-layout": "连续页面使用了相同的结构版式。",
+}
+
 
 @dataclass(frozen=True)
 class ReadinessResult:
@@ -246,7 +277,12 @@ def classify_finding(finding: Finding, *, language: str = "en") -> dict[str, obj
             finding.rule_id,
             [finding.remediation, "把修改另存为交付副本。", "再运行一次 PPTLint，确认该提醒已经处理。"],
         )
-    return {"disposition": disposition, "impact": impact, "fixSteps": steps}
+    message = (
+        ZH_MESSAGES.get(finding.rule_id, "发现一项需要在交付前确认的问题。")
+        if language == "zh-CN"
+        else finding.message
+    )
+    return {"disposition": disposition, "message": message, "impact": impact, "fixSteps": steps}
 
 
 def assess_readiness(

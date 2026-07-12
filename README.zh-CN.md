@@ -1,5 +1,5 @@
 <p align="center">
-  English · <a href="README.md">简体中文</a> · <a href="https://kdnsna.github.io/pptlint/">Product site</a> · <a href="https://kdnsna.github.io/pptlint/lab/">12 before/after cases</a> · <a href="https://kdnsna.github.io/pptlint/proof-loop/comparison.html">Real 49 → 100 proof</a>
+  English · <a href="README.md">简体中文</a> · <a href="https://kdnsna.github.io/pptlint/">Product site</a> · <a href="https://kdnsna.github.io/pptlint/lab/">12 before/after cases</a> · <a href="https://kdnsna.github.io/pptlint/proof-loop/comparison.html">Real 83 → 100 proof</a>
 </p>
 
 <p align="center">
@@ -47,7 +47,7 @@
         </div>
         <div style="padding:18px 18px 22px;">
           <h3 style="margin:0 0 8px;color:#0A1628;font-size:18px;">Real Proof Loop</h3>
-          <p style="margin:0 0 16px;color:#6B7280;font-size:14px;line-height:1.6;">The same deck from 49 to 100 — before/after PPTX, full reports and machine-readable data, all public.</p>
+          <p style="margin:0 0 16px;color:#6B7280;font-size:14px;line-height:1.6;">The same deck scores 83 to 100 under the current rules — before/after PPTX, reports and machine-readable data are public.</p>
           <a href="https://kdnsna.github.io/pptlint/proof-loop/comparison.html" style="display:inline-block;padding:9px 20px;background:#E85D2C;color:#ffffff;border-radius:9px;text-decoration:none;font-weight:600;font-size:14px;">Visit →</a>
         </div>
       </div>
@@ -59,7 +59,7 @@
   <strong>Do not send the PowerPoint yet.</strong> Problems that stay invisible on your laptop often appear on your client's computer or in the meeting room.
 </div>
 
-[![The same editable PowerPoint before and after delivery fixes, from 49 to 100](site/assets/pptlint-before-after-hero.png)](https://kdnsna.github.io/pptlint/lab/)
+[![The same editable PowerPoint before and after delivery fixes, from 83 to 100](site/assets/readme-hero.svg)](https://kdnsna.github.io/pptlint/lab/)
 
 ## Not “is it beautiful?” — “is it safe to send?”
 
@@ -90,6 +90,8 @@ Or run it directly:
 uvx pptlint check output.pptx --scenario present
 ```
 
+Use `uvx pptlint start output.pptx` to check the deck and open the offline report. Run `uvx pptlint doctor` for a safe local diagnostic before filing an issue.
+
 `present` is the default meeting-room scenario. Use `screen` for close screen reading or `document` for report-like decks.
 
 Each run writes:
@@ -97,10 +99,16 @@ Each run writes:
 - `pptlint-report.html` — an offline human report that explains consequences and next steps;
 - `pptlint-report.json` — stable evidence for agents, CI, and integrations.
 
+Full reports can contain slide previews, text, and document properties. Treat them like the source deck. For external collaboration, create a redacted copy:
+
+```bash
+uvx pptlint check output.pptx --report-mode shareable --output pptlint-safe
+```
+
 ## Inspect the evidence first
 
 - [12 delivery-risk before/after cases](https://kdnsna.github.io/pptlint/lab/);
-- [real editable deck: 49 → 100](https://kdnsna.github.io/pptlint/proof-loop/comparison.html), with both PPTX files and full reports;
+- [real editable deck: 83 → 100](https://kdnsna.github.io/pptlint/proof-loop/comparison.html), with both PPTX files and full reports;
 - [before PPTX](examples/proof-loop/before.pptx) and [after PPTX](examples/proof-loop/after.pptx);
 - [evaluation-method archive](https://kdnsna.github.io/pptlint/benchmark/).
 
@@ -144,6 +152,8 @@ uvx pptlint check output.pptx --policy pptlint-policy.yml
 
 Policies can define approved fonts and colors, minimum type size, and rules for external links, notes, hidden slides, and alt text. Unknown policy fields fail explicitly instead of being ignored.
 
+Document approved exceptions with a rule, optional slide scope, business reason, and expiry date. Active and expired exceptions remain visible in the report audit trail.
+
 ## Scope and boundaries
 
 | Delivery question | What PPTLint checks |
@@ -160,12 +170,14 @@ PPTLint does not judge aesthetics, persuasion, or factual accuracy. Low-confiden
 ## GitHub Actions
 
 ```yaml
-- uses: kdnsna/pptlint@v0
+- uses: kdnsna/pptlint@v1
   with:
     path: output.pptx
     profile: ai-generated
     renderer: wireframe
 ```
+
+The Action uploads redacted `shareable` reports by default. Use `report-mode: full` only in a controlled repository that needs slide previews.
 
 Reports are uploaded even when the check fails.
 

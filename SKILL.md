@@ -28,12 +28,18 @@ pptlint check input.pptx \
 
 向用户说明页码、实际影响和 `fixSteps`。不要先展示内部规则编号或总分。
 
+普通用户希望检查后直接查看报告时，可运行 `pptlint start input.pptx --lang zh-CN`。遇到安装或渲染问题时先运行 `pptlint doctor --json`，不要要求用户上传原 PPT。
+
+完整 HTML/JSON 可能包含页面预览、文字和属性。需要外发诊断结果时，使用 `--report-mode shareable`，并再次确认没有业务敏感信息。
+
 如需套用企业交付规范：
 
 ```bash
 pptlint policy init company-ppt.yml
 pptlint check input.pptx --policy company-ppt.yml --lang zh-CN
 ```
+
+策略例外必须包含业务理由，可限制具体页面并设置到期日。不要为了通过检查而添加无理由或永久例外。
 
 如需交给 Coding Agent 修改：
 

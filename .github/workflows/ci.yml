@@ -17,6 +17,11 @@ jobs:
       - run: python -m pip install -e ".[dev]"
       - run: pytest
       - run: ruff check src tests tools
+      - name: Verify installed CLI contract
+        run: |
+          pptlint --version
+          pptlint doctor --json
+          python tools/build_case_lab.py --check
   package:
     runs-on: ubuntu-latest
     steps:

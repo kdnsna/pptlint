@@ -42,7 +42,7 @@
     <rect x="18" y="48" width="150" height="8" rx="4" fill="#5E3744"/>
     <rect x="18" y="66" width="140" height="8" rx="4" fill="#5E3744"/>
     <rect x="18" y="92" width="92" height="34" rx="6" fill="#E85D2C" opacity="0.85"/>
-    <text x="95" y="138" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="22" font-weight="800" fill="#E8A98C">49</text>
+    <text x="95" y="138" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="22" font-weight="800" fill="#E8A98C">83</text>
 
     <path d="M204 70 l24 0 m-8 -8 l8 8 l-8 8" stroke="#E85D2C" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
 
