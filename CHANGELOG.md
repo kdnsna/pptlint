@@ -1,11 +1,25 @@
 # Changelog
 
+## 1.0.0 — 2026-07-12
+
+- Add `pptlint start` to check a deck and open its offline report in one command.
+- Add `pptlint doctor` and `pptlint --version` for supportable local diagnostics.
+- Add documented policy exceptions with page scope, business reason, expiry, and matched counts.
+- Exercise the installed CLI, diagnostics, generated public assets, and documentation contracts in CI.
+
+## 0.8.0 — 2026-07-12
+
+- Make Chinese reports consistently Chinese, including messages, impact labels, scores, run details, and page summaries.
+- Add sticky page navigation and action filters for must-fix, review, and advisory findings.
+- Warn that full reports are as sensitive as the source presentation.
+- Add `--report-mode shareable` to redact filenames, slide titles, previews, and object-level evidence.
+
 ## 0.7.1 — 2026-07-12
 
-- Regenerate the public Proof Loop with the current scoring and calibration rules.
-- Restore release truth across the repository, package, GitHub Action, and public website.
-- Add `pptlint --version` plus scenario, language, and policy inputs to the composite Action.
-- Complete Chinese localization of human-facing HTML report labels and scoring details.
+- Align the package description, release instructions, public tests, and generated case pages.
+- Replace invalid case-lab `--rule` examples with a command supported by the published CLI contract.
+- Emit one valid HTML document for the case lab and verify public commands in tests.
+- Regenerate the public Proof Loop with the current Chinese report contract.
 
 ## 0.7.0 — 2026-07-12
 

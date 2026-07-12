@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import date
 from pathlib import Path
 
 import yaml
@@ -22,6 +23,15 @@ class DeliveryPolicy:
     forbid_notes: bool
     forbid_hidden_slides: bool
     require_alt_text: bool
+    exceptions: tuple["PolicyException", ...]
+
+
+@dataclass(frozen=True)
+class PolicyException:
+    rule_id: str
+    slides: frozenset[int]
+    reason: str
+    expires: date | None
 
 
 def _string_set(value: object, field: str) -> frozenset[str]:
@@ -51,6 +61,7 @@ def load_policy(path: Path) -> DeliveryPolicy:
         "forbidNotes",
         "forbidHiddenSlides",
         "requireAltText",
+        "exceptions",
     }
     if unknown:
         raise ValueError(f"Unsupported policy fields: {', '.join(sorted(unknown))}")
@@ -59,6 +70,37 @@ def load_policy(path: Path) -> DeliveryPolicy:
     minimum = payload.get("minimumFontSize")
     if minimum is not None and (not isinstance(minimum, (int, float)) or not 6 <= minimum <= 72):
         raise ValueError("minimumFontSize must be between 6 and 72")
+    raw_exceptions = payload.get("exceptions", [])
+    if not isinstance(raw_exceptions, list):
+        raise ValueError("Policy field exceptions must be a list")
+    exceptions: list[PolicyException] = []
+    for index, item in enumerate(raw_exceptions, 1):
+        if not isinstance(item, dict):
+            raise ValueError(f"Policy exception {index} must be a mapping")
+        unknown_exception = set(item) - {"ruleId", "slides", "reason", "expires"}
+        if unknown_exception:
+            raise ValueError(
+                f"Unsupported exception fields: {', '.join(sorted(unknown_exception))}"
+            )
+        rule_id = item.get("ruleId")
+        reason = item.get("reason")
+        slides = item.get("slides", [])
+        if not isinstance(rule_id, str) or not rule_id.strip():
+            raise ValueError(f"Policy exception {index} requires ruleId")
+        if not isinstance(reason, str) or not reason.strip():
+            raise ValueError(f"Policy exception {index} requires a reason")
+        if not isinstance(slides, list) or not all(
+            isinstance(value, int) and value >= 1 for value in slides
+        ):
+            raise ValueError(f"Policy exception {index} slides must be positive integers")
+        expires_value = item.get("expires")
+        try:
+            expires = date.fromisoformat(str(expires_value)) if expires_value else None
+        except ValueError as exc:
+            raise ValueError(f"Policy exception {index} expires must be YYYY-MM-DD") from exc
+        exceptions.append(
+            PolicyException(rule_id.strip(), frozenset(slides), reason.strip(), expires)
+        )
     return DeliveryPolicy(
         name=str(payload.get("name") or path.stem),
         allowed_fonts=_string_set(payload.get("allowedFonts"), "allowedFonts"),
@@ -71,7 +113,42 @@ def load_policy(path: Path) -> DeliveryPolicy:
         forbid_notes=bool(payload.get("forbidNotes", False)),
         forbid_hidden_slides=bool(payload.get("forbidHiddenSlides", False)),
         require_alt_text=bool(payload.get("requireAltText", False)),
+        exceptions=tuple(exceptions),
     )
+
+
+def apply_exceptions(
+    findings: list[Finding], policy: DeliveryPolicy, *, today: date | None = None
+) -> tuple[list[Finding], list[dict[str, object]]]:
+    current = today or date.today()
+    remaining: list[Finding] = []
+    counts = [0 for _ in policy.exceptions]
+    for finding in findings:
+        matched = False
+        for index, exception in enumerate(policy.exceptions):
+            if exception.expires is not None and exception.expires < current:
+                continue
+            if finding.rule_id != exception.rule_id:
+                continue
+            if exception.slides and finding.slide_index not in exception.slides:
+                continue
+            counts[index] += 1
+            matched = True
+            break
+        if not matched:
+            remaining.append(finding)
+    records = [
+        {
+            "ruleId": exception.rule_id,
+            "slides": sorted(exception.slides),
+            "reason": exception.reason,
+            "expires": exception.expires.isoformat() if exception.expires else "",
+            "matchedCount": counts[index],
+            "active": exception.expires is None or exception.expires >= current,
+        }
+        for index, exception in enumerate(policy.exceptions)
+    ]
+    return remaining, records
 
 
 def apply_policy(deck: DeckModel, policy: DeliveryPolicy) -> list[Finding]:
@@ -201,4 +278,9 @@ forbidExternalLinks: true
 forbidNotes: true
 forbidHiddenSlides: true
 requireAltText: true
+exceptions:
+  - ruleId: readability.small-font
+    slides: [12]
+    reason: Legal disclaimer approved by the presentation owner
+    expires: 2026-12-31
 """

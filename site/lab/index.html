@@ -1,116 +1,275 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="../favicon.svg" type="image/svg+xml"><meta name="description" content="12 个一眼看懂的 PowerPoint 交付风险前后对比，以及热门 AI PPT 项目的公开样本实测。"><link rel="canonical" href="https://kdnsna.github.io/pptlint/lab/"><meta property="og:type" content="website"><meta property="og:title" content="PPTLint 交付案例实验室"><meta property="og:description" content="12 个一眼看懂的 PowerPoint 交付风险前后对比，以及热门 AI PPT 项目的公开样本实测。"><meta property="og:image" content="https://kdnsna.github.io/pptlint/assets/pptlint-before-after-hero.png"><meta name="twitter:card" content="summary_large_image"><title>PPTLint 交付案例实验室</title><link rel="stylesheet" href="lab.css"></head><body><header class="topbar shell"><a class="brand" href="../"><span>PPT</span>LINT</a><nav><a href="../">产品首页</a><a href="../proof-loop/comparison.html">真实 Proof Loop</a><a href="https://github.com/kdnsna/pptlint">GitHub</a></nav></header><main class="shell">
-<section class="hero"><div><span class="kicker">PPTLint Delivery Lab · v0.7.0</span><h1>好看的 PPT，<br>也可能还不能直接发。</h1><p>这里不评审美，也不替你改文件。我们把会议室、换电脑、可编辑交接和隐私外发中的真实风险，做成 12 个一眼能懂的前后对比。</p></div><aside class="hero-proof"><strong>12 + 4</strong><span>12 个可控前后演示 · 4 个热门开源项目样本实测</span><div class="fine">本地 · 只读 · 不上传 · 不调用模型</div></aside></section>
-<section><div class="section-head"><div><span class="kicker">Before / After</span><h2>先看会出什么事，再看怎么处理</h2></div><p>每个案例都公开检查规则、处理边界和复检方式。100 分只代表这些规则通过，不代表审美满分或绝对零风险。</p></div><div class="filters"><button class="filter active" data-category="全部">全部</button><button class="filter" data-category="现场可读性">现场可读性</button><button class="filter" data-category="换电脑稳定性">换电脑稳定性</button><button class="filter" data-category="可编辑交接">可编辑交接</button><button class="filter" data-category="隐私与外发">隐私与外发</button><button class="filter" data-category="文件完整性">文件完整性</button><button class="filter" data-category="文件体积">文件体积</button><button class="filter" data-category="团队规范">团队规范</button></div><div class="case-grid"><article class="case-card" data-category="现场可读性" data-visual="small-text">
-  <div class="case-copy"><span class="tag">可控演示 · 现场可读性</span><h2>电脑上清楚，会议室后排看不见</h2><p>12 号正文塞进投影页，坐远两排就只剩一片灰。</p></div>
-  <div class="comparison">
-    <section class="state before"><div class="state-head"><span>修改前</span><span>67 分</span></div><div class="slide"><span class="line"></span><span class="line short"></span><span class="line"></span><div class="chart"><i style="height:42%"></i><i></i><i></i></div></div></section>
-    <section class="state after"><div class="state-head"><span>修改后</span><span>100 分</span></div><div class="slide"><span class="line"></span><span class="line short"></span><span class="line"></span><div class="chart"><i style="height:42%"></i><i></i><i></i></div></div></section>
-  </div>
-  <div class="case-footer"><div><strong>发现</strong>一页 268 字，最小字号 12 pt</div><div><strong>处理</strong>结论先行，正文拆页，最小字号 18 pt</div></div>
-  <a class="case-link" href="cases/meeting-room-small-text.html">查看检查依据和处理过程 →</a>
-</article>
-<article class="case-card" data-category="现场可读性" data-visual="clipping">
-  <div class="case-copy"><span class="tag">可控演示 · 现场可读性</span><h2>最后一行，在另一台电脑上消失了</h2><p>字体替换后文字重新换行，文本框高度没变，结论被截掉。</p></div>
-  <div class="comparison">
-    <section class="state before"><div class="state-head"><span>修改前</span><span>74 分</span></div><div class="slide"><span class="line"></span><span class="line short"></span><span class="line"></span><div class="chart"><i style="height:42%"></i><i></i><i></i></div></div></section>
-    <section class="state after"><div class="state-head"><span>修改后</span><span>100 分</span></div><div class="slide"><span class="line"></span><span class="line short"></span><span class="line"></span><div class="chart"><i style="height:42%"></i><i></i><i></i></div></div></section>
-  </div>
-  <div class="case-footer"><div><strong>发现</strong>末行超出文本框，存在截断风险</div><div><strong>处理</strong>精简文字并留出安全高度</div></div>
-  <a class="case-link" href="cases/clipped-last-line.html">查看检查依据和处理过程 →</a>
-</article>
-<article class="case-card" data-category="现场可读性" data-visual="overlap">
-  <div class="case-copy"><span class="tag">可控演示 · 现场可读性</span><h2>两个文本框，投屏时撞在一起</h2><p>标题换行后压住图表说明，现场看起来像根本没有检查。</p></div>
-  <div class="comparison">
-    <section class="state before"><div class="state-head"><span>修改前</span><span>58 分</span></div><div class="slide"><span class="line"></span><span class="line short"></span><span class="line"></span><div class="chart"><i style="height:42%"></i><i></i><i></i></div></div></section>
-    <section class="state after"><div class="state-head"><span>修改后</span><span>100 分</span></div><div class="slide"><span class="line"></span><span class="line short"></span><span class="line"></span><div class="chart"><i style="height:42%"></i><i></i><i></i></div></div></section>
-  </div>
-  <div class="case-footer"><div><strong>发现</strong>标题与说明发生实质重叠</div><div><strong>处理</strong>重新分区并保留安全间距</div></div>
-  <a class="case-link" href="cases/overlapping-text.html">查看检查依据和处理过程 →</a>
-</article>
-<article class="case-card" data-category="换电脑稳定性" data-visual="font">
-  <div class="case-copy"><span class="tag">可控演示 · 换电脑稳定性</span><h2>对方没有你的字体，整页就变样</h2><p>特殊字体在客户电脑被替换，标题多出一行，所有对象向下挤。</p></div>
-  <div class="comparison">
-    <section class="state before"><div class="state-head"><span>修改前</span><span>72 分</span></div><div class="slide"><span class="line"></span><span class="line short"></span><span class="line"></span><div class="chart"><i style="height:42%"></i><i></i><i></i></div></div></section>
-    <section class="state after"><div class="state-head"><span>修改后</span><span>100 分</span></div><div class="slide"><span class="line"></span><span class="line short"></span><span class="line"></span><div class="chart"><i style="height:42%"></i><i></i><i></i></div></div></section>
-  </div>
-  <div class="case-footer"><div><strong>发现</strong>使用不易携带的字体</div><div><strong>处理</strong>改用批准字体并复测换行</div></div>
-  <a class="case-link" href="cases/font-portability.html">查看检查依据和处理过程 →</a>
-</article>
-<article class="case-card" data-category="现场可读性" data-visual="contrast">
-  <div class="case-copy"><span class="tag">可控演示 · 现场可读性</span><h2>精致浅灰，到了投影上什么都没有</h2><p>笔记本屏幕上的浅灰小字很高级，会议室开灯后几乎消失。</p></div>
-  <div class="comparison">
-    <section class="state before"><div class="state-head"><span>修改前</span><span>70 分</span></div><div class="slide"><span class="line"></span><span class="line short"></span><span class="line"></span><div class="chart"><i style="height:42%"></i><i></i><i></i></div></div></section>
-    <section class="state after"><div class="state-head"><span>修改后</span><span>100 分</span></div><div class="slide"><span class="line"></span><span class="line short"></span><span class="line"></span><div class="chart"><i style="height:42%"></i><i></i><i></i></div></div></section>
-  </div>
-  <div class="case-footer"><div><strong>发现</strong>正文与背景对比不足</div><div><strong>处理</strong>提高对比并保留品牌气质</div></div>
-  <a class="case-link" href="cases/low-contrast-projector.html">查看检查依据和处理过程 →</a>
-</article>
-<article class="case-card" data-category="可编辑交接" data-visual="flattened">
-  <div class="case-copy"><span class="tag">可控演示 · 可编辑交接</span><h2>看起来像 PPT，其实整页只是一张图</h2><p>客户只想改一个数字，却发现标题、图表和正文都选不中。</p></div>
-  <div class="comparison">
-    <section class="state before"><div class="state-head"><span>修改前</span><span>76 分</span></div><div class="slide"><span class="line"></span><span class="line short"></span><span class="line"></span><div class="chart"><i style="height:42%"></i><i></i><i></i></div></div></section>
-    <section class="state after"><div class="state-head"><span>修改后</span><span>100 分</span></div><div class="slide"><span class="line"></span><span class="line short"></span><span class="line"></span><div class="chart"><i style="height:42%"></i><i></i><i></i></div></div></section>
-  </div>
-  <div class="case-footer"><div><strong>发现</strong>整页图片覆盖 99% 画布</div><div><strong>处理</strong>标题、数字和图表恢复为原生对象</div></div>
-  <a class="case-link" href="cases/flattened-slide.html">查看检查依据和处理过程 →</a>
-</article>
-<article class="case-card" data-category="隐私与外发" data-visual="notes">
-  <div class="case-copy"><span class="tag">可控演示 · 隐私与外发</span><h2>你删掉了页面，却忘了备注里的内部话</h2><p>页面很干净，讲者备注仍保留报价底线和未公开结论。</p></div>
-  <div class="comparison">
-    <section class="state before"><div class="state-head"><span>修改前</span><span>82 分</span></div><div class="slide"><span class="line"></span><span class="line short"></span><span class="line"></span><div class="chart"><i style="height:42%"></i><i></i><i></i></div></div></section>
-    <section class="state after"><div class="state-head"><span>修改后</span><span>100 分</span></div><div class="slide"><span class="line"></span><span class="line short"></span><span class="line"></span><div class="chart"><i style="height:42%"></i><i></i><i></i></div></div></section>
-  </div>
-  <div class="case-footer"><div><strong>发现</strong>3 页含内部讲者备注</div><div><strong>处理</strong>交付副本清理备注，原稿不动</div></div>
-  <a class="case-link" href="cases/speaker-notes-leak.html">查看检查依据和处理过程 →</a>
-</article>
-<article class="case-card" data-category="隐私与外发" data-visual="hidden">
-  <div class="case-copy"><span class="tag">可控演示 · 隐私与外发</span><h2>隐藏页和作者信息，也会跟着文件走</h2><p>收件人打开浏览视图，可以看到备用报价页和编辑者姓名。</p></div>
-  <div class="comparison">
-    <section class="state before"><div class="state-head"><span>修改前</span><span>69 分</span></div><div class="slide"><span class="line"></span><span class="line short"></span><span class="line"></span><div class="chart"><i style="height:42%"></i><i></i><i></i></div></div></section>
-    <section class="state after"><div class="state-head"><span>修改后</span><span>100 分</span></div><div class="slide"><span class="line"></span><span class="line short"></span><span class="line"></span><div class="chart"><i style="height:42%"></i><i></i><i></i></div></div></section>
-  </div>
-  <div class="case-footer"><div><strong>发现</strong>2 张隐藏页，含个人元数据</div><div><strong>处理</strong>删除不应外发内容并另存交付副本</div></div>
-  <a class="case-link" href="cases/hidden-slide-metadata.html">查看检查依据和处理过程 →</a>
-</article>
-<article class="case-card" data-category="换电脑稳定性" data-visual="link">
-  <div class="case-copy"><span class="tag">可控演示 · 换电脑稳定性</span><h2>图表连着你的桌面文件，对方当然打不开</h2><p>图表仍引用本机 Excel 路径，离开你的电脑就提示找不到源文件。</p></div>
-  <div class="comparison">
-    <section class="state before"><div class="state-head"><span>修改前</span><span>49 分</span></div><div class="slide"><span class="line"></span><span class="line short"></span><span class="line"></span><div class="chart"><i style="height:42%"></i><i></i><i></i></div></div></section>
-    <section class="state after"><div class="state-head"><span>修改后</span><span>100 分</span></div><div class="slide"><span class="line"></span><span class="line short"></span><span class="line"></span><div class="chart"><i style="height:42%"></i><i></i><i></i></div></div></section>
-  </div>
-  <div class="case-footer"><div><strong>发现</strong>存在本地文件外链</div><div><strong>处理</strong>嵌入交付内容并复测断网打开</div></div>
-  <a class="case-link" href="cases/external-file-link.html">查看检查依据和处理过程 →</a>
-</article>
-<article class="case-card" data-category="文件完整性" data-visual="broken">
-  <div class="case-copy"><span class="tag">可控演示 · 文件完整性</span><h2>文件能保存，不代表别人能正常打开</h2><p>生成过程留下断裂关系，PowerPoint 在客户电脑弹出修复警告。</p></div>
-  <div class="comparison">
-    <section class="state before"><div class="state-head"><span>修改前</span><span>41 分</span></div><div class="slide"><span class="line"></span><span class="line short"></span><span class="line"></span><div class="chart"><i style="height:42%"></i><i></i><i></i></div></div></section>
-    <section class="state after"><div class="state-head"><span>修改后</span><span>100 分</span></div><div class="slide"><span class="line"></span><span class="line short"></span><span class="line"></span><div class="chart"><i style="height:42%"></i><i></i><i></i></div></div></section>
-  </div>
-  <div class="case-footer"><div><strong>发现</strong>包内关系指向缺失对象</div><div><strong>处理</strong>重建对象并确认无修复提示</div></div>
-  <a class="case-link" href="cases/broken-package.html">查看检查依据和处理过程 →</a>
-</article>
-<article class="case-card" data-category="文件体积" data-visual="size">
-  <div class="case-copy"><span class="tag">可控演示 · 文件体积</span><h2>九页 PPT，为什么有 86 MB</h2><p>同一张背景被重复保存十几次，微信发送慢，会议电脑打开也慢。</p></div>
-  <div class="comparison">
-    <section class="state before"><div class="state-head"><span>修改前</span><span>88 分</span></div><div class="slide"><span class="line"></span><span class="line short"></span><span class="line"></span><div class="chart"><i style="height:42%"></i><i></i><i></i></div></div></section>
-    <section class="state after"><div class="state-head"><span>修改后</span><span>100 分</span></div><div class="slide"><span class="line"></span><span class="line short"></span><span class="line"></span><div class="chart"><i style="height:42%"></i><i></i><i></i></div></div></section>
-  </div>
-  <div class="case-footer"><div><strong>发现</strong>86 MB，14 份重复媒体</div><div><strong>处理</strong>18 MB，清理重复资源</div></div>
-  <a class="case-link" href="cases/bloated-media.html">查看检查依据和处理过程 →</a>
-</article>
-<article class="case-card" data-category="团队规范" data-visual="brand">
-  <div class="case-copy"><span class="tag">可控演示 · 团队规范</span><h2>不是不好看，是不符合这次交付规范</h2><p>总部只允许两种字体和五个品牌色，人工逐页检查很容易漏。</p></div>
-  <div class="comparison">
-    <section class="state before"><div class="state-head"><span>修改前</span><span>62 分</span></div><div class="slide"><span class="line"></span><span class="line short"></span><span class="line"></span><div class="chart"><i style="height:42%"></i><i></i><i></i></div></div></section>
-    <section class="state after"><div class="state-head"><span>修改后</span><span>100 分</span></div><div class="slide"><span class="line"></span><span class="line short"></span><span class="line"></span><div class="chart"><i style="height:42%"></i><i></i><i></i></div></div></section>
-  </div>
-  <div class="case-footer"><div><strong>发现</strong>4 种非批准字体，7 个越界颜色</div><div><strong>处理</strong>按 YAML 规范复检通过</div></div>
-  <a class="case-link" href="cases/brand-policy.html">查看检查依据和处理过程 →</a>
-</article></div></section>
-<section class="market"><div class="section-head"><div><span class="kicker">Market compatibility</span><h2>优秀 AI PPT，PPTLint 还能看什么？</h2></div><p>审美已经很好时，价值从“挑版式”转向“交付验收”：观看距离、文件完整性、可编辑对象、隐私残留和跨电脑稳定性。</p></div><div class="market-grid"><article class="market-card"><span class="tag">公开样本实测</span><div class="score">86</div><h3>PPT Master / Attention</h3><p>10 个问题组 · 设计表现强；会议室场景下的小字号与图片说明需要人工确认。</p><p><code>sha256 85e84a7463f6…</code></p><a href="https://github.com/hugohe3/ppt-master/blob/main/examples/ppt169_attention_is_all_you_need/exports/attention_is_all_you_need_narrated.pptx">查看准确样本 ↗</a></article>
-<article class="market-card"><span class="tag">公开样本实测</span><div class="score">78</div><h3>PPT Master / Brutalist</h3><p>11 个问题组 · 强风格页面不应被粗暴改造；重点核查备注关系和交接稳定性。</p><p><code>sha256 a78701848dd7…</code></p><a href="https://github.com/hugohe3/ppt-master/blob/main/examples/ppt169_brutalist_ai_newspaper_2026/exports/brutalist_ai_newspaper_2026.pptx">查看准确样本 ↗</a></article>
-<article class="market-card"><span class="tag">公开样本实测</span><div class="score">99</div><h3>PPTAgent / Agents</h3><p>3 个问题组 · 亚像素越界已校准，不再误判为阻断；保留少量交接提醒。</p><p><code>sha256 217bd88104b6…</code></p><a href="https://github.com/icip-cas/PPTAgent/blob/main/resource/build_effective_agents/build_effective_agents.pptx">查看准确样本 ↗</a></article>
-<article class="market-card"><span class="tag">公开样本实测</span><div class="score">100</div><h3>PPTAgent / iPhone</h3><p>2 个问题组 · 高质量成品仍可能留下观看距离、版式重复或无障碍层面的提醒。</p><p><code>sha256 5f953e8a2799…</code></p><a href="https://github.com/icip-cas/PPTAgent/blob/main/resource/iphone16pro/Iphone16Pro.pptx">查看准确样本 ↗</a></article></div><p class="disclosure">公开样本实测只描述 PPTLint 在默认“会议室演示”场景下的规则结果，不代表对项目整体质量的排名。样本版权归原项目，本站仅链接来源，不提供第三方文件下载。</p></section>
-<section class="method"><div class="section-head"><div><span class="kicker">Evidence boundary</span><h2>真实证据和情境演示，分开说</h2></div></div><p class="disclosure">上方 12 个案例是为解释单一风险而制作的可控演示，不伪装成客户案例；公开的当前版 83 → 100 Proof Loop 才是可下载、可复核的真实九页 PPTX 改造证据。旧版 49 分是 v0.3 历史评分，不再作为当前结果。</p></section>
-<section class="cta"><div><h2>自己的 PPT，发出去前先查一次。</h2><p>一分钟生成离线 HTML 报告；原文件保持不变。</p></div><div class="buttons"><a class="button primary" href="https://github.com/kdnsna/pptlint#quick-start">安装 PPTLint</a><a class="button" href="../proof-loop/comparison.html">打开真实对比</a></div></section></main><footer class="shell">PPTLint v0.7.0 · MIT · Updated 2026-07-12</footer><script src="lab.js"></script></body></html>
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="12 个一眼看懂的 PowerPoint 交付风险前后对比，以及热门 AI PPT 项目的公开样本实测。">
+  <link rel="canonical" href="https://kdnsna.github.io/pptlint/lab/">
+  <title>PPTLint 交付案例实验室</title>
+  <link rel="icon" href="../favicon.svg">
+  <link rel="stylesheet" href="../shared.css">
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav__inner">
+      <a class="nav__logo" href="../">PPTLINT</a>
+      <div class="nav__links">
+        <a class="nav__link" href="../">产品首页</a>
+        <a class="nav__link" href="../proof-loop/comparison.html">Proof Loop</a>
+        <a class="nav__link" href="https://github.com/kdnsna/pptlint">GitHub</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <div class="lab-hero">
+        <div>
+          <p class="hero__eyebrow reveal">PPTLint 交付案例实验室</p>
+          <h1 class="hero__title reveal">好看的 PPT，<br>未必就能直接发出去。</h1>
+          <p class="hero__subtitle reveal">这里不评审美，也不替你改文件。我们把会议室、换电脑、可编辑交接和隐私外发里真会翻车的地方，拆成 12 个一眼就能看懂的前后对比。</p>
+        </div>
+        <div class="lab-hero__stat reveal reveal--scale">
+          <div class="lab-hero__stat-big"><span data-count="12">12</span> + <span data-count="4">4</span></div>
+          <p style="color: rgba(255,255,255,0.72); margin: 0 0 14px; position: relative;">12 个可控前后演示 · 4 个热门开源项目样本实测</p>
+          <div class="lab-hero__tags">
+            <span>本地</span><span>只读</span><span>不上传</span><span>不调用模型</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="section section--muted">
+    <div class="container">
+      <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
+        <h2 class="section__title reveal" style="margin-bottom: 0;">前后对比</h2>
+        <p class="text-muted">每个案例都公开检查规则、处理边界和复检方式。</p>
+      </div>
+
+      <div class="filters reveal">
+        <button class="filter active" data-category="all">全部</button>
+        <button class="filter" data-category="readability">现场可读性</button>
+        <button class="filter" data-category="stability">换电脑稳定性</button>
+        <button class="filter" data-category="editable">可编辑交接</button>
+        <button class="filter" data-category="privacy">隐私与外发</button>
+        <button class="filter" data-category="integrity">文件完整性</button>
+        <button class="filter" data-category="size">文件体积</button>
+        <button class="filter" data-category="policy">团队规范</button>
+      </div>
+
+      <div class="card-grid card-grid--3" id="case-grid">
+        <article class="card reveal" data-category="readability">
+          <span class="card__tag">现场可读性</span>
+          <h3 class="card__title">电脑上清楚，会议室后排看不见</h3>
+          <p class="card__body">12 号正文塞进投影页，坐远两排就只剩一片灰。</p>
+          <div class="case-compare">
+            <div class="case-compare__state case-compare__state--before"><span class="case-compare__score">67</span><span class="case-compare__label">修改前</span></div>
+            <div class="case-compare__state case-compare__state--after"><span class="case-compare__score">100</span><span class="case-compare__label">修改后</span></div>
+          </div>
+          <p class="case-card__meta">发现：一页 268 字，最小字号 12 pt<br>处理：结论先行，正文拆页，最小字号 18 pt</p>
+          <a class="card__link" href="cases/meeting-room-small-text.html">查看检查依据 →</a>
+        </article>
+        <article class="card reveal" data-category="readability">
+          <span class="card__tag">现场可读性</span>
+          <h3 class="card__title">最后一行，在另一台电脑上消失了</h3>
+          <p class="card__body">字体替换后文字重新换行，文本框高度没变，结论被截掉。</p>
+          <div class="case-compare">
+            <div class="case-compare__state case-compare__state--before"><span class="case-compare__score">74</span><span class="case-compare__label">修改前</span></div>
+            <div class="case-compare__state case-compare__state--after"><span class="case-compare__score">100</span><span class="case-compare__label">修改后</span></div>
+          </div>
+          <p class="case-card__meta">发现：末行超出文本框，存在截断风险<br>处理：精简文字并留出安全高度</p>
+          <a class="card__link" href="cases/clipped-last-line.html">查看检查依据 →</a>
+        </article>
+        <article class="card reveal" data-category="readability">
+          <span class="card__tag">现场可读性</span>
+          <h3 class="card__title">两个文本框，投屏时撞在一起</h3>
+          <p class="card__body">标题换行后压住图表说明，现场看起来像根本没有检查。</p>
+          <div class="case-compare">
+            <div class="case-compare__state case-compare__state--before"><span class="case-compare__score">58</span><span class="case-compare__label">修改前</span></div>
+            <div class="case-compare__state case-compare__state--after"><span class="case-compare__score">100</span><span class="case-compare__label">修改后</span></div>
+          </div>
+          <p class="case-card__meta">发现：标题与说明发生实质重叠<br>处理：重新分区并保留安全间距</p>
+          <a class="card__link" href="cases/overlapping-text.html">查看检查依据 →</a>
+        </article>
+        <article class="card reveal" data-category="stability">
+          <span class="card__tag">换电脑稳定性</span>
+          <h3 class="card__title">对方没有你的字体，整页就变样</h3>
+          <p class="card__body">特殊字体在客户电脑被替换，标题多出一行，所有对象向下挤。</p>
+          <div class="case-compare">
+            <div class="case-compare__state case-compare__state--before"><span class="case-compare__score">72</span><span class="case-compare__label">修改前</span></div>
+            <div class="case-compare__state case-compare__state--after"><span class="case-compare__score">100</span><span class="case-compare__label">修改后</span></div>
+          </div>
+          <p class="case-card__meta">发现：使用不易携带的字体<br>处理：改用批准字体并复测换行</p>
+          <a class="card__link" href="cases/font-portability.html">查看检查依据 →</a>
+        </article>
+        <article class="card reveal" data-category="readability">
+          <span class="card__tag">现场可读性</span>
+          <h3 class="card__title">精致浅灰，到了投影上什么都没有</h3>
+          <p class="card__body">笔记本屏幕上的浅灰小字很高级，会议室开灯后几乎消失。</p>
+          <div class="case-compare">
+            <div class="case-compare__state case-compare__state--before"><span class="case-compare__score">70</span><span class="case-compare__label">修改前</span></div>
+            <div class="case-compare__state case-compare__state--after"><span class="case-compare__score">100</span><span class="case-compare__label">修改后</span></div>
+          </div>
+          <p class="case-card__meta">发现：正文与背景对比不足<br>处理：提高对比并保留品牌气质</p>
+          <a class="card__link" href="cases/low-contrast-projector.html">查看检查依据 →</a>
+        </article>
+        <article class="card reveal" data-category="editable">
+          <span class="card__tag">可编辑交接</span>
+          <h3 class="card__title">看起来像 PPT，其实整页只是一张图</h3>
+          <p class="card__body">客户只想改一个数字，却发现标题、图表和正文都选不中。</p>
+          <div class="case-compare">
+            <div class="case-compare__state case-compare__state--before"><span class="case-compare__score">76</span><span class="case-compare__label">修改前</span></div>
+            <div class="case-compare__state case-compare__state--after"><span class="case-compare__score">100</span><span class="case-compare__label">修改后</span></div>
+          </div>
+          <p class="case-card__meta">发现：整页图片覆盖 99% 画布<br>处理：标题、数字和图表恢复为原生对象</p>
+          <a class="card__link" href="cases/flattened-slide.html">查看检查依据 →</a>
+        </article>
+        <article class="card reveal" data-category="privacy">
+          <span class="card__tag">隐私与外发</span>
+          <h3 class="card__title">你删掉了页面，却忘了备注里的内部话</h3>
+          <p class="card__body">页面很干净，讲者备注仍保留报价底线和未公开结论。</p>
+          <div class="case-compare">
+            <div class="case-compare__state case-compare__state--before"><span class="case-compare__score">82</span><span class="case-compare__label">修改前</span></div>
+            <div class="case-compare__state case-compare__state--after"><span class="case-compare__score">100</span><span class="case-compare__label">修改后</span></div>
+          </div>
+          <p class="case-card__meta">发现：3 页含内部讲者备注<br>处理：交付副本清理备注，原稿不动</p>
+          <a class="card__link" href="cases/speaker-notes-leak.html">查看检查依据 →</a>
+        </article>
+        <article class="card reveal" data-category="privacy">
+          <span class="card__tag">隐私与外发</span>
+          <h3 class="card__title">隐藏页和作者信息，也会跟着文件走</h3>
+          <p class="card__body">收件人打开浏览视图，可以看到备用报价页和编辑者姓名。</p>
+          <div class="case-compare">
+            <div class="case-compare__state case-compare__state--before"><span class="case-compare__score">69</span><span class="case-compare__label">修改前</span></div>
+            <div class="case-compare__state case-compare__state--after"><span class="case-compare__score">100</span><span class="case-compare__label">修改后</span></div>
+          </div>
+          <p class="case-card__meta">发现：2 张隐藏页，含个人元数据<br>处理：删除不应外发内容并另存交付副本</p>
+          <a class="card__link" href="cases/hidden-slide-metadata.html">查看检查依据 →</a>
+        </article>
+        <article class="card reveal" data-category="stability">
+          <span class="card__tag">换电脑稳定性</span>
+          <h3 class="card__title">图表连着你的桌面文件，对方当然打不开</h3>
+          <p class="card__body">图表仍引用本机 Excel 路径，离开你的电脑就提示找不到源文件。</p>
+          <div class="case-compare">
+            <div class="case-compare__state case-compare__state--before"><span class="case-compare__score">49</span><span class="case-compare__label">修改前</span></div>
+            <div class="case-compare__state case-compare__state--after"><span class="case-compare__score">100</span><span class="case-compare__label">修改后</span></div>
+          </div>
+          <p class="case-card__meta">发现：存在本地文件外链<br>处理：嵌入交付内容并复测断网打开</p>
+          <a class="card__link" href="cases/external-file-link.html">查看检查依据 →</a>
+        </article>
+        <article class="card reveal" data-category="integrity">
+          <span class="card__tag">文件完整性</span>
+          <h3 class="card__title">文件能保存，不代表别人能正常打开</h3>
+          <p class="card__body">生成过程留下断裂关系，PowerPoint 在客户电脑弹出修复警告。</p>
+          <div class="case-compare">
+            <div class="case-compare__state case-compare__state--before"><span class="case-compare__score">41</span><span class="case-compare__label">修改前</span></div>
+            <div class="case-compare__state case-compare__state--after"><span class="case-compare__score">100</span><span class="case-compare__label">修改后</span></div>
+          </div>
+          <p class="case-card__meta">发现：包内关系指向缺失对象<br>处理：重建对象并确认无修复提示</p>
+          <a class="card__link" href="cases/broken-package.html">查看检查依据 →</a>
+        </article>
+        <article class="card reveal" data-category="size">
+          <span class="card__tag">文件体积</span>
+          <h3 class="card__title">九页 PPT，为什么有 86 MB</h3>
+          <p class="card__body">同一张背景被重复保存十几次，微信发送慢，会议电脑打开也慢。</p>
+          <div class="case-compare">
+            <div class="case-compare__state case-compare__state--before"><span class="case-compare__score">88</span><span class="case-compare__label">修改前</span></div>
+            <div class="case-compare__state case-compare__state--after"><span class="case-compare__score">100</span><span class="case-compare__label">修改后</span></div>
+          </div>
+          <p class="case-card__meta">发现：86 MB，14 份重复媒体<br>处理：18 MB，清理重复资源</p>
+          <a class="card__link" href="cases/bloated-media.html">查看检查依据 →</a>
+        </article>
+        <article class="card reveal" data-category="policy">
+          <span class="card__tag">团队规范</span>
+          <h3 class="card__title">不是不好看，是不符合这次交付规范</h3>
+          <p class="card__body">总部只允许两种字体和五个品牌色，人工逐页检查很容易漏。</p>
+          <div class="case-compare">
+            <div class="case-compare__state case-compare__state--before"><span class="case-compare__score">62</span><span class="case-compare__label">修改前</span></div>
+            <div class="case-compare__state case-compare__state--after"><span class="case-compare__score">100</span><span class="case-compare__label">修改后</span></div>
+          </div>
+          <p class="case-card__meta">发现：4 种非批准字体，7 个越界颜色<br>处理：按 YAML 规范复检通过</p>
+          <a class="card__link" href="cases/brand-policy.html">查看检查依据 →</a>
+        </article>
+      </div>
+
+      <p class="note" style="text-align: center; margin-top: 40px; border: none; padding: 0;">100 分只代表这些规则通过，不代表审美满分或绝对零风险。</p>
+    </div>
+  </section>
+
+  <section class="section section--white">
+    <div class="container">
+      <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
+        <h2 class="section__title reveal" style="margin-bottom: 0;">开源项目样本实测</h2>
+        <p class="text-muted">公开 AI PPT 项目的样本，仅做演示性检查，不代表对该项目的评价。</p>
+      </div>
+      <div class="table-wrap reveal reveal--scale">
+        <table class="table">
+          <thead>
+            <tr><th>项目</th><th>结果</th><th>分数</th><th>发现组</th><th>备注</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><a class="card__link" href="https://github.com/hugohe3/ppt-master" target="_blank" rel="noopener">PPT Master / Attention</a></td>
+              <td><span class="badge badge--warn">需复核</span></td>
+              <td class="mono">86</td>
+              <td class="mono">10</td>
+              <td class="text-muted">设计表现强；会议室场景下的小字号与图片说明需要人工确认。</td>
+            </tr>
+            <tr>
+              <td><a class="card__link" href="https://github.com/hugohe3/ppt-master" target="_blank" rel="noopener">PPT Master / Brutalist</a></td>
+              <td><span class="badge badge--warn">需复核</span></td>
+              <td class="mono">78</td>
+              <td class="mono">11</td>
+              <td class="text-muted">强风格页面不应被粗暴改造；重点核查备注关系和交接稳定性。</td>
+            </tr>
+            <tr>
+              <td><a class="card__link" href="https://github.com/icip-cas/PPTAgent" target="_blank" rel="noopener">PPTAgent / Agents</a></td>
+              <td><span class="badge badge--warn">需复核</span></td>
+              <td class="mono">99</td>
+              <td class="mono">3</td>
+              <td class="text-muted">亚像素越界已校准，不再误判为阻断；保留少量交接提醒。</td>
+            </tr>
+            <tr>
+              <td><a class="card__link" href="https://github.com/icip-cas/PPTAgent" target="_blank" rel="noopener">PPTAgent / iPhone</a></td>
+              <td><span class="badge badge--warn">需复核</span></td>
+              <td class="mono">100</td>
+              <td class="mono">2</td>
+              <td class="text-muted">高质量成品仍可能留下观看距离、版式重复或无障碍层面的提醒。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__brand">PPTLINT</div>
+      <p class="footer__tagline">PowerPoint 的本地、只读、确定性质量基础设施。</p>
+      <div class="footer__links">
+        <a class="footer__link" href="../">产品首页</a>
+        <a class="footer__link" href="../proof-loop/comparison.html">Proof Loop</a>
+        <a class="footer__link" href="https://github.com/kdnsna/pptlint">GitHub</a>
+      </div>
+      <p class="footer__copy">MIT · Deterministic · Local · Read-only</p>
+    </div>
+  </footer>
+
+  <script src="../shared.js"></script>
+  <script>
+    document.querySelectorAll('.filter').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const cat = btn.dataset.category;
+        document.querySelectorAll('#case-grid .card').forEach(card => {
+          const show = (cat === 'all' || card.dataset.category === cat);
+          card.style.display = show ? '' : 'none';
+          if (show) card.classList.add('in');
+        });
+      });
+    });
+  </script>
+</body>
+</html>

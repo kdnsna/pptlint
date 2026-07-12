@@ -2,106 +2,259 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <meta name="description" content="PPTLint 在你发送或汇报之前，检查 PPT 是否会出现文字被截断、换电脑变样、无法编辑或隐藏内容外泄等问题。">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="PPTLint 在你发送或汇报之前，先在本地检查这份 PPT 会不会出现文字截断、换电脑走样、无法编辑，或备注隐藏页外泄等问题。只读、不上传。">
   <link rel="canonical" href="https://kdnsna.github.io/pptlint/">
-  <meta property="og:type" content="website">
   <meta property="og:title" content="PPT 发出去之前，先检查一次">
-  <meta property="og:description" content="你电脑上看着正常的 PPT，换电脑或投屏后可能已经坏了。PPTLint 本地、只读检查，不上传文件。">
-  <meta property="og:url" content="https://kdnsna.github.io/pptlint/">
-  <meta property="og:image" content="https://kdnsna.github.io/pptlint/assets/pptlint-before-after-hero.png">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="PPT 发出去之前，先检查一次">
-  <meta name="twitter:description" content="检查文字截断、换电脑变样、无法编辑和隐藏内容外泄。">
-  <meta name="twitter:image" content="https://kdnsna.github.io/pptlint/assets/pptlint-before-after-hero.png">
+  <meta property="og:description" content="你电脑上看着好好的 PPT，换台电脑或一投屏可能就散了。PPTLint 在本地只读检查，不上传文件。">
   <title>PPTLint — PPT 发出去之前，先检查一次</title>
-  <style>
-    :root{--paper:#f7f5ef;--ink:#102a43;--muted:#52606d;--line:#c8d0d7;--signal:#e56a2f;--ok:#2f7d5b;--bad:#b42318}
-    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:"PingFang SC","Microsoft YaHei","Noto Sans CJK SC","Segoe UI",sans-serif;line-height:1.65}main{max-width:1240px;margin:auto;padding:30px 28px 96px}a{color:inherit}header{padding-bottom:58px;border-bottom:2px solid var(--line)}.navline{display:flex;align-items:center;justify-content:space-between;gap:22px;margin-bottom:52px}.wordmark{font:900 18px/1 "IBM Plex Mono","Courier New",monospace;letter-spacing:-.06em}.navlinks{display:flex;gap:22px;align-items:center}.navlinks a{font-size:14px;font-weight:800;text-decoration:none;border-bottom:1px solid var(--ink)}.eyebrow{font:800 12px/1.2 "IBM Plex Mono","Courier New",monospace;letter-spacing:.12em;color:var(--signal)}h1{font-family:"Songti SC",STSong,Georgia,serif;font-size:clamp(50px,6.5vw,86px);font-weight:700;letter-spacing:-.055em;line-height:1.02;margin:18px 0 24px;max-width:720px}h2{font-family:"Songti SC",STSong,Georgia,serif;font-size:clamp(34px,4vw,46px);font-weight:700;letter-spacing:-.035em;line-height:1.18;margin:76px 0 18px}h3{margin:0 0 8px;font-size:22px}p{font-size:18px;color:var(--muted);max-width:850px}.hero-grid{display:grid;grid-template-columns:minmax(360px,.82fr) minmax(540px,1.18fr);gap:38px;align-items:center}.hero-copy>p{max-width:610px}.hero-lead{font-size:21px}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}.button{display:inline-block;padding:12px 18px;border:2px solid var(--ink);color:var(--ink);text-decoration:none;font-weight:900;transition:transform .2s ease,background .2s ease}.button:hover{transform:translateY(-2px)}.button.primary{background:var(--ink);color:var(--paper)}.trust{display:flex;gap:9px;flex-wrap:wrap;margin-top:20px}.trust span{padding:7px 10px;border:1px solid var(--line);background:#fff;font-size:12px;font-weight:900}.hero-visual{position:relative;margin-right:-42px;isolation:isolate}.hero-visual:before{content:"";position:absolute;inset:8% 6% -6% 4%;background:var(--ink);z-index:-1;transform:rotate(1.6deg)}.hero-visual img{display:block;width:100%;border:2px solid var(--ink);background:#fff}.visual-label{position:absolute;top:15px;padding:7px 10px;background:var(--paper);border:2px solid currentColor;font:900 11px/1 "IBM Plex Mono","Courier New",monospace;letter-spacing:.08em}.visual-label.before{left:20px;color:var(--bad)}.visual-label.after{right:20px;color:var(--ok)}.score-jump{position:absolute;left:50%;bottom:-24px;transform:translateX(-50%) rotate(-2deg);display:flex;align-items:baseline;gap:9px;padding:10px 16px;background:var(--signal);color:#fff;border:2px solid var(--ink);box-shadow:6px 6px 0 var(--ink);white-space:nowrap}.score-jump strong{font:900 27px/1 "IBM Plex Mono","Courier New",monospace}.score-jump span{font-size:12px;font-weight:900}.hero-caption{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:42px;padding-top:18px;border-top:1px solid var(--line)}.hero-caption div{font-size:14px;color:var(--muted)}.hero-caption strong{display:block;color:var(--ink)}.pain-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.pain{padding:22px;background:#fff;border-top:5px solid var(--signal)}.pain:nth-child(2){border-color:var(--bad)}.pain:nth-child(3){border-color:#6d55a5}.pain:nth-child(4){border-color:var(--ok)}.pain b{display:block;font-size:15px;color:var(--signal);margin-bottom:8px}.pain p{font-size:15px;margin:0}.start{scroll-margin-top:20px}.start-card{margin-top:30px;padding:28px;background:#fff;border:2px solid var(--ink);box-shadow:8px 8px 0 var(--ink)}.start-card .step{color:var(--signal);font-weight:900;font-size:13px}.prompt{position:relative;margin-top:16px;padding:20px 168px 20px 22px;background:#f1ede4;border-left:6px solid var(--signal);font-size:17px;color:var(--ink)}.copy-button{position:absolute;right:18px;top:50%;transform:translateY(-50%);padding:10px 13px;border:1px solid var(--ink);background:#fff;color:var(--ink);font-weight:900;cursor:pointer}.plain-note{font-size:15px;margin:15px 0 0}.result{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.result article{padding:23px;background:#fff;border-top:5px solid var(--ok)}.result article:nth-child(2){border-color:var(--signal)}.result article:nth-child(3){border-color:var(--bad)}.result strong{display:block;font-size:25px;margin-bottom:5px}.result span{color:var(--muted)}.proof{display:grid;grid-template-columns:repeat(3,1fr);border:2px solid var(--line);margin-top:26px}.metric{padding:26px;border-right:2px solid var(--line)}.metric:last-child{border:0}.metric strong{display:block;font:900 42px "IBM Plex Mono","Courier New",monospace}.proof-image{width:100%;border:2px solid var(--line);margin-top:20px}.note{font-size:15px;border-left:4px solid var(--signal);padding-left:14px}.links{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.links a{padding:17px;border:1px solid var(--line);color:var(--ink);text-decoration:none;background:#fff;font-weight:800}.technical{margin-top:70px;padding:28px;background:#eae6dc}.technical summary{cursor:pointer;font-size:18px;font-weight:900}.technical p{font-size:15px}.command-wrap{position:relative;margin-top:16px}.command-wrap pre{overflow:auto;background:var(--ink);color:var(--paper);padding:18px 160px 18px 22px;font:14px/1.6 "IBM Plex Mono","Courier New",monospace}.command-wrap .copy-button{color:var(--paper);border-color:var(--paper);background:transparent}footer{margin-top:76px;padding-top:22px;border-top:2px solid var(--line);color:var(--muted);font-size:14px}
-    @media(max-width:980px){.hero-grid{grid-template-columns:1fr}.hero-visual{margin:12px 0 0}.pain-grid{grid-template-columns:repeat(2,1fr)}}
-    @media(max-width:700px){main{padding:22px 18px 70px}.navline{margin-bottom:36px}.navlinks a:first-child{display:none}.hero-grid{display:flex;flex-direction:column}.hero-copy,.hero-visual{width:100%}.hero-visual{order:2}h1{font-size:48px}.hero-lead{font-size:18px}.pain-grid,.result,.proof,.links{grid-template-columns:1fr}.metric{border-right:0;border-bottom:1px solid var(--line)}.metric:last-child{border:0}.hero-caption{gap:14px}.visual-label{top:8px}.visual-label.before{left:8px}.visual-label.after{right:8px}.score-jump{bottom:-20px}.score-jump strong{font-size:21px}.prompt{padding:18px 18px 70px}.copy-button{top:auto;bottom:15px;left:18px;right:auto;transform:none}.command-wrap pre{padding:18px 18px 68px}.command-wrap .copy-button{left:18px}.start-card{padding:22px 18px}}
-  </style>
+  <link rel="icon" href="favicon.svg">
+  <link rel="stylesheet" href="shared.css">
 </head>
-<body><main>
-  <header>
-    <div class="navline"><div class="wordmark">PPTLINT</div><nav class="navlinks"><a href="lab/">看看 12 个案例</a><a href="https://github.com/kdnsna/pptlint">GitHub</a></nav></div>
-    <div class="hero-grid">
-      <div class="hero-copy">
-        <div class="eyebrow">PPT 发出去之前的最后一次检查</div>
-        <h1>你电脑上正常，到了会议室可能已经坏了。</h1>
-        <p class="hero-lead"><strong>PPT 做完以后，别急着发。</strong> PPTLint 会先帮你找出文字被截掉、换电脑变样、整页无法编辑，以及备注和隐藏页被一起发出去等问题。</p>
-        <div class="actions"><a class="button primary" href="#start">检查我的 PPT</a><a class="button" href="lab/">先看 12 个真实场景</a></div>
-        <div class="trust" aria-label="使用方式"><span>文件留在自己电脑</span><span>只检查，不改原文件</span><span>不上传</span><span>不使用 AI 读取内容</span></div>
+<body>
+  <nav class="nav">
+    <div class="container nav__inner">
+      <a class="nav__logo" href="./">PPTLINT</a>
+      <div class="nav__links">
+        <a class="nav__link" href="lab/">12 个真实案例</a>
+        <a class="nav__link" href="proof-loop/comparison.html">Proof Loop</a>
+        <a class="nav__link" href="https://github.com/kdnsna/pptlint">GitHub</a>
+        <a class="nav__cta" href="#start">检查我的 PPT</a>
       </div>
-      <figure class="hero-visual">
-        <img src="assets/pptlint-before-after-hero.png" alt="同一份可编辑 PPT 修改前后对比，左侧存在交付问题，右侧已经处理">
-        <span class="visual-label before">修改前 · 103 项问题和提醒</span>
-        <span class="visual-label after">修改后 · 100 分 / 仍需确认</span>
-        <div class="score-jump"><span>同一份 9 页 PPT</span><strong>83 → 100</strong></div>
-        <figcaption class="hero-caption"><div><strong>修改前</strong>文件损坏、阅读困难和交付风险被找出来。</div><div><strong>修改后</strong>针对问题处理，没有新增高把握的问题。</div></figcaption>
-      </figure>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <p class="hero__eyebrow reveal">发出去之前的最后一道关</p>
+      <h1 class="hero__title reveal">在你电脑上好好的，<br>到了会议室可能已经散了。</h1>
+      <p class="hero__subtitle reveal">
+        <strong>PPT 做完，先别急着点发送。</strong>PPTLint 会在你自己的电脑上把它过一遍——文字有没有被截掉、换台电脑会不会走样、整页是不是根本改不动，以及讲者备注和隐藏页会不会被一起带出去。
+      </p>
+      <div class="hero__actions reveal">
+        <a class="btn btn--primary" href="#start">检查我的 PPT</a>
+        <a class="btn btn--secondary" href="lab/">先看 12 个真实场景</a>
+      </div>
+      <div class="hero__trust reveal">
+        <span>文件只留在本机</span>
+        <span>只检查，不动原文件</span>
+        <span>全程不上传</span>
+        <span>不调用 AI 读取内容</span>
+      </div>
+
+      <!-- PPT 展示容器：真实幻灯片模板 修改前 → 修改后 -->
+      <div class="showcase reveal reveal--scale">
+        <div class="showcase__stage">
+          <span class="showcase__eyebrow">同一份 9 页 PPT · 一次完整检查与修复</span>
+          <div class="deck">
+            <!-- 修改前：拥挤、低对比、杂乱 -->
+            <figure class="pslide pslide--before">
+              <div class="pslide__chrome"><span></span><span></span><span></span><em>方案汇报_最终版_v7.pptx</em></div>
+              <div class="pslide__body">
+                <div class="pslide__eyebrow-bad">2026 年第一季度 · 内部汇报</div>
+                <div class="pslide__title-bad">二〇二六年第一季度业务经营情况回顾与下一阶段重点工作策略规划专题汇报材料</div>
+                <div class="pslide__cols">
+                  <div class="pslide__col"><i></i><i></i><i></i><i></i><i></i><i class="s"></i></div>
+                  <div class="pslide__col"><i></i><i></i><i></i><i></i><i></i><i class="s"></i></div>
+                  <div class="pslide__col"><i></i><i></i><i></i><i></i><i></i><i class="s"></i></div>
+                </div>
+                <div class="pslide__minichart pslide__minichart--bad"><i style="height:40%"></i><i style="height:65%"></i><i style="height:30%"></i><i style="height:80%"></i><i style="height:50%"></i></div>
+                <div class="pslide__overlap"></div>
+              </div>
+              <span class="pslide__flag pslide__flag--bad">12pt 小字 · 对比不足 · 文本重叠</span>
+              <span class="score-badge score-badge--bad">83<small>修改前</small></span>
+            </figure>
+
+            <div class="deck__arrow">
+              <span class="deck__arrow-chip">PPTLint 检查 + 修复</span>
+              <span class="deck__arrow-line">→</span>
+            </div>
+
+            <!-- 修改后：层次分明、精致 -->
+            <figure class="pslide pslide--after">
+              <div class="pslide__chrome"><span></span><span></span><span></span><em>方案汇报_交付版.pptx</em></div>
+              <div class="pslide__body">
+                <div class="pslide__brandbar"></div>
+                <div class="pslide__kicker">Q1 业务回顾</div>
+                <div class="pslide__headline">营收同比 <b>+37%</b>，三条曲线全部转正</div>
+                <div class="pslide__sub">结论先行 · 正文拆页 · 最小字号 18pt</div>
+                <div class="pslide__cleanchart"><i style="height:46%"></i><i style="height:62%"></i><i style="height:74%"></i><i style="height:100%"></i></div>
+              </div>
+              <span class="pslide__flag pslide__flag--good">层次清晰 · 可编辑 · 现场可读</span>
+              <span class="score-badge score-badge--good">100<small>修改后</small></span>
+            </figure>
+          </div>
+          <p class="showcase__caption">基于一份真实的 9 页可编辑 PPTX，按当前规则完整检查与修复：<b>83 → 100</b></p>
+        </div>
+      </div>
     </div>
   </header>
 
-  <section>
-    <h2>这些问题，往往等到别人打开才暴露</h2>
-    <div class="pain-grid">
-      <article class="pain"><b>会议上看不清</b><h3>最后一行只剩一半</h3><p>换字体或投屏以后，标题突然换行，文字被文本框截掉。</p></article>
-      <article class="pain"><b>换电脑就变样</b><h3>原本整齐，到了客户电脑全乱了</h3><p>对方没有相同字体，标题、表格和图片位置一起变化。</p></article>
-      <article class="pain"><b>别人没法修改</b><h3>想改一个数字，却什么都选不中</h3><p>页面看起来像 PPT，其实从标题到图表都是一张图片。</p></article>
-      <article class="pain"><b>内部内容被带出去</b><h3>页面删了，备注还在</h3><p>隐藏页、批注、作者信息和内部链接仍然留在交付文件里。</p></article>
+  <section class="section section--muted">
+    <div class="container">
+      <h2 class="section__title reveal">这些毛病，往往等到别人打开才露馅</h2>
+      <p class="section__desc reveal">它们在你自己的屏幕上几乎看不出来，却会在客户的电脑、会议室的投影上原形毕露。</p>
+      <div class="card-grid card-grid--4">
+        <article class="card reveal">
+          <span class="card__tag">会议室看不清</span>
+          <h3 class="card__title">最后一行只剩半截</h3>
+          <p class="card__body">一换字体或一投屏，标题突然多折一行，正文被文本框硬生生截掉。</p>
+        </article>
+        <article class="card reveal">
+          <span class="card__tag">换电脑就走样</span>
+          <h3 class="card__title">原本整齐，到客户那全乱了</h3>
+          <p class="card__body">对方没装你的字体，标题、表格和图片的位置跟着一起挪位。</p>
+        </article>
+        <article class="card reveal">
+          <span class="card__tag">别人改不动</span>
+          <h3 class="card__title">想改一个数字，却什么都点不中</h3>
+          <p class="card__body">看着是张 PPT，其实从标题到图表整页都被压成了一张图片。</p>
+        </article>
+        <article class="card reveal">
+          <span class="card__tag">内部内容外泄</span>
+          <h3 class="card__title">页面删了，备注还留着</h3>
+          <p class="card__body">隐藏页、批注、作者信息和内部链接，仍然安静地躺在交付文件里。</p>
+        </article>
+      </div>
     </div>
   </section>
 
-  <section id="start" class="start">
-    <h2>不懂代码也没关系，把这句话交给你的助手</h2>
-    <p>如果你正在使用 Codex、Claude Code 或其他可以处理本地文件的助手，把 PPT 和下面这句话一起发给它即可。</p>
-    <div class="start-card">
-      <div class="step">复制下面这句话</div>
-      <div id="agent-command" class="prompt">请安装 PPTLint，检查这份 PowerPoint 是否适合发给领导或客户。先告诉我必须处理的页面，再告诉我在 PowerPoint 里具体怎么改。不要修改原文件。<button class="copy-button" type="button" data-copy="agent-command">复制这句话</button></div>
-      <p class="plain-note">助手会在你的电脑上完成检查，并生成一份可以直接打开的中文报告。你的 PPT 不会被上传到 PPTLint。</p>
+  <section id="start" class="section section--white">
+    <div class="container">
+      <h2 class="section__title reveal">不懂代码也没关系，把这句话交给你的 AI 助手</h2>
+      <p class="section__desc reveal">只要你在用 Codex、Claude Code，或任何能读写本地文件的 AI 助手，把 PPT 连同下面这句话一起发给它就行。</p>
+      <div class="prompt-card reveal reveal--scale">
+        <div class="prompt-card__label">复制下面这句话</div>
+        <p class="prompt-card__text">请安装 PPTLint，帮我检查这份 PowerPoint 适不适合发给领导或客户。先列出必须处理的页面，再告诉我在 PowerPoint 里具体该怎么改。不要改动原文件。</p>
+        <button class="btn btn--primary" type="button" onclick="copyPrompt()">复制这句话</button>
+      </div>
+      <p class="text-muted reveal" style="margin-top: 16px;">助手会在你本机完成检查，并生成一份可以直接打开的中文报告。整个过程，你的 PPT 都不会被上传到 PPTLint。</p>
     </div>
   </section>
 
-  <section>
-    <h2>检查完，不给你一堆术语，只给三种结论</h2>
-    <div class="result">
-      <article><strong>可以交付</strong><span>没有发现高把握的交付问题，最后人工预览一次即可。</span></article>
-      <article><strong>建议再看一眼</strong><span>报告会点名具体页面，请你确认需要业务判断的内容。</span></article>
-      <article><strong>先别发送</strong><span>先处理报告列出的必要问题，另存副本后重新检查。</span></article>
+  <section class="section section--muted">
+    <div class="container">
+      <h2 class="section__title reveal">检查完不甩你一堆术语，只给三个结论</h2>
+      <p class="section__desc reveal">每一条都落到具体页面，让你一眼知道下一步该做什么。</p>
+      <div class="card-grid card-grid--3">
+        <article class="card result-card reveal">
+          <span class="result-card__dot"></span>
+          <h3 class="card__title">可以交付</h3>
+          <p class="card__body">没有发现有把握的交付问题，你最后再人工预览一遍即可放心发送。</p>
+        </article>
+        <article class="card result-card result-card--warn reveal">
+          <span class="result-card__dot"></span>
+          <h3 class="card__title">建议再看一眼</h3>
+          <p class="card__body">报告会点名具体页面，请你确认那些需要业务判断的内容是否妥当。</p>
+        </article>
+        <article class="card result-card result-card--bad reveal">
+          <span class="result-card__dot"></span>
+          <h3 class="card__title">先别发送</h3>
+          <p class="card__body">先处理报告里列出的必要问题，另存一份副本后重新检查一次。</p>
+        </article>
+      </div>
     </div>
   </section>
 
-  <section>
-    <h2>不是演示数字：修改前后的文件都公开</h2>
-    <p>我们用同一份 9 页可编辑 PPT 做了完整检查。使用当前 v0.7.1 规则，修改前是 83 分，针对报告处理后是 100 分。原有 103 项问题和提醒不再报告，没有新增高把握的问题；仍有 21 项需要确认，并新增 3 项低把握提醒。</p>
-    <div class="proof">
-      <div class="metric"><strong>83 → 100</strong><span>当前规则下的修改前后</span></div>
-      <div class="metric"><strong>103</strong><span>原有问题和提醒得到处理</span></div>
-      <div class="metric"><strong>0</strong><span>新增高把握问题</span></div>
-    </div>
-    <img class="proof-image" src="proof-loop/deck-montage.png" alt="用于真实修改前后检查的 9 页可编辑 PPT">
-    <p class="note">100 分只代表计分规则没有继续扣分；报告仍要求人工确认 21 项既有提醒和 3 项新增低把握提醒，不代表审美满分或绝对没有风险。</p>
-    <div class="links">
-      <a href="lab/">看 12 个前后对比案例 →</a>
-      <a href="proof-loop/comparison.html">打开完整修改前后报告 →</a>
-      <a href="proof-loop/before.pptx">下载修改前 PPTX →</a>
-      <a href="proof-loop/after.pptx">下载修改后 PPTX →</a>
-      <a href="proof-loop/before.html">查看修改前报告 →</a>
-      <a href="proof-loop/after.html">查看修改后报告 →</a>
+  <section class="section section--white">
+    <div class="container">
+      <h2 class="section__title reveal">不是漂亮的演示数字：改前改后的文件全都公开</h2>
+      <p class="section__desc reveal">我们拿同一份 9 页可编辑 PPT 做了完整检查。第一遍得 83 分；照着报告处理之后，拿到 100 分。原有 103 项问题已处理，未引入新的高置信阻断问题。</p>
+      <div class="metrics reveal" style="margin-bottom: 32px;">
+        <div class="metric">
+          <span class="metric__value">83 → 100</span>
+          <span class="metric__label">同一份 PPT，改前改后</span>
+        </div>
+        <div class="metric">
+          <span class="metric__value" data-count="103">103</span>
+          <span class="metric__label">原有问题与提醒被处理</span>
+        </div>
+        <div class="metric metric--success">
+          <span class="metric__value" data-count="0">0</span>
+          <span class="metric__label">新增高把握问题</span>
+        </div>
+        <div class="metric metric--success">
+          <span class="metric__value">PASS</span>
+          <span class="metric__label">high 回归门禁</span>
+        </div>
+      </div>
+
+      <!-- 报告前后对比：展示容器复用 -->
+      <div class="showcase showcase--report reveal reveal--scale" style="margin-top: 8px;">
+        <div class="showcase__stage">
+          <span class="showcase__eyebrow">改前 / 改后 · 两份可打开的 HTML 报告</span>
+          <div class="deck">
+            <figure class="pslide pslide--before" style="transform: rotate(-1deg);">
+              <div class="pslide__chrome"><span></span><span></span><span></span><em>report_before.html</em></div>
+              <div class="pslide__body">
+                <div class="pslide__kicker" style="color:#EF4444;">改造前报告 · 83 分</div>
+                <div class="report-lines">
+                  <div class="rl"><b>critical</b><span class="bar"><i style="width:60%;background:#EF4444;"></i></span><span class="n" style="color:#EF4444;">9</span></div>
+                  <div class="rl"><b>high</b><span class="bar"><i style="width:100%;background:#EF4444;"></i></span><span class="n" style="color:#EF4444;">92</span></div>
+                  <div class="rl"><b>medium</b><span class="bar"><i style="width:6%;background:#F59E0B;"></i></span><span class="n">0</span></div>
+                  <div class="rl"><b>low</b><span class="bar"><i style="width:12%;background:#9CA3AF;"></i></span><span class="n">2</span></div>
+                </div>
+              </div>
+              <span class="score-badge score-badge--bad" style="top:40px;">83</span>
+            </figure>
+
+            <div class="deck__arrow">
+              <span class="deck__arrow-chip">定向修复后复检</span>
+              <span class="deck__arrow-line">→</span>
+            </div>
+
+            <figure class="pslide pslide--after" style="transform: rotate(1deg);">
+              <div class="pslide__chrome"><span></span><span></span><span></span><em>report_after.html</em></div>
+              <div class="pslide__body">
+                <div class="pslide__kicker" style="color:#10B981;">改造后报告 · 100 分</div>
+                <div class="report-lines">
+                  <div class="rl"><b>critical</b><span class="bar"><i style="width:0%;"></i></span><span class="n" style="color:#10B981;">0</span></div>
+                  <div class="rl"><b>high</b><span class="bar"><i style="width:0%;"></i></span><span class="n" style="color:#10B981;">0</span></div>
+                  <div class="rl"><b>medium</b><span class="bar"><i style="width:0%;"></i></span><span class="n" style="color:#10B981;">0</span></div>
+                  <div class="rl"><b>low</b><span class="bar"><i style="width:0%;"></i></span><span class="n" style="color:#10B981;">0</span></div>
+                </div>
+              </div>
+              <span class="score-badge score-badge--good" style="top:40px;">100</span>
+            </figure>
+          </div>
+          <p class="showcase__caption">两份报告都能在浏览器里直接打开，逐条核对每一项 finding。</p>
+        </div>
+      </div>
+
+      <p class="note reveal">100 分只代表这次规则检查通过，不代表审美满分，也不代表绝对零风险。</p>
+      <div class="link-strip reveal" style="margin-top: 28px;">
+        <a href="lab/">看 12 个前后对比案例 →</a>
+        <a href="proof-loop/comparison.html">打开完整的改前改后报告 →</a>
+        <a href="proof-loop/before.pptx">下载改造前 PPTX →</a>
+        <a href="proof-loop/after.pptx">下载改造后 PPTX →</a>
+      </div>
     </div>
   </section>
 
-  <details class="technical">
-    <summary>我会使用命令行，想自己运行</summary>
-    <p>默认按会议室投屏场景检查，并生成中文离线报告：</p>
-    <div class="command-wrap"><pre id="cli-command">uvx pptlint check output.pptx --scenario present --lang zh-CN</pre><button class="copy-button" type="button" data-copy="cli-command">复制命令</button></div>
-    <p>已经有修改前和修改后的两个文件，可以生成完整对比证据：</p>
-    <div class="command-wrap"><pre id="proof-command">uvx pptlint proof before.pptx after.pptx --scenario present --lang zh-CN --output comparison</pre><button class="copy-button" type="button" data-copy="proof-command">复制命令</button></div>
-    <div class="actions"><a class="button" href="https://github.com/kdnsna/pptlint">查看安装说明</a><a class="button" href="benchmark/">查看检查方法档案</a></div>
-  </details>
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__brand">PPTLINT</div>
+      <p class="footer__tagline">面向 PowerPoint 的本地、只读、确定性质量基础设施。</p>
+      <div class="footer__links">
+        <a class="footer__link" href="lab/">12 个案例</a>
+        <a class="footer__link" href="proof-loop/comparison.html">Proof Loop</a>
+        <a class="footer__link" href="https://github.com/kdnsna/pptlint">GitHub</a>
+      </div>
+      <p class="footer__copy">MIT · Deterministic · Local · Read-only</p>
+    </div>
+  </footer>
 
-  <footer>MIT 开源 · 本地运行 · 只读检查 · 不上传文件 · 不调用模型 · <a href="https://github.com/kdnsna/pptlint">PPTLint GitHub</a></footer>
-</main><script>document.querySelectorAll("[data-copy]").forEach((button)=>button.addEventListener("click",async(event)=>{event.stopPropagation();const target=document.getElementById(button.dataset.copy);if(!target)return;const text=[...target.childNodes].filter(node=>node.nodeType===Node.TEXT_NODE).map(node=>node.textContent).join("").trim()||target.textContent.replace(button.textContent,"").trim();let copied=false;try{await navigator.clipboard.writeText(text);copied=true}catch{const helper=document.createElement("textarea");helper.value=text;helper.setAttribute("readonly","");helper.style.cssText="position:fixed;opacity:0;pointer-events:none";document.body.appendChild(helper);helper.select();copied=document.execCommand("copy");helper.remove()}const original=button.textContent;button.textContent=copied?"已复制":"请长按文字复制";setTimeout(()=>button.textContent=original,1600)}));</script></body>
+  <script src="shared.js"></script>
+  <script>
+    function copyPrompt() {
+      const text = '请安装 PPTLint，帮我检查这份 PowerPoint 适不适合发给领导或客户。先列出必须处理的页面，再告诉我在 PowerPoint 里具体该怎么改。不要改动原文件。';
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.querySelector('.prompt-card .btn');
+        const original = btn.textContent;
+        btn.textContent = '已复制到剪贴板';
+        setTimeout(() => btn.textContent = original, 1600);
+      });
+    }
+  </script>
+</body>
 </html>

@@ -23,11 +23,14 @@ inputs:
   scenario:
     description: present, screen, or document.
     default: present
-  lang:
+  language:
     description: en or zh-CN.
     default: en
+  report-mode:
+    description: full or shareable. CI defaults to redacted artifacts.
+    default: shareable
   policy:
-    description: Optional path to a PPTLint YAML delivery policy.
+    description: Optional repository-relative delivery policy path.
     default: ""
   artifact-name:
     description: Uploaded report artifact name.
@@ -69,14 +72,15 @@ runs:
         INPUT_MIN_SCORE: ${{ inputs.min-score }}
         INPUT_RENDERER: ${{ inputs.renderer }}
         INPUT_SCENARIO: ${{ inputs.scenario }}
-        INPUT_LANG: ${{ inputs.lang }}
+        INPUT_LANGUAGE: ${{ inputs.language }}
+        INPUT_REPORT_MODE: ${{ inputs.report-mode }}
         INPUT_POLICY: ${{ inputs.policy }}
       run: |
         report_dir=$(mktemp -d "$RUNNER_TEMP/pptlint.XXXXXX")
         report_prefix="$report_dir/pptlint-report"
         html_report="$report_prefix.html"
         json_report="$report_prefix.json"
-        args=(pptlint check "$INPUT_PATH" --profile "$INPUT_PROFILE" --scenario "$INPUT_SCENARIO" --lang "$INPUT_LANG" --fail-on "$INPUT_FAIL_ON" --renderer "$INPUT_RENDERER" --output "$report_prefix")
+        args=(pptlint check "$INPUT_PATH" --profile "$INPUT_PROFILE" --scenario "$INPUT_SCENARIO" --lang "$INPUT_LANGUAGE" --report-mode "$INPUT_REPORT_MODE" --fail-on "$INPUT_FAIL_ON" --renderer "$INPUT_RENDERER" --output "$report_prefix")
         if [[ -n "$INPUT_MIN_SCORE" ]]; then args+=(--min-score "$INPUT_MIN_SCORE"); fi
         if [[ -n "$INPUT_POLICY" ]]; then args+=(--policy "$INPUT_POLICY"); fi
         set +e

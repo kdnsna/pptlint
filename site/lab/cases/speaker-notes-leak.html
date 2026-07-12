@@ -1,9 +1,137 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="../../favicon.svg" type="image/svg+xml"><meta name="description" content="你删掉了页面，却忘了备注里的内部话：页面很干净，讲者备注仍保留报价底线和未公开结论。"><link rel="canonical" href="https://kdnsna.github.io/pptlint/lab/cases/speaker-notes-leak.html"><meta property="og:type" content="website"><meta property="og:title" content="你删掉了页面，却忘了备注里的内部话 · PPTLint 案例"><meta property="og:description" content="你删掉了页面，却忘了备注里的内部话：页面很干净，讲者备注仍保留报价底线和未公开结论。"><meta property="og:image" content="https://kdnsna.github.io/pptlint/assets/pptlint-before-after-hero.png"><meta name="twitter:card" content="summary_large_image"><title>你删掉了页面，却忘了备注里的内部话 · PPTLint 案例</title><link rel="stylesheet" href="../lab.css"></head><body><header class="topbar shell"><a class="brand" href="../../"><span>PPT</span>LINT</a><nav><a href="../../">产品首页</a><a href="../../proof-loop/comparison.html">真实 Proof Loop</a><a href="https://github.com/kdnsna/pptlint">GitHub</a></nav></header><main class="case-page shell"><span class="kicker">隐私与外发 · Controlled demonstration</span><h1>你删掉了页面，却忘了备注里的内部话</h1><p class="lead">页面很干净，讲者备注仍保留报价底线和未公开结论。</p><article class="case-card" data-category="隐私与外发" data-visual="notes">
-  <div class="case-copy"><span class="tag">可控演示 · 隐私与外发</span><h2>你删掉了页面，却忘了备注里的内部话</h2><p>页面很干净，讲者备注仍保留报价底线和未公开结论。</p></div>
-  <div class="comparison">
-    <section class="state before"><div class="state-head"><span>修改前</span><span>82 分</span></div><div class="slide"><span class="line"></span><span class="line short"></span><span class="line"></span><div class="chart"><i style="height:42%"></i><i></i><i></i></div></div></section>
-    <section class="state after"><div class="state-head"><span>修改后</span><span>100 分</span></div><div class="slide"><span class="line"></span><span class="line short"></span><span class="line"></span><div class="chart"><i style="height:42%"></i><i></i><i></i></div></div></section>
-  </div>
-  <div class="case-footer"><div><strong>发现</strong>3 页含内部讲者备注</div><div><strong>处理</strong>交付副本清理备注，原稿不动</div></div>
-  <a class="case-link" href="../index.html">← 返回全部案例</a>
-</article><section class="steps"><article><strong>01 · PPTLint 发现</strong><p>3 页含内部讲者备注</p></article><article><strong>02 · 人工处理</strong><p>交付副本清理备注，原稿不动</p></article><article><strong>03 · 同场景复检</strong><p><code>pptlint check deck.pptx --scenario present</code></p></article></section><p class="disclosure">规则：<code>privacy.speaker-notes</code>。这是用于解释单一风险的可控演示，不是客户证言。分数只代表规则检查结果；PPTLint 不自动修改文件，也不把审美偏好冒充成错误。</p><section class="cta"><div><h2>查看另外 11 个交付案例</h2><p>从投屏事故，到隐私外发和可编辑交接。</p></div><div class="buttons"><a class="button primary" href="../index.html">返回案例实验室</a><a class="button" href="https://github.com/kdnsna/pptlint">GitHub</a></div></section></main><footer class="shell">PPTLint · Local, read-only PowerPoint preflight</footer></body></html>
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="你删掉了页面，却忘了备注里的内部话：页面很干净，讲者备注仍保留报价底线和未公开结论。">
+  <link rel="canonical" href="https://kdnsna.github.io/pptlint/lab/cases/speaker-notes-leak.html">
+  <title>你删掉了页面，却忘了备注里的内部话 · PPTLint 案例</title>
+  <link rel="icon" href="../../favicon.svg">
+  <link rel="stylesheet" href="../../shared.css">
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav__inner">
+      <a class="nav__logo" href="../../">PPTLINT</a>
+      <div class="nav__links">
+        <a class="nav__link" href="../../">产品首页</a>
+        <a class="nav__link" href="../">案例实验室</a>
+        <a class="nav__link" href="../../proof-loop/comparison.html">Proof Loop</a>
+        <a class="nav__link" href="https://github.com/kdnsna/pptlint">GitHub</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="case-hero">
+    <div class="container">
+      <span class="case-hero__kicker reveal">隐私与外发 · 可控演示</span>
+      <h1 class="case-hero__title reveal">你删掉了页面，却忘了备注里的内部话</h1>
+      <p class="case-hero__lead reveal">页面很干净，讲者备注仍保留报价底线和未公开结论。</p>
+    </div>
+  </header>
+
+  <section class="section section--white">
+    <div class="container">
+      <div class="showcase reveal reveal--scale" style="margin-top:0;">
+        <div class="showcase__stage">
+          <span class="showcase__eyebrow">同一页幻灯片 · 处理前后对比</span>
+          <div class="deck">
+            <figure class="pslide pslide--before">
+              <div class="pslide__chrome"><span></span><span></span><span></span><em>修改前.pptx</em></div>
+              <div class="pslide__body">
+                <div class="pslide__eyebrow-bad">交付风险 · 未处理</div>
+                <div class="pslide__title-bad">内部研讨：报价策略与结论</div>
+                <div class="scene scene-nt">
+              <div class="scene-nt__slide"><span></span></div>
+              <div class="scene-nt__notes">备注：报价底线 ¥__ · 未公开结论…</div>
+            </div>
+              </div>
+              <span class="pslide__flag pslide__flag--bad">备注泄露</span>
+              <span class="score-badge score-badge--bad">82<small>修改前</small></span>
+            </figure>
+            <div class="deck__arrow">
+              <span class="deck__arrow-chip">PPTLint 检查 + 人工处理</span>
+              <span class="deck__arrow-line">→</span>
+            </div>
+            <figure class="pslide pslide--after">
+              <div class="pslide__chrome"><span></span><span></span><span></span><em>交付版.pptx</em></div>
+              <div class="pslide__body">
+                <div class="pslide__brandbar"></div>
+                <div class="pslide__kicker">已按报告处理</div>
+                <div class="pslide__headline">外发之前，清理干净</div>
+                <div class="pslide__sub">备注清理 · 隐藏页移除</div>
+                <div class="pslide__cleanchart"><i style="height:46%"></i><i style="height:62%"></i><i style="height:74%"></i><i style="height:100%"></i></div>
+              </div>
+              <span class="pslide__flag pslide__flag--good">复检通过</span>
+              <span class="score-badge score-badge--good">100<small>修改后</small></span>
+            </figure>
+          </div>
+          <p class="showcase__caption">分数从 <b>82</b> 到 <b>100</b>，只代表该规则通过，不代表审美评价。</p>
+        </div>
+      </div>
+      <div class="case-finding reveal">
+        <div class="case-finding__item"><strong>PPTLint 发现</strong>3 页含内部讲者备注</div>
+        <div class="case-finding__item"><strong>人工处理</strong>交付副本清理备注，原稿不动</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--muted">
+    <div class="container">
+      <h2 class="section__title reveal">从发现到复检</h2>
+      <p class="section__desc reveal">这是用来解释单一风险的可控演示，并非客户证言；分数只反映规则检查的结果。</p>
+      <div class="steps">
+        <div class="step reveal">
+          <div class="step__num">01 · PPTLint 发现</div>
+          <h3 class="step__title">这一页发现了什么</h3>
+          <p class="step__body">3 页含内部讲者备注</p>
+        </div>
+        <div class="step reveal">
+          <div class="step__num">02 · 人工处理</div>
+          <h3 class="step__title">处理后复检</h3>
+          <p class="step__body">交付副本清理备注，原稿不动</p>
+        </div>
+        <div class="step reveal">
+          <div class="step__num">03 · 同场景复检</div>
+          <h3 class="step__title">复检命令</h3>
+          <p class="step__body"><code>pptlint check deck.pptx --scenario present --lang zh-CN</code></p>
+        </div>
+      </div>
+      <div class="disclosure reveal" style="margin-top:24px;">
+        规则：<code>privacy.speaker-notes</code>。PPTLint 不会替你改文件，也不会把审美偏好当成错误来报。本页是一个可控演示，用来说明这条规则在真实交付里是怎么检查、边界在哪里。
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--white">
+    <div class="container">
+      <div class="case-cta reveal reveal--scale">
+        <div>
+          <h2 class="case-cta__title">再看看另外 11 个交付案例</h2>
+          <p class="case-cta__sub">从投屏翻车，到隐私外发和可编辑交接。</p>
+        </div>
+        <div class="case-cta__actions">
+          <a class="btn btn--primary" href="../index.html">返回案例实验室</a>
+          <a class="btn btn--secondary" href="https://github.com/kdnsna/pptlint">GitHub</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__brand">PPTLINT</div>
+      <p class="footer__tagline">本地 · 只读 · 不上传 · 不调用模型的 PowerPoint 交付前检查。</p>
+      <div class="footer__links">
+        <a class="footer__link" href="../../">产品首页</a>
+        <a class="footer__link" href="../">案例实验室</a>
+        <a class="footer__link" href="../../proof-loop/comparison.html">真实 Proof Loop</a>
+        <a class="footer__link" href="https://github.com/kdnsna/pptlint">GitHub</a>
+      </div>
+      <p class="footer__copy">PPTLint · Local, read-only PowerPoint preflight</p>
+    </div>
+  </footer>
+
+  <script src="../../shared.js"></script>
+</body>
+</html>

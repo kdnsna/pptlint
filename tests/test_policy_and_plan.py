@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 import json
+from datetime import date
 from pathlib import Path
 
 from decklint.cli import main
 from decklint.model import load_deck
-from decklint.policy import apply_policy, load_policy
+from decklint.policy import apply_exceptions, apply_policy, load_policy
 
 from .pptx_factory import slide_xml, write_pptx
 
@@ -89,6 +90,100 @@ def test_cli_applies_policy_and_records_its_name(tmp_path: Path) -> None:
     report = json.loads(output.with_suffix(".json").read_text(encoding="utf-8"))
     assert report["policy"] == {"applied": True, "name": "Board delivery"}
     assert report["readiness"]["status"] == "blocked"
+
+
+def test_policy_exception_requires_reason_and_filters_only_scoped_findings(tmp_path: Path) -> None:
+    policy_path = tmp_path / "company.yml"
+    policy_path.write_text(
+        """version: 1
+name: Approved exception
+minimumFontSize: 20
+exceptions:
+  - ruleId: policy.font-size-below-minimum
+    slides: [1]
+    reason: Approved legal disclaimer
+    expires: 2026-12-31
+""",
+        encoding="utf-8",
+    )
+    source = write_pptx(
+        tmp_path / "deck.pptx",
+        slides=[slide_xml(body_size=1800), slide_xml(body_size=1800)],
+    )
+    policy = load_policy(policy_path)
+    findings = apply_policy(load_deck(source), policy)
+
+    remaining, records = apply_exceptions(findings, policy, today=date(2026, 7, 12))
+
+    assert {finding.slide_index for finding in remaining} == {2}
+    assert records[0]["reason"] == "Approved legal disclaimer"
+    assert records[0]["matchedCount"] == 1
+    assert records[0]["active"] is True
+
+
+def test_expired_policy_exception_is_recorded_but_not_applied(tmp_path: Path) -> None:
+    policy_path = tmp_path / "company.yml"
+    policy_path.write_text(
+        """version: 1
+minimumFontSize: 20
+exceptions:
+  - ruleId: policy.font-size-below-minimum
+    reason: Temporary approval
+    expires: 2026-01-01
+""",
+        encoding="utf-8",
+    )
+    source = write_pptx(tmp_path / "deck.pptx", slides=[slide_xml(body_size=1800)])
+    policy = load_policy(policy_path)
+    findings = apply_policy(load_deck(source), policy)
+
+    remaining, records = apply_exceptions(findings, policy, today=date(2026, 7, 12))
+
+    assert remaining
+    assert records[0]["matchedCount"] == 0
+    assert records[0]["active"] is False
+
+
+def test_cli_records_applied_policy_exception_in_report(tmp_path: Path) -> None:
+    policy_path = tmp_path / "company.yml"
+    policy_path.write_text(
+        """version: 1
+name: Board-approved exception
+exceptions:
+  - ruleId: readability.small-font
+    slides: [1]
+    reason: Approved legal disclaimer
+    expires: 2099-12-31
+""",
+        encoding="utf-8",
+    )
+    source = write_pptx(tmp_path / "deck.pptx", slides=[slide_xml(body_size=900)])
+    output = tmp_path / "report"
+
+    main(
+        [
+            "check",
+            str(source),
+            "--profile",
+            "ai-generated",
+            "--renderer",
+            "wireframe",
+            "--policy",
+            str(policy_path),
+            "--output",
+            str(output),
+        ]
+    )
+
+    report = json.loads(output.with_suffix(".json").read_text(encoding="utf-8"))
+    waiver = report["policy"]["waivers"][0]
+    markup = output.with_suffix(".html").read_text(encoding="utf-8")
+    assert waiver["ruleId"] == "readability.small-font"
+    assert waiver["matchedCount"] == 1
+    assert waiver["reason"] == "Approved legal disclaimer"
+    assert all(item["rule_id"] != "readability.small-font" for item in report["findings"])
+    assert "Policy waivers" in markup
+    assert "Approved legal disclaimer" in markup
 
 
 def test_plan_writes_agent_ready_brief_from_current_report(tmp_path: Path) -> None:

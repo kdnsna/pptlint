@@ -143,7 +143,7 @@ def test_report_groups_repeated_findings_for_people(tmp_path: Path) -> None:
     small = next(group for group in payload["issueGroups"] if group["ruleId"] == "readability.small-font")
     assert small["occurrenceCount"] == 4
     assert small["affectedSlides"] == [1, 2]
-    assert html.count("<strong>Text uses 9 pt type") == 2
+    assert html.count("<strong>页面文字小于当前场景建议字号") == 2
     assert "本页 2 处" in html
 
 
