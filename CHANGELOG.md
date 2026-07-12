@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.8.0 — 2026-07-12
+
+- Make Chinese reports consistently Chinese, including messages, impact labels, scores, run details, and page summaries.
+- Add sticky page navigation and action filters for must-fix, review, and advisory findings.
+- Warn that full reports are as sensitive as the source presentation.
+- Add `--report-mode shareable` to redact filenames, slide titles, previews, and object-level evidence.
+
 ## 0.7.1 — 2026-07-12
 
 - Align the package description, release instructions, public tests, and generated case pages.

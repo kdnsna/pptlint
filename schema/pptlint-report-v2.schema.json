@@ -8,6 +8,7 @@
   "properties": {
     "schemaVersion": { "const": "pptlint-report/v2" },
     "toolVersion": { "type": "string" },
+    "reportMode": { "enum": ["full", "shareable"] },
     "language": { "enum": ["en", "zh-CN"] },
     "scenario": { "enum": ["present", "screen", "document"] },
     "policy": {

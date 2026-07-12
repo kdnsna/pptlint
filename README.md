@@ -112,6 +112,14 @@ uvx pptlint check output.pptx --scenario document --lang zh-CN
 - `pptlint-report.html`：给人看的离线报告，先说后果，再说处理方法；
 - `pptlint-report.json`：给 Agent、CI 和其他工具读取的稳定数据。
 
+完整报告可能包含页面预览、文字和文档属性，应与原 PPT 同级保护。如需提交问题或发给外部协作者，先生成安全分享版：
+
+```bash
+uvx pptlint check output.pptx --lang zh-CN --report-mode shareable --output pptlint-safe
+```
+
+安全分享版会隐藏文件名、页面标题、预览和对象级证据，但保留规则、结论和处理步骤。
+
 ## 先看证据，再决定要不要用
 
 - [🏠 产品首页](https://kdnsna.github.io/pptlint/)：30 秒理解 PPTLint 在交付前帮你挡住什么。

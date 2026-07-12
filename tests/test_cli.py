@@ -21,6 +21,29 @@ def test_cli_writes_html_and_json_for_valid_deck(tmp_path: Path, monkeypatch) ->
     assert payload["file"]["name"] == "valid.pptx"
 
 
+def test_cli_can_write_a_shareable_report(tmp_path: Path) -> None:
+    source = write_pptx(tmp_path / "sensitive-name.pptx")
+    output = tmp_path / "safe"
+
+    exit_code = main(
+        [
+            "check",
+            str(source),
+            "--renderer",
+            "wireframe",
+            "--report-mode",
+            "shareable",
+            "--output",
+            str(output),
+        ]
+    )
+
+    payload = json.loads(output.with_suffix(".json").read_text(encoding="utf-8"))
+    assert exit_code in {0, 1}
+    assert payload["reportMode"] == "shareable"
+    assert payload["file"]["name"] == "presentation.pptx"
+
+
 def test_cli_returns_one_when_high_confidence_finding_reaches_threshold(tmp_path: Path) -> None:
     source = write_pptx(tmp_path / "broken.pptx", broken_relationship=True)
 

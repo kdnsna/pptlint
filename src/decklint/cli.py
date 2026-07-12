@@ -39,6 +39,12 @@ def _add_check_arguments(command: argparse.ArgumentParser, *, output: str, fail_
     command.add_argument("--fail-on", choices=("none", "low", "medium", "high", "critical"), default=fail_on)
     command.add_argument("--min-score", type=_score_value, default=None)
     command.add_argument("--lang", choices=("en", "zh-CN"), default="en", help="Report language")
+    command.add_argument(
+        "--report-mode",
+        choices=("full", "shareable"),
+        default="full",
+        help="Full local evidence or a redacted report that is safer to share",
+    )
     command.add_argument("--policy", type=Path, default=None, help="Optional YAML delivery policy")
 
 
@@ -80,6 +86,7 @@ def build_parser() -> argparse.ArgumentParser:
     proof.add_argument("--renderer", choices=("auto", "wireframe", "libreoffice"), default="auto")
     proof.add_argument("--soffice-path", help="Optional path to the LibreOffice soffice executable")
     proof.add_argument("--lang", choices=("en", "zh-CN"), default="en", help="Report language")
+    proof.add_argument("--report-mode", choices=("full", "shareable"), default="full")
     proof.add_argument("--policy", type=Path, default=None, help="Optional YAML delivery policy")
     proof.add_argument(
         "--fail-on-regression",
@@ -129,6 +136,7 @@ def _build_audit_report(
     language: str,
     scenario: str,
     policy_path: Path | None,
+    report_mode: str,
 ) -> tuple[dict[str, object], list[object]]:
     source = source.expanduser()
     deck = load_deck(source)
@@ -153,6 +161,7 @@ def _build_audit_report(
         language=language,
         scenario=scenario,
         policy_name=policy.name if policy is not None else None,
+        report_mode=report_mode,
     )
     return report, findings
 
@@ -167,6 +176,7 @@ def _run_audit(args: argparse.Namespace) -> int:
             language=args.lang,
             scenario=args.scenario,
             policy_path=args.policy,
+            report_mode=args.report_mode,
         )
         html_path, json_path = write_reports(args.output.expanduser(), report)
     except (DeckLoadError, RenderError, OSError, ValueError) as exc:
@@ -236,6 +246,7 @@ def _run_proof(args: argparse.Namespace) -> int:
             language=args.lang,
             scenario=args.scenario,
             policy_path=args.policy,
+            report_mode=args.report_mode,
         )
         after, _ = _build_audit_report(
             args.after,
@@ -245,6 +256,7 @@ def _run_proof(args: argparse.Namespace) -> int:
             language=args.lang,
             scenario=args.scenario,
             policy_path=args.policy,
+            report_mode=args.report_mode,
         )
         output = args.output.expanduser()
         before_paths = write_reports(Path(f"{output}-before"), before)

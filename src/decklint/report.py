@@ -111,9 +111,12 @@ def build_report(
     language: str = "en",
     scenario: str = "present",
     policy_name: str | None = None,
+    report_mode: str = "full",
 ) -> dict[str, object]:
     if language not in CHECK_COPY:
         raise ValueError(f"Unsupported report language: {language}")
+    if report_mode not in {"full", "shareable"}:
+        raise ValueError(f"Unsupported report mode: {report_mode}")
     summary = {
         severity: sum(1 for finding in findings if finding.severity == severity) for severity in SEVERITIES
     }
@@ -136,9 +139,10 @@ def build_report(
         )
         and sum(1 for shape in slide.shapes if shape.text.strip()) <= 2
     )
-    return {
+    report: dict[str, object] = {
         "schemaVersion": "pptlint-report/v2",
         "toolVersion": __version__,
+        "reportMode": report_mode,
         "language": language,
         "profile": profile,
         "scenario": scenario,
@@ -197,6 +201,20 @@ def build_report(
             for slide in deck.slides
         ],
     }
+    if report_mode == "shareable":
+        file_info = report["file"]
+        assert isinstance(file_info, dict)
+        file_info["name"] = "presentation.pptx"
+        reasons = report["readiness"]
+        assert isinstance(reasons, dict)
+        for reason in reasons["reasons"]:
+            reason["evidence"] = "[redacted from shareable report]"
+        for finding in report["findings"]:
+            finding["evidence"] = "[redacted from shareable report]"
+        for slide in report["slides"]:
+            slide["title"] = ""
+            slide["preview"] = ""
+    return report
 
 
 def _escape(value: object) -> str:
@@ -239,10 +257,16 @@ def _render_html(report: dict[str, object]) -> str:
     assert isinstance(delivery_checklist, list)
     assert isinstance(metrics, dict)
     zh = language == "zh-CN"
+    report_mode = str(report.get("reportMode", "full"))
     categories = scores["categories"]
     assert isinstance(categories, dict)
+    category_labels = (
+        {"integrity": "完整性", "readability": "可读性", "editability": "可编辑性", "consistency": "一致性", "accessibility": "无障碍"}
+        if zh
+        else {}
+    )
     score_cards = "".join(
-        f'<div class="score-card"><span>{_escape(name.title())}</span><strong>{_escape(value)}</strong></div>'
+        f'<div class="score-card"><span>{_escape(category_labels.get(name, name.title()))}</span><strong>{_escape(value)}</strong></div>'
         for name, value in categories.items()
     )
     deductions = scores.get("deductions", [])
@@ -254,15 +278,24 @@ def _render_html(report: dict[str, object]) -> str:
     assert isinstance(policy, dict) and isinstance(weights, dict)
     severity_deductions = policy["severityDeductions"]
     assert isinstance(severity_deductions, dict)
-    scoring_policy = (
-        '<details class="scoring-policy"><summary>How the secondary score is calculated</summary>'
-        f"<p>Starts at {policy['startingScore']} per category. High-confidence deductions: "
-        f"critical {severity_deductions['critical']}, high {severity_deductions['high']}, "
-        f"medium {severity_deductions['medium']}, low {severity_deductions['low']} points; "
-        f"per-rule cap {policy['perRuleCap']}. Weights: "
-        + ", ".join(f"{name} {float(weight):.0%}" for name, weight in weights.items())
-        + ". Suggestions that require human judgment and privacy reminders deduct 0 points.</p></details>"
-    )
+    if zh:
+        scoring_policy = (
+            '<details class="scoring-policy"><summary>分数如何计算</summary>'
+            f"<p>每个维度从 {policy['startingScore']} 分开始；仅高置信问题扣分："
+            f"严重 {severity_deductions['critical']}、高 {severity_deductions['high']}、"
+            f"中 {severity_deductions['medium']}、低 {severity_deductions['low']} 分；"
+            f"单条规则最多扣 {policy['perRuleCap']} 分。需要人工判断的建议和隐私提醒不扣分。</p></details>"
+        )
+    else:
+        scoring_policy = (
+            '<details class="scoring-policy"><summary>How the secondary score is calculated</summary>'
+            f"<p>Starts at {policy['startingScore']} per category. High-confidence deductions: "
+            f"critical {severity_deductions['critical']}, high {severity_deductions['high']}, "
+            f"medium {severity_deductions['medium']}, low {severity_deductions['low']} points; "
+            f"per-rule cap {policy['perRuleCap']}. Weights: "
+            + ", ".join(f"{name} {float(weight):.0%}" for name, weight in weights.items())
+            + ". Suggestions that require human judgment and privacy reminders deduct 0 points.</p></details>"
+        )
     status = str(readiness["status"])
     status_label = (
         {"ready": "可以发送", "review": "发送前再看一眼", "blocked": "先处理再发送"}
@@ -345,9 +378,9 @@ def _render_html(report: dict[str, object]) -> str:
             applied = sum(int(item.get("applied", 0)) for item in deductions_for_group)
             deduction = deductions_for_group[0]
             points = (
-                f"-{applied} points"
+                (f"扣 {applied} 分" if zh else f"-{applied} points")
                 if applied
-                else f"0 points · {deduction['reason']}"
+                else ("不扣分" if zh else f"0 points · {deduction['reason']}")
             )
             count_label = (
                 f" · 本页 {len(group)} 处" if zh and len(group) > 1 else (f" · {len(group)} occurrences" if len(group) > 1 else "")
@@ -357,20 +390,21 @@ def _render_html(report: dict[str, object]) -> str:
                 evidence += f" | +{len(group) - 5} more"
             finding_items += (
                 f'<li class="finding severity-{_escape(finding["severity"])}" '
-                f'data-severity="{_escape(finding["severity"])}" data-category="{_escape(finding["category"])}">'
+                f'data-severity="{_escape(finding["severity"])}" data-category="{_escape(finding["category"])}" '
+                f'data-disposition="{_escape(finding["disposition"])}">'
                 f"<strong>{_escape(finding['message'])}{_escape(count_label)}</strong>"
-                f'<p class="impact">Impact: {_escape(finding["impact"])}</p>'
+                f'<p class="impact">{"影响：" if zh else "Impact: "}{_escape(finding["impact"])}</p>'
                 '<ol class="fix-steps">'
                 + "".join(f"<li>{_escape(step)}</li>" for step in finding["fixSteps"])
-                + '</ol><details class="technical-details"><summary>Technical details</summary>'
+                + f'</ol><details class="technical-details"><summary>{"技术证据" if zh else "Technical details"}</summary>'
                 f"<code>{_escape(finding['rule_id'])}</code><em>{_escape(points)}</em>"
                 f"<p>{_escape(evidence)}</p></details></li>"
             )
         slide_cards.append(
-            f'<article class="slide-card" data-slide="{index}"><header><span>Slide {index:02d}</span>'
-            f"<h2>{_escape(slide.get('title') or 'Untitled slide')}</h2><b>{len(rendered_groups)} groups · {len(slide_findings)} occurrences</b></header>"
-            f'<div class="slide-preview"><img alt="Slide {index} preview" src="{_escape(slide.get("preview", ""))}">{overlays}</div>'
-            f"<ul>{finding_items or '<li class=clean>No item to check on this slide.</li>'}</ul></article>"
+            f'<article class="slide-card" id="slide-{index}" data-slide="{index}"><header><span>{"第" if zh else "Slide "}{index:02d}{" 页" if zh else ""}</span>'
+            f"<h2>{_escape(slide.get('title') or ('未命名页面' if zh else 'Untitled slide'))}</h2><b>{len(rendered_groups)} {'类问题' if zh else 'groups'} · {len(slide_findings)} {'处' if zh else 'occurrences'}</b></header>"
+            f'<div class="slide-preview"><img alt="{"第 " + str(index) + " 页预览" if zh else "Slide " + str(index) + " preview"}" src="{_escape(slide.get("preview", ""))}">{overlays}</div>'
+            f"<ul>{finding_items or ('<li class=clean>本页没有需要检查的项目。</li>' if zh else '<li class=clean>No item to check on this slide.</li>')}</ul></article>"
         )
     deck_findings = finding_groups.get(0, [])
     deck_items = ""
@@ -382,25 +416,41 @@ def _render_html(report: dict[str, object]) -> str:
         applied = sum(int(item.get("applied", 0)) for item in deductions_for_group)
         deduction = deductions_for_group[0]
         points = (
-            f"-{applied} points" if applied else f"0 points · {deduction['reason']}"
+            (f"扣 {applied} 分" if zh else f"-{applied} points")
+            if applied
+            else ("不扣分" if zh else f"0 points · {deduction['reason']}")
         )
         count_label = (
             f" · {len(group)} 处" if zh and len(group) > 1 else (f" · {len(group)} occurrences" if len(group) > 1 else "")
         )
         deck_items += (
-            f'<li class="finding severity-{_escape(finding["severity"])}">'
+            f'<li class="finding severity-{_escape(finding["severity"])}" data-disposition="{_escape(finding["disposition"])}">'
             f"<strong>{_escape(finding['message'])}{_escape(count_label)}</strong>"
-            f'<p class="impact">Impact: {_escape(finding["impact"])}</p>'
+            f'<p class="impact">{"影响：" if zh else "Impact: "}{_escape(finding["impact"])}</p>'
             '<ol class="fix-steps">'
             + "".join(f"<li>{_escape(step)}</li>" for step in finding["fixSteps"])
-            + '</ol><details class="technical-details"><summary>Technical details</summary>'
+            + f'</ol><details class="technical-details"><summary>{"技术证据" if zh else "Technical details"}</summary>'
             f"<code>{_escape(finding['rule_id'])}</code><em>{_escape(points)}</em>"
             f"<p>{_escape(' | '.join(str(item['evidence']) for item in group[:5]))}</p></details></li>"
         )
+    page_nav = "".join(
+        f'<a href="#slide-{int(slide["index"])}">{int(slide["index"]):02d}</a>'
+        for slide in slides
+        if isinstance(slide, dict)
+    )
+    privacy_notice = (
+        "这是安全分享报告：页面预览、标题和对象级证据已隐藏。"
+        if report_mode == "shareable" and zh
+        else "This shareable report redacts slide previews, titles, and object-level evidence."
+        if report_mode == "shareable"
+        else "本报告可能包含幻灯片预览、文字和文档属性，请按原 PPT 同级保护，不要直接外发。"
+        if zh
+        else "This report may contain slide previews, text, and document properties. Protect it like the source PPTX."
+    )
     raw_json = json.dumps(report, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
     safe_json = raw_json.replace("&", "\\u0026").replace("<", "\\u003c").replace(">", "\\u003e")
     return f"""<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="{_escape(language)}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>PPTLint report · {_escape(file_info["name"])}</title>
 <style>
 :root{{--ink:#172033;--paper:#f4f0e7;--panel:#fffdf8;--muted:#667085;--critical:#b42318;--high:#d92d20;--medium:#dc6803;--low:#175cd3}}
@@ -412,20 +462,24 @@ main{{max-width:1240px;margin:auto;padding:48px 24px 80px}}.hero{{display:grid;g
 .checklist{{margin:28px 0}}.checklist>header h2{{font-size:clamp(26px,4vw,42px);margin:5px 0 18px}}.checklist>div{{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}}.check{{background:var(--panel);border-top:5px solid #18794e;padding:18px}}.check-review{{border-color:var(--medium)}}.check-fix{{border-color:var(--critical)}}.check span{{font-weight:800;font-size:12px}}.check h3{{margin:7px 0}}.check p{{color:var(--muted);min-height:68px}}.check small{{color:var(--muted)}}
 .handoff{{margin:28px 0}}.handoff h2{{font-size:clamp(25px,3vw,36px);margin:6px 0 16px}}.handoff>div{{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}}.handoff article{{background:var(--panel);padding:15px;border-top:3px solid var(--ink)}}.handoff span,.handoff b{{display:block}}.handoff span{{font-size:11px;color:var(--muted)}}.handoff b{{font-size:21px;margin-top:5px}}
 .notice{{padding:12px 16px;background:#fff3d6;border-left:4px solid var(--medium);margin-bottom:24px}}.slide-grid{{display:grid;gap:28px}}.slide-card{{display:grid;grid-template-columns:minmax(360px,1.1fr) minmax(300px,.9fr);gap:24px;background:var(--panel);border:1px solid #d6d0c4;padding:20px}}
+.report-tools{{position:sticky;top:0;z-index:10;display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:#172033;color:white;padding:12px 16px;margin:24px 0}}.report-tools button,.report-tools a{{border:1px solid #ffffff55;background:transparent;color:white;padding:7px 10px;cursor:pointer;text-decoration:none}}.report-tools button.active{{background:white;color:#172033}}.page-nav{{display:flex;gap:5px;flex-wrap:wrap;margin-left:auto}}.privacy-notice{{padding:14px 18px;background:#fff3d6;border-left:5px solid #dc6803;margin:20px 0;font-weight:650}}.is-hidden{{display:none!important}}
 .slide-card header{{grid-column:1/-1;display:flex;align-items:baseline;gap:14px;border-bottom:1px solid #ded8cd}}.slide-card header h2{{margin:0 0 10px;flex:1}}.slide-card header span,.slide-card header b{{font:700 11px ui-monospace,monospace;color:var(--muted)}}
 .slide-preview{{position:relative;align-self:start;background:#ddd;box-shadow:0 12px 28px #17203320}}.slide-preview img{{width:100%;display:block}}.overlay{{position:absolute;border:3px solid var(--high);background:#d92d2015}}.overlay.severity-critical{{border-color:var(--critical)}}.overlay.severity-medium{{border-color:var(--medium)}}
 ul{{list-style:none;margin:0;padding:0;display:grid;gap:10px}}.finding{{border-left:4px solid var(--low);padding:12px;background:#f7f8fa}}.finding.severity-critical{{border-color:var(--critical)}}.finding.severity-high{{border-color:var(--high)}}.finding.severity-medium{{border-color:var(--medium)}}.finding code{{display:inline-block;color:var(--muted);font-size:11px}}.finding em{{float:right;color:var(--muted);font:700 11px ui-monospace,monospace}}.finding strong{{display:block;margin:0 0 3px}}.finding p,.finding small{{margin:0;color:var(--muted)}}.technical-details{{margin-top:10px;color:var(--muted)}}.technical-details summary{{cursor:pointer;font-size:12px}}.technical-details p{{clear:both}}.deck-findings{{margin:0 0 32px}}.scoring-policy{{border-left:4px solid #8a3d22;padding:10px 14px;margin:12px 0 0}}.scoring-policy p{{margin:6px 0 0;color:var(--muted)}}
 @media(max-width:800px){{.hero,.readiness{{grid-template-columns:1fr}}.checklist>div{{grid-template-columns:1fr 1fr}}.handoff>div{{grid-template-columns:repeat(2,1fr)}}.overall{{width:110px;height:110px}}.scores{{grid-template-columns:repeat(2,1fr)}}.slide-card{{grid-template-columns:1fr}}}}@media(max-width:480px){{.checklist>div{{grid-template-columns:1fr}}main{{padding-left:16px;padding-right:16px}}}}
 </style></head><body><main>
 <section class="hero"><div><span class="eyebrow">PPTLint · {"PPT 发送前体检" if zh else "PowerPoint delivery check"}</span><h1>{_escape(file_info["name"])}</h1><p>{("本地检查 · " + str(file_info["slides"]) + " 页 · 原文件未改动") if zh else ("Checked locally · " + str(file_info["slides"]) + (" slide" if int(file_info["slides"]) == 1 else " slides") + " · source file unchanged")}</p></div></section>
+<aside class="privacy-notice">{_escape(privacy_notice)}</aside>
 {readiness_panel}
 {checklist_panel}
 {handoff_panel}
-<details class="secondary-score"><summary>Secondary score: {_escape(scores["overall"])}/100</summary><p>Use this only to compare the same presentation before and after changes.</p><section class="scores">{score_cards}</section>{scoring_policy}<details class="technical-details"><summary>Run details</summary><p>{_escape(report["profile"])} profile · {_escape(renderer["used"])} renderer</p></details></details>
+<details class="secondary-score"><summary>{"辅助分数" if zh else "Secondary score"}: {_escape(scores["overall"])}/100</summary><p>{"仅用于比较同一份文件修改前后的变化。" if zh else "Use this only to compare the same presentation before and after changes."}</p><section class="scores">{score_cards}</section>{scoring_policy}<details class="technical-details"><summary>{"运行信息" if zh else "Run details"}</summary><p>{_escape(report["profile"])} profile · {_escape(renderer["used"])} renderer</p></details></details>
 {f'<div class="notice">{_escape(renderer["detail"])}</div>' if renderer.get("detail") else ""}
-{f'<section class="deck-findings"><h2>Items that affect the whole file</h2><ul>{deck_items}</ul></section>' if deck_items else ""}
+{f'<section class="deck-findings"><h2>{"影响整个文件的问题" if zh else "Items that affect the whole file"}</h2><ul>{deck_items}</ul></section>' if deck_items else ""}
+<nav class="report-tools" aria-label="{"报告筛选" if zh else "Report filters"}"><strong>{"筛选" if zh else "Filter"}</strong><button class="active" data-filter="all">{"全部" if zh else "All"}</button><button data-filter="blocker">{"必须处理" if zh else "Must fix"}</button><button data-filter="review">{"需要确认" if zh else "Review"}</button><button data-filter="advisory">{"建议查看" if zh else "Suggestions"}</button><span class="page-nav">{page_nav}</span></nav>
 <section class="slide-grid">{"".join(slide_cards)}</section>
 <script id="decklint-data" type="application/json">{safe_json}</script>
+<script>(function(){{var buttons=document.querySelectorAll('[data-filter]');buttons.forEach(function(button){{button.addEventListener('click',function(){{var value=button.getAttribute('data-filter');buttons.forEach(function(item){{item.classList.toggle('active',item===button);}});document.querySelectorAll('.finding').forEach(function(item){{item.classList.toggle('is-hidden',value!=='all'&&item.getAttribute('data-disposition')!==value);}});document.querySelectorAll('.slide-card').forEach(function(card){{var visible=card.querySelectorAll('.finding:not(.is-hidden)').length>0||value==='all';card.classList.toggle('is-hidden',!visible);}});}});}});}})();</script>
 </main></body></html>"""
 
 

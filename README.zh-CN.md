@@ -97,6 +97,12 @@ Each run writes:
 - `pptlint-report.html` — an offline human report that explains consequences and next steps;
 - `pptlint-report.json` — stable evidence for agents, CI, and integrations.
 
+Full reports can contain slide previews, text, and document properties. Treat them like the source deck. For external collaboration, create a redacted copy:
+
+```bash
+uvx pptlint check output.pptx --report-mode shareable --output pptlint-safe
+```
+
 ## Inspect the evidence first
 
 - [12 delivery-risk before/after cases](https://kdnsna.github.io/pptlint/lab/);
