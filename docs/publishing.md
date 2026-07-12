@@ -17,4 +17,4 @@ Before the first publish, create the `pptlint` project or a pending trusted publ
 - Workflow: `publish-pypi.yml`
 - Environment: `pypi`
 
-Then run the **Publish to PyPI** workflow manually and enter the exact version from `pyproject.toml`. The workflow checks the version, builds in a clean job, and publishes through GitHub OIDC. A manual trigger prevents an unconfigured or accidental GitHub release from attempting a package upload.
+Then run the **Publish to PyPI** workflow manually and enter the exact version from `pyproject.toml`. The workflow checks the version, builds and smoke-tests a clean wheel, publishes through GitHub OIDC, verifies the public PyPI package, creates the immutable GitHub Release, and finally advances the floating `v0` Action tag. A manual trigger prevents an accidental package upload.

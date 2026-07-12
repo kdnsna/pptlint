@@ -114,6 +114,33 @@ def test_html_leads_with_delivery_readiness_and_priority_actions(tmp_path: Path)
     assert "ai-generated profile" not in html.split("</section>", 1)[0]
 
 
+def test_chinese_html_localizes_all_human_facing_report_labels(tmp_path: Path) -> None:
+    source = write_pptx(tmp_path / "中文报告.pptx", broken_relationship=True)
+    deck = load_deck(source)
+    findings = audit_deck(deck, profile="ai-generated")
+    rendering = render_deck(deck, source=source, renderer="wireframe")
+    report = build_report(
+        deck,
+        findings,
+        score_findings(findings),
+        rendering,
+        profile="ai-generated",
+        language="zh-CN",
+    )
+
+    html_path, _ = write_reports(tmp_path / "中文报告", report)
+    html = html_path.read_text(encoding="utf-8")
+
+    assert '<html lang="zh-CN">' in html
+    assert "辅助分数" in html
+    assert "实际影响：" in html
+    assert "第 1 页" in html
+    assert "影响整个文件的问题" in html
+    assert "Secondary score" not in html
+    assert "Impact:" not in html
+    assert "Items that affect the whole file" not in html
+
+
 def test_v2_report_exposes_editability_metrics(tmp_path: Path) -> None:
     source = write_pptx(
         tmp_path / "mixed.pptx",

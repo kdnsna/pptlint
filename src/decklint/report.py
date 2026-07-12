@@ -241,8 +241,13 @@ def _render_html(report: dict[str, object]) -> str:
     zh = language == "zh-CN"
     categories = scores["categories"]
     assert isinstance(categories, dict)
+    category_labels = (
+        {"integrity": "文件完整性", "readability": "现场可读性", "editability": "可编辑性", "consistency": "一致性", "accessibility": "无障碍"}
+        if zh
+        else {name: name.title() for name in categories}
+    )
     score_cards = "".join(
-        f'<div class="score-card"><span>{_escape(name.title())}</span><strong>{_escape(value)}</strong></div>'
+        f'<div class="score-card"><span>{_escape(category_labels.get(name, name))}</span><strong>{_escape(value)}</strong></div>'
         for name, value in categories.items()
     )
     deductions = scores.get("deductions", [])
@@ -254,15 +259,28 @@ def _render_html(report: dict[str, object]) -> str:
     assert isinstance(policy, dict) and isinstance(weights, dict)
     severity_deductions = policy["severityDeductions"]
     assert isinstance(severity_deductions, dict)
-    scoring_policy = (
-        '<details class="scoring-policy"><summary>How the secondary score is calculated</summary>'
-        f"<p>Starts at {policy['startingScore']} per category. High-confidence deductions: "
-        f"critical {severity_deductions['critical']}, high {severity_deductions['high']}, "
-        f"medium {severity_deductions['medium']}, low {severity_deductions['low']} points; "
-        f"per-rule cap {policy['perRuleCap']}. Weights: "
-        + ", ".join(f"{name} {float(weight):.0%}" for name, weight in weights.items())
-        + ". Suggestions that require human judgment and privacy reminders deduct 0 points.</p></details>"
-    )
+    if zh:
+        scoring_policy = (
+            '<details class="scoring-policy"><summary>辅助分数怎样计算</summary>'
+            f"<p>每个类别从 {policy['startingScore']} 分开始。高置信问题扣分："
+            f"严重 {severity_deductions['critical']}、高 {severity_deductions['high']}、"
+            f"中 {severity_deductions['medium']}、低 {severity_deductions['low']} 分；"
+            f"同一规则最多扣 {policy['perRuleCap']} 分。权重："
+            + "、".join(
+                f"{category_labels.get(name, name)} {float(weight):.0%}" for name, weight in weights.items()
+            )
+            + "。需要人工判断的建议和隐私提醒不扣分。</p></details>"
+        )
+    else:
+        scoring_policy = (
+            '<details class="scoring-policy"><summary>How the secondary score is calculated</summary>'
+            f"<p>Starts at {policy['startingScore']} per category. High-confidence deductions: "
+            f"critical {severity_deductions['critical']}, high {severity_deductions['high']}, "
+            f"medium {severity_deductions['medium']}, low {severity_deductions['low']} points; "
+            f"per-rule cap {policy['perRuleCap']}. Weights: "
+            + ", ".join(f"{name} {float(weight):.0%}" for name, weight in weights.items())
+            + ". Suggestions that require human judgment and privacy reminders deduct 0 points.</p></details>"
+        )
     status = str(readiness["status"])
     status_label = (
         {"ready": "可以发送", "review": "发送前再看一眼", "blocked": "先处理再发送"}
@@ -359,7 +377,7 @@ def _render_html(report: dict[str, object]) -> str:
                 f'<li class="finding severity-{_escape(finding["severity"])}" '
                 f'data-severity="{_escape(finding["severity"])}" data-category="{_escape(finding["category"])}">'
                 f"<strong>{_escape(finding['message'])}{_escape(count_label)}</strong>"
-                f'<p class="impact">Impact: {_escape(finding["impact"])}</p>'
+                f'<p class="impact">{("实际影响：" if zh else "Impact: ")}{_escape(finding["impact"])}</p>'
                 '<ol class="fix-steps">'
                 + "".join(f"<li>{_escape(step)}</li>" for step in finding["fixSteps"])
                 + '</ol><details class="technical-details"><summary>Technical details</summary>'
@@ -367,10 +385,10 @@ def _render_html(report: dict[str, object]) -> str:
                 f"<p>{_escape(evidence)}</p></details></li>"
             )
         slide_cards.append(
-            f'<article class="slide-card" data-slide="{index}"><header><span>Slide {index:02d}</span>'
-            f"<h2>{_escape(slide.get('title') or 'Untitled slide')}</h2><b>{len(rendered_groups)} groups · {len(slide_findings)} occurrences</b></header>"
-            f'<div class="slide-preview"><img alt="Slide {index} preview" src="{_escape(slide.get("preview", ""))}">{overlays}</div>'
-            f"<ul>{finding_items or '<li class=clean>No item to check on this slide.</li>'}</ul></article>"
+            f'<article class="slide-card" data-slide="{index}"><header><span>{("第 " + str(index) + " 页" if zh else f"Slide {index:02d}")}</span>'
+            f"<h2>{_escape(slide.get('title') or ('无标题页面' if zh else 'Untitled slide'))}</h2><b>{(str(len(rendered_groups)) + ' 类问题 · ' + str(len(slide_findings)) + ' 处提醒' if zh else str(len(rendered_groups)) + ' groups · ' + str(len(slide_findings)) + ' occurrences')}</b></header>"
+            f'<div class="slide-preview"><img alt="{("第 " + str(index) + " 页预览" if zh else "Slide " + str(index) + " preview")}" src="{_escape(slide.get("preview", ""))}">{overlays}</div>'
+            f"<ul>{finding_items or ('<li class=clean>这一页没有需要检查的内容。</li>' if zh else '<li class=clean>No item to check on this slide.</li>')}</ul></article>"
         )
     deck_findings = finding_groups.get(0, [])
     deck_items = ""
@@ -390,7 +408,7 @@ def _render_html(report: dict[str, object]) -> str:
         deck_items += (
             f'<li class="finding severity-{_escape(finding["severity"])}">'
             f"<strong>{_escape(finding['message'])}{_escape(count_label)}</strong>"
-            f'<p class="impact">Impact: {_escape(finding["impact"])}</p>'
+            f'<p class="impact">{("实际影响：" if zh else "Impact: ")}{_escape(finding["impact"])}</p>'
             '<ol class="fix-steps">'
             + "".join(f"<li>{_escape(step)}</li>" for step in finding["fixSteps"])
             + '</ol><details class="technical-details"><summary>Technical details</summary>'
@@ -400,8 +418,8 @@ def _render_html(report: dict[str, object]) -> str:
     raw_json = json.dumps(report, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
     safe_json = raw_json.replace("&", "\\u0026").replace("<", "\\u003c").replace(">", "\\u003e")
     return f"""<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>PPTLint report · {_escape(file_info["name"])}</title>
+<html lang="{"zh-CN" if zh else "en"}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{"PPTLint 检查报告" if zh else "PPTLint report"} · {_escape(file_info["name"])}</title>
 <style>
 :root{{--ink:#172033;--paper:#f4f0e7;--panel:#fffdf8;--muted:#667085;--critical:#b42318;--high:#d92d20;--medium:#dc6803;--low:#175cd3}}
 *{{box-sizing:border-box}}body{{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}}
@@ -421,9 +439,9 @@ ul{{list-style:none;margin:0;padding:0;display:grid;gap:10px}}.finding{{border-l
 {readiness_panel}
 {checklist_panel}
 {handoff_panel}
-<details class="secondary-score"><summary>Secondary score: {_escape(scores["overall"])}/100</summary><p>Use this only to compare the same presentation before and after changes.</p><section class="scores">{score_cards}</section>{scoring_policy}<details class="technical-details"><summary>Run details</summary><p>{_escape(report["profile"])} profile · {_escape(renderer["used"])} renderer</p></details></details>
+<details class="secondary-score"><summary>{"辅助分数" if zh else "Secondary score"}: {_escape(scores["overall"])}/100</summary><p>{"只用它比较同一份 PPT 修改前后的变化。" if zh else "Use this only to compare the same presentation before and after changes."}</p><section class="scores">{score_cards}</section>{scoring_policy}<details class="technical-details"><summary>{"运行详情" if zh else "Run details"}</summary><p>{_escape(report["profile"])} {"检查配置" if zh else "profile"} · {_escape(renderer["used"])} {"预览方式" if zh else "renderer"}</p></details></details>
 {f'<div class="notice">{_escape(renderer["detail"])}</div>' if renderer.get("detail") else ""}
-{f'<section class="deck-findings"><h2>Items that affect the whole file</h2><ul>{deck_items}</ul></section>' if deck_items else ""}
+{f'<section class="deck-findings"><h2>{"影响整个文件的问题" if zh else "Items that affect the whole file"}</h2><ul>{deck_items}</ul></section>' if deck_items else ""}
 <section class="slide-grid">{"".join(slide_cards)}</section>
 <script id="decklint-data" type="application/json">{safe_json}</script>
 </main></body></html>"""

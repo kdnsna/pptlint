@@ -4,6 +4,7 @@ import argparse
 import sys
 from pathlib import Path
 
+from . import __version__
 from .comparison import ComparisonError, load_audit_report
 from .comparison_report import build_comparison_report, write_comparison_reports
 from .model import DeckLoadError, load_deck
@@ -46,6 +47,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="pptlint", description="Preflight checks for AI-generated PowerPoint files."
     )
+    parser.add_argument("--version", action="version", version=f"PPTLint {__version__}")
     subcommands = parser.add_subparsers(dest="command", required=True)
     check = subcommands.add_parser("check", help="Check whether a PPTX is ready to deliver.")
     _add_check_arguments(check, output="pptlint-report", fail_on="none")

@@ -3,10 +3,20 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from decklint.cli import main
 
 from .pptx_factory import slide_xml, write_pptx
 from .report_factory import make_report
+
+
+def test_cli_prints_current_version(capsys) -> None:
+    with pytest.raises(SystemExit) as exc:
+        main(["--version"])
+
+    assert exc.value.code == 0
+    assert capsys.readouterr().out.strip() == "PPTLint 0.7.1"
 
 
 def test_cli_writes_html_and_json_for_valid_deck(tmp_path: Path, monkeypatch) -> None:

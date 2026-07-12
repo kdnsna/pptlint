@@ -2,14 +2,14 @@
 
 > **PPT 做完以后，别急着发。** 你电脑上看不出来的问题，往往会在领导、客户或会议室的电脑上暴露。
 
-[English](README.md) · [产品首页](https://kdnsna.github.io/pptlint/) · [12 个前后对比案例](https://kdnsna.github.io/pptlint/lab/) · [真实 49 → 100 报告](https://kdnsna.github.io/pptlint/proof-loop/comparison.html)
+[English](README.md) · [产品首页](https://kdnsna.github.io/pptlint/) · [12 个前后对比案例](https://kdnsna.github.io/pptlint/lab/) · [当前 83 → 100 报告](https://kdnsna.github.io/pptlint/proof-loop/comparison.html)
 
 [![CI](https://github.com/kdnsna/pptlint/actions/workflows/ci.yml/badge.svg)](https://github.com/kdnsna/pptlint/actions/workflows/ci.yml)
 [![Pages](https://github.com/kdnsna/pptlint/actions/workflows/pages.yml/badge.svg)](https://kdnsna.github.io/pptlint/)
 [![PyPI](https://img.shields.io/pypi/v/pptlint.svg)](https://pypi.org/project/pptlint/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-10233f.svg)](LICENSE)
 
-[![同一份可编辑 PPT 修改前后对比：49 分到 100 分](site/assets/pptlint-before-after-hero.png)](https://kdnsna.github.io/pptlint/lab/)
+[![同一份可编辑 PPT 使用当前规则检查：83 分到 100 分](site/assets/pptlint-before-after-hero.png)](https://kdnsna.github.io/pptlint/lab/)
 
 ## 它解决的不是“好不好看”，而是“能不能放心发”
 
@@ -54,11 +54,11 @@ uvx pptlint check output.pptx --scenario document --lang zh-CN
 ## 先看证据，再决定要不要用
 
 - [12 个交付风险前后对比](https://kdnsna.github.io/pptlint/lab/)：投屏、换电脑、隐私、可编辑交接、文件体积和团队规范；
-- [真实可编辑 PPT：49 → 100](https://kdnsna.github.io/pptlint/proof-loop/comparison.html)：修改前后文件、完整报告和机器可读数据全部公开；
+- [真实可编辑 PPT：83 → 100](https://kdnsna.github.io/pptlint/proof-loop/comparison.html)：修改前后文件、完整报告和机器可读数据全部公开；
 - [修改前 PPTX](examples/proof-loop/before.pptx) 与 [修改后 PPTX](examples/proof-loop/after.pptx)；
 - [检查方法档案](https://kdnsna.github.io/pptlint/benchmark/)：说明 PPTLint 如何面对不同 AI PPT 项目。
 
-真实 Proof Loop 使用同一份 9 页可编辑 PPT。报告中的 103 项问题和提醒得到处理，修改后没有新增高置信问题。**100 分只是规则检查结果，不是审美满分，也不是绝对零风险。**
+真实 Proof Loop 使用同一份 9 页可编辑 PPT。当前规则下，103 项问题和提醒不再报告，仍有 21 项需要确认，新增 3 项低置信提醒，没有新增高置信问题。**100 分只是计分结果，不代表审美满分或绝对零风险。**
 
 ## 报告直接给出三种结论
 

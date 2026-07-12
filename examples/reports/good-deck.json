@@ -1,18 +1,68 @@
 {
+  "deliveryChecklist": [
+    {
+      "findingCount": 0,
+      "id": "file",
+      "label": "Opens reliably",
+      "status": "pass",
+      "summary": "No package-integrity issue was found."
+    },
+    {
+      "findingCount": 0,
+      "id": "presentation",
+      "label": "Readable in the room",
+      "status": "pass",
+      "summary": "No current readability risk was found."
+    },
+    {
+      "findingCount": 0,
+      "id": "editability",
+      "label": "Can be handed over",
+      "status": "pass",
+      "summary": "No flattened full-slide image was found."
+    },
+    {
+      "findingCount": 0,
+      "id": "privacy",
+      "label": "Safe to share",
+      "status": "pass",
+      "summary": "No note, hidden page, comment, metadata, or external-link reminder was found."
+    }
+  ],
   "file": {
     "name": "good-deck.pptx",
     "sha256": "43bfd6fffa605419b66a027a42f4a0676473e486b43498a006a38f7525ada711",
     "slides": 1
   },
   "findings": [],
+  "issueGroups": [],
+  "language": "en",
   "metrics": {
     "editability": {
+      "charts": 0,
       "flattenedSlides": 0,
       "graphicFrames": 0,
       "nativeObjectRatio": 1.0,
       "nativeTextShapes": 2,
-      "pictures": 0
+      "pictures": 0,
+      "tables": 0
+    },
+    "package": {
+      "animationSlides": 0,
+      "audioFiles": 0,
+      "compressedBytes": 3486,
+      "duplicateMediaFiles": 0,
+      "embeddedFontFiles": 0,
+      "mediaBytes": 0,
+      "mediaFiles": 0,
+      "transitionSlides": 0,
+      "uncompressedBytes": 2740,
+      "videoFiles": 0
     }
+  },
+  "policy": {
+    "applied": false,
+    "name": ""
   },
   "priorityActions": [],
   "profile": "baseline",
@@ -26,6 +76,7 @@
     "status": "ok",
     "used": "wireframe"
   },
+  "scenario": "present",
   "schemaVersion": "pptlint-report/v2",
   "scores": {
     "calculation": {
@@ -77,5 +128,5 @@
     "low": 0,
     "medium": 0
   },
-  "toolVersion": "0.3.1"
+  "toolVersion": "0.7.1"
 }

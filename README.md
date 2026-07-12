@@ -2,14 +2,14 @@
 
 > **Do not send the PowerPoint yet.** Problems that stay invisible on your laptop often appear on your client's computer or in the meeting room.
 
-[简体中文](README.zh-CN.md) · [Product site](https://kdnsna.github.io/pptlint/) · [12 before/after cases](https://kdnsna.github.io/pptlint/lab/) · [Real 49 → 100 proof](https://kdnsna.github.io/pptlint/proof-loop/comparison.html)
+[简体中文](README.zh-CN.md) · [Product site](https://kdnsna.github.io/pptlint/) · [12 before/after cases](https://kdnsna.github.io/pptlint/lab/) · [Current 83 → 100 proof](https://kdnsna.github.io/pptlint/proof-loop/comparison.html)
 
 [![CI](https://github.com/kdnsna/pptlint/actions/workflows/ci.yml/badge.svg)](https://github.com/kdnsna/pptlint/actions/workflows/ci.yml)
 [![Pages](https://github.com/kdnsna/pptlint/actions/workflows/pages.yml/badge.svg)](https://kdnsna.github.io/pptlint/)
 [![PyPI](https://img.shields.io/pypi/v/pptlint.svg)](https://pypi.org/project/pptlint/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-10233f.svg)](LICENSE)
 
-[![The same editable PowerPoint before and after delivery fixes, from 49 to 100](site/assets/pptlint-before-after-hero.png)](https://kdnsna.github.io/pptlint/lab/)
+[![The same editable PowerPoint under the current rules, from 83 to 100](site/assets/pptlint-before-after-hero.png)](https://kdnsna.github.io/pptlint/lab/)
 
 ## Not “is it beautiful?” — “is it safe to send?”
 
@@ -50,11 +50,11 @@ Each run writes:
 ## Inspect the evidence first
 
 - [12 delivery-risk before/after cases](https://kdnsna.github.io/pptlint/lab/);
-- [real editable deck: 49 → 100](https://kdnsna.github.io/pptlint/proof-loop/comparison.html), with both PPTX files and full reports;
+- [real editable deck: 83 → 100](https://kdnsna.github.io/pptlint/proof-loop/comparison.html), with both PPTX files and full reports;
 - [before PPTX](examples/proof-loop/before.pptx) and [after PPTX](examples/proof-loop/after.pptx);
 - [evaluation-method archive](https://kdnsna.github.io/pptlint/benchmark/).
 
-In the published nine-slide Proof Loop, 103 reported items were resolved and the edited deck introduced no new high-confidence problem. **A score of 100 is a rule-check result, not an aesthetic grade or a zero-risk guarantee.**
+In the published nine-slide Proof Loop, 103 items are no longer reported, 21 still need review, three new low-confidence reminders appear, and no new high-confidence problem appears. **A score of 100 is a scoring result, not an aesthetic grade or a zero-risk guarantee.**
 
 ## Three outcomes people can act on
 

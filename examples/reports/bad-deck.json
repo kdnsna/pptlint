@@ -1,4 +1,34 @@
 {
+  "deliveryChecklist": [
+    {
+      "findingCount": 0,
+      "id": "file",
+      "label": "Opens reliably",
+      "status": "pass",
+      "summary": "No package-integrity issue was found."
+    },
+    {
+      "findingCount": 4,
+      "id": "presentation",
+      "label": "Readable in the room",
+      "status": "review",
+      "summary": "People using assistive technology may not understand the image."
+    },
+    {
+      "findingCount": 1,
+      "id": "editability",
+      "label": "Can be handed over",
+      "status": "review",
+      "summary": "Important content cannot be edited as native PowerPoint objects."
+    },
+    {
+      "findingCount": 0,
+      "id": "privacy",
+      "label": "Safe to share",
+      "status": "pass",
+      "summary": "No note, hidden page, comment, metadata, or external-link reminder was found."
+    }
+  ],
   "file": {
     "name": "bad-deck.pptx",
     "sha256": "5568c357d1769ca055e2a0e533fc128530e4aacf8055d3471948e5b2c1648ce6",
@@ -22,7 +52,7 @@
         "Run PPTLint again and confirm that the reported item no longer appears."
       ],
       "id": "accessibility.missing-alt-text:s1-4:275634bc8d",
-      "impact": "This issue may reduce delivery quality or requires a human decision before sharing.",
+      "impact": "People using assistive technology may not understand the image.",
       "message": "An image has no alternative text.",
       "remediation": "Add concise alt text or mark the image as decorative in PowerPoint.",
       "rule_id": "accessibility.missing-alt-text",
@@ -42,7 +72,7 @@
         "Run PPTLint again and confirm that the reported item no longer appears."
       ],
       "id": "accessibility.missing-title:s1-deck:77588f6fee",
-      "impact": "This issue may reduce delivery quality or requires a human decision before sharing.",
+      "impact": "The slide is harder to navigate, review, and hand over without a clear title.",
       "message": "The slide has no populated title placeholder.",
       "remediation": "Add a unique slide title using the title placeholder.",
       "rule_id": "accessibility.missing-title",
@@ -62,9 +92,9 @@
       "disposition": "review",
       "evidence": "image coverage=100.0%; native text boxes=1",
       "fixSteps": [
-        "Keep body text, charts, and key labels as native PowerPoint objects.",
-        "Save changes to a separate delivery copy.",
-        "Run PPTLint again and confirm that the reported item no longer appears."
+        "Confirm whether the recipient must edit any text, number, chart, or shape on this slide.",
+        "Rebuild required content as native PowerPoint objects in a delivery copy.",
+        "Run PPTLint again and confirm the flattened-slide count."
       ],
       "id": "editability.full-slide-image:s1-4:2b1cc784f8",
       "impact": "Important content cannot be edited as native PowerPoint objects.",
@@ -87,9 +117,9 @@
       "disposition": "review",
       "evidence": "text=['F8F8F8']; fill=FFFFFF",
       "fixSteps": [
-        "Use text and background colors with at least 3:1 contrast for large type.",
-        "Save changes to a separate delivery copy.",
-        "Run PPTLint again and confirm that the reported item no longer appears."
+        "View the highlighted text against its actual background.",
+        "Darken the text, lighten the background, or add a solid backing shape.",
+        "Run PPTLint again and inspect the rendered preview."
       ],
       "id": "readability.low-contrast:s1-3:884eb35530",
       "impact": "The affected text may be unreadable on a projector or low-quality display.",
@@ -112,9 +142,9 @@
       "disposition": "review",
       "evidence": "Body 2: minimum explicit font size 9 pt",
       "fixSteps": [
-        "Increase the font size or split dense content across slides.",
-        "Save changes to a separate delivery copy.",
-        "Run PPTLint again and confirm that the reported item no longer appears."
+        "View the reported slide at the size used in the meeting room.",
+        "Increase the text size or reduce the amount of content.",
+        "Run PPTLint again and inspect the rendered preview."
       ],
       "id": "readability.small-font:s1-3:17892eb799",
       "impact": "The audience may not be able to read the affected text at presentation distance.",
@@ -126,44 +156,137 @@
       "slide_index": 1
     }
   ],
+  "issueGroups": [
+    {
+      "affectedSlides": [
+        1
+      ],
+      "category": "accessibility",
+      "confidence": "high",
+      "disposition": "review",
+      "impact": "People using assistive technology may not understand the image.",
+      "occurrenceCount": 1,
+      "ruleId": "accessibility.missing-alt-text",
+      "severity": "medium"
+    },
+    {
+      "affectedSlides": [
+        1
+      ],
+      "category": "accessibility",
+      "confidence": "high",
+      "disposition": "review",
+      "impact": "The slide is harder to navigate, review, and hand over without a clear title.",
+      "occurrenceCount": 1,
+      "ruleId": "accessibility.missing-title",
+      "severity": "medium"
+    },
+    {
+      "affectedSlides": [
+        1
+      ],
+      "category": "editability",
+      "confidence": "high",
+      "disposition": "review",
+      "impact": "Important content cannot be edited as native PowerPoint objects.",
+      "occurrenceCount": 1,
+      "ruleId": "editability.full-slide-image",
+      "severity": "high"
+    },
+    {
+      "affectedSlides": [
+        1
+      ],
+      "category": "readability",
+      "confidence": "high",
+      "disposition": "review",
+      "impact": "The affected text may be unreadable on a projector or low-quality display.",
+      "occurrenceCount": 1,
+      "ruleId": "readability.low-contrast",
+      "severity": "high"
+    },
+    {
+      "affectedSlides": [
+        1
+      ],
+      "category": "readability",
+      "confidence": "high",
+      "disposition": "review",
+      "impact": "The audience may not be able to read the affected text at presentation distance.",
+      "occurrenceCount": 1,
+      "ruleId": "readability.small-font",
+      "severity": "high"
+    }
+  ],
+  "language": "en",
   "metrics": {
     "editability": {
+      "charts": 0,
       "flattenedSlides": 1,
       "graphicFrames": 0,
       "nativeObjectRatio": 0.5,
       "nativeTextShapes": 1,
-      "pictures": 1
+      "pictures": 1,
+      "tables": 0
+    },
+    "package": {
+      "animationSlides": 0,
+      "audioFiles": 0,
+      "compressedBytes": 3930,
+      "duplicateMediaFiles": 0,
+      "embeddedFontFiles": 0,
+      "mediaBytes": 68,
+      "mediaFiles": 1,
+      "transitionSlides": 0,
+      "uncompressedBytes": 3068,
+      "videoFiles": 0
     }
+  },
+  "policy": {
+    "applied": false,
+    "name": ""
   },
   "priorityActions": [
     {
+      "affectedSlides": [
+        1
+      ],
       "disposition": "review",
+      "findingCount": 1,
       "fixSteps": [
-        "Keep body text, charts, and key labels as native PowerPoint objects.",
-        "Save changes to a separate delivery copy.",
-        "Run PPTLint again and confirm that the reported item no longer appears."
+        "Confirm whether the recipient must edit any text, number, chart, or shape on this slide.",
+        "Rebuild required content as native PowerPoint objects in a delivery copy.",
+        "Run PPTLint again and confirm the flattened-slide count."
       ],
       "impact": "Important content cannot be edited as native PowerPoint objects.",
       "ruleId": "editability.full-slide-image",
       "slideIndex": 1
     },
     {
+      "affectedSlides": [
+        1
+      ],
       "disposition": "review",
+      "findingCount": 1,
       "fixSteps": [
-        "Use text and background colors with at least 3:1 contrast for large type.",
-        "Save changes to a separate delivery copy.",
-        "Run PPTLint again and confirm that the reported item no longer appears."
+        "View the highlighted text against its actual background.",
+        "Darken the text, lighten the background, or add a solid backing shape.",
+        "Run PPTLint again and inspect the rendered preview."
       ],
       "impact": "The affected text may be unreadable on a projector or low-quality display.",
       "ruleId": "readability.low-contrast",
       "slideIndex": 1
     },
     {
+      "affectedSlides": [
+        1
+      ],
       "disposition": "review",
+      "findingCount": 1,
       "fixSteps": [
-        "Increase the font size or split dense content across slides.",
-        "Save changes to a separate delivery copy.",
-        "Run PPTLint again and confirm that the reported item no longer appears."
+        "View the reported slide at the size used in the meeting room.",
+        "Increase the text size or reduce the amount of content.",
+        "Run PPTLint again and inspect the rendered preview."
       ],
       "impact": "The audience may not be able to read the affected text at presentation distance.",
       "ruleId": "readability.small-font",
@@ -175,13 +298,13 @@
     "reasons": [
       {
         "evidence": "Hero has an empty descr/title attribute",
-        "impact": "This issue may reduce delivery quality or requires a human decision before sharing.",
+        "impact": "People using assistive technology may not understand the image.",
         "ruleId": "accessibility.missing-alt-text",
         "slideIndex": 1
       },
       {
         "evidence": "Slide 1 has no title or centered-title placeholder text",
-        "impact": "This issue may reduce delivery quality or requires a human decision before sharing.",
+        "impact": "The slide is harder to navigate, review, and hand over without a clear title.",
         "ruleId": "accessibility.missing-title",
         "slideIndex": 1
       },
@@ -212,6 +335,7 @@
     "status": "ok",
     "used": "wireframe"
   },
+  "scenario": "present",
   "schemaVersion": "pptlint-report/v2",
   "scores": {
     "calculation": {
@@ -314,5 +438,5 @@
     "low": 0,
     "medium": 2
   },
-  "toolVersion": "0.3.1"
+  "toolVersion": "0.7.1"
 }

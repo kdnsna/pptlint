@@ -79,7 +79,16 @@ def test_committed_proof_reports_match_schema_and_scoring_contract() -> None:
 def test_github_action_exposes_the_cli_contract() -> None:
     action = yaml.safe_load((ROOT / "action.yml").read_text(encoding="utf-8"))
 
-    assert {"path", "profile", "fail-on", "min-score", "renderer"} <= set(action["inputs"])
+    assert {
+        "path",
+        "profile",
+        "fail-on",
+        "min-score",
+        "renderer",
+        "scenario",
+        "lang",
+        "policy",
+    } <= set(action["inputs"])
     assert {"readiness", "score", "html-report", "json-report"} <= set(action["outputs"])
     run_scripts = "\n".join(step.get("run", "") for step in action["runs"]["steps"])
     assert "pip install" in run_scripts
@@ -179,22 +188,25 @@ def test_proof_loop_case_is_schema_valid_and_matches_public_claims() -> None:
     jsonschema.validate(before, report_schema)
     jsonschema.validate(after, report_schema)
     jsonschema.validate(comparison, comparison_schema)
-    assert before["scores"]["overall"] == 49
+    assert before["toolVersion"] == "0.7.1"
+    assert after["toolVersion"] == "0.7.1"
+    assert before["scores"]["overall"] == 83
     assert after["scores"]["overall"] == 100
-    assert comparison["scores"]["overall"] == {"before": 49, "after": 100, "delta": 51}
+    assert comparison["scores"]["overall"] == {"before": 83, "after": 100, "delta": 17}
     assert len(comparison["resolved"]) == 103
+    assert len(comparison["persistent"]) == 21
     assert len(comparison["new"]) == 3
     assert all(item["confidence"] == "low" for item in comparison["new"])
     assert comparison["gate"]["passed"] is True
 
     site = (ROOT / "site/index.html").read_text(encoding="utf-8")
-    assert "49 → 100" in site
+    assert "83 → 100" in site
     assert "proof-loop/comparison.html" in site
     assert "http://" not in site and "https://" in site
 
 
-def test_version_is_070() -> None:
-    assert decklint.__version__ == "0.7.0"
+def test_version_is_071() -> None:
+    assert decklint.__version__ == "0.7.1"
 
 
 def test_homepage_leads_with_agent_instruction_before_cli() -> None:

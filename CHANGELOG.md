@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.7.1 — 2026-07-12
+
+- Regenerate the public Proof Loop with the current scoring and calibration rules.
+- Restore release truth across the repository, package, GitHub Action, and public website.
+- Add `pptlint --version` plus scenario, language, and policy inputs to the composite Action.
+- Complete Chinese localization of human-facing HTML report labels and scoring details.
+
 ## 0.7.0 — 2026-07-12
 
 - Launch the Delivery Lab with 12 complete before/after risk demonstrations.
