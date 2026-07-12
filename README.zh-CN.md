@@ -2,13 +2,8 @@
   English · <a href="README.md">简体中文</a> · <a href="https://kdnsna.github.io/pptlint/">Product site</a> · <a href="https://kdnsna.github.io/pptlint/lab/">12 before/after cases</a> · <a href="https://kdnsna.github.io/pptlint/proof-loop/comparison.html">Real 49 → 100 proof</a>
 </p>
 
-<div align="center">
-  <h1>PPTLint</h1>
-</div>
-
 <p align="center">
-  <strong>PowerPoint pre-delivery checks · local · read-only · deterministic</strong><br>
-  Before you send the deck, catch the problems that stay invisible on your laptop but show up on your client's machine or in the meeting room.
+  <img src="site/assets/readme-hero.svg" alt="PPTLint — PowerPoint pre-delivery checks" width="1200">
 </p>
 
 <p align="center">
@@ -22,33 +17,47 @@
 <table>
   <tr>
     <td width="33%" align="center" valign="top">
-      <div style="border:1px solid #e5e7eb;border-radius:14px;padding:24px 18px;background:#ffffff;">
-        <div style="font-size:34px;line-height:1;">🏠</div>
-        <h3 style="margin:12px 0 6px;color:#0A1628;">Product site</h3>
-        <p style="color:#6B7280;font-size:14px;line-height:1.6;margin:0 0 16px;">See what PPTLint blocks before delivery, and why it never modifies your file.</p>
-        <a href="https://kdnsna.github.io/pptlint/" style="display:inline-block;padding:9px 20px;background:#E85D2C;color:#ffffff;border-radius:9px;text-decoration:none;font-weight:600;font-size:14px;">Visit →</a>
+      <div style="border:1px solid #ECECF1;border-radius:16px;overflow:hidden;box-shadow:0 8px 24px rgba(10,22,40,0.10);background:#ffffff;">
+        <div style="background-color:#E85D2C;background:linear-gradient(135deg,#E85D2C 0%,#F2874E 100%);padding:22px 18px;text-align:center;">
+          <div style="font-size:30px;line-height:1;">🏠</div>
+        </div>
+        <div style="padding:18px 18px 22px;">
+          <h3 style="margin:0 0 8px;color:#0A1628;font-size:18px;">Product site</h3>
+          <p style="margin:0 0 16px;color:#6B7280;font-size:14px;line-height:1.6;">See what PPTLint blocks before delivery, and why it never modifies your file.</p>
+          <a href="https://kdnsna.github.io/pptlint/" style="display:inline-block;padding:9px 20px;background:#E85D2C;color:#ffffff;border-radius:9px;text-decoration:none;font-weight:600;font-size:14px;">Visit →</a>
+        </div>
       </div>
     </td>
     <td width="33%" align="center" valign="top">
-      <div style="border:1px solid #e5e7eb;border-radius:14px;padding:24px 18px;background:#ffffff;">
-        <div style="font-size:34px;line-height:1;">🔬</div>
-        <h3 style="margin:12px 0 6px;color:#0A1628;">Delivery Lab</h3>
-        <p style="color:#6B7280;font-size:14px;line-height:1.6;margin:0 0 16px;">12 one-glance before/after cases: projection fails, cross-machine drift, privacy leaks, editable handoff.</p>
-        <a href="https://kdnsna.github.io/pptlint/lab/" style="display:inline-block;padding:9px 20px;background:#E85D2C;color:#ffffff;border-radius:9px;text-decoration:none;font-weight:600;font-size:14px;">Visit →</a>
+      <div style="border:1px solid #ECECF1;border-radius:16px;overflow:hidden;box-shadow:0 8px 24px rgba(10,22,40,0.10);background:#ffffff;">
+        <div style="background-color:#E85D2C;background:linear-gradient(135deg,#E85D2C 0%,#F2874E 100%);padding:22px 18px;text-align:center;">
+          <div style="font-size:30px;line-height:1;">🔬</div>
+        </div>
+        <div style="padding:18px 18px 22px;">
+          <h3 style="margin:0 0 8px;color:#0A1628;font-size:18px;">Delivery Lab</h3>
+          <p style="margin:0 0 16px;color:#6B7280;font-size:14px;line-height:1.6;">12 one-glance before/after cases: projection fails, cross-machine drift, privacy leaks, editable handoff.</p>
+          <a href="https://kdnsna.github.io/pptlint/lab/" style="display:inline-block;padding:9px 20px;background:#E85D2C;color:#ffffff;border-radius:9px;text-decoration:none;font-weight:600;font-size:14px;">Visit →</a>
+        </div>
       </div>
     </td>
     <td width="33%" align="center" valign="top">
-      <div style="border:1px solid #e5e7eb;border-radius:14px;padding:24px 18px;background:#ffffff;">
-        <div style="font-size:34px;line-height:1;">📈</div>
-        <h3 style="margin:12px 0 6px;color:#0A1628;">Real Proof Loop</h3>
-        <p style="color:#6B7280;font-size:14px;line-height:1.6;margin:0 0 16px;">The same deck from 49 to 100 — before/after PPTX, full reports and machine-readable data, all public.</p>
-        <a href="https://kdnsna.github.io/pptlint/proof-loop/comparison.html" style="display:inline-block;padding:9px 20px;background:#E85D2C;color:#ffffff;border-radius:9px;text-decoration:none;font-weight:600;font-size:14px;">Visit →</a>
+      <div style="border:1px solid #ECECF1;border-radius:16px;overflow:hidden;box-shadow:0 8px 24px rgba(10,22,40,0.10);background:#ffffff;">
+        <div style="background-color:#E85D2C;background:linear-gradient(135deg,#E85D2C 0%,#F2874E 100%);padding:22px 18px;text-align:center;">
+          <div style="font-size:30px;line-height:1;">📈</div>
+        </div>
+        <div style="padding:18px 18px 22px;">
+          <h3 style="margin:0 0 8px;color:#0A1628;font-size:18px;">Real Proof Loop</h3>
+          <p style="margin:0 0 16px;color:#6B7280;font-size:14px;line-height:1.6;">The same deck from 49 to 100 — before/after PPTX, full reports and machine-readable data, all public.</p>
+          <a href="https://kdnsna.github.io/pptlint/proof-loop/comparison.html" style="display:inline-block;padding:9px 20px;background:#E85D2C;color:#ffffff;border-radius:9px;text-decoration:none;font-weight:600;font-size:14px;">Visit →</a>
+        </div>
       </div>
     </td>
   </tr>
 </table>
 
-> **Do not send the PowerPoint yet.** Problems that stay invisible on your laptop often appear on your client's computer or in the meeting room.
+<div style="border-left:4px solid #E85D2C;background:#FFF7F2;padding:14px 18px;border-radius:0 10px 10px 0;color:#0A1628;font-size:15px;line-height:1.7;margin:26px 0;">
+  <strong>Do not send the PowerPoint yet.</strong> Problems that stay invisible on your laptop often appear on your client's computer or in the meeting room.
+</div>
 
 [![The same editable PowerPoint before and after delivery fixes, from 49 to 100](site/assets/pptlint-before-after-hero.png)](https://kdnsna.github.io/pptlint/lab/)
 
@@ -101,9 +110,9 @@ In the published nine-slide Proof Loop, 103 reported items were resolved and the
 
 | Result | What to do |
 |---|---|
-| Ready to send | No high-confidence delivery problem was found; still perform the final human preview |
-| Check before sending | Open the named slides and confirm suggestions that need context or human judgment |
-| Fix before sending | Resolve the listed blocker, save a separate delivery copy, and check again |
+| <span style="color:#10B981;font-weight:700;">✅ Ready to send</span> | No high-confidence delivery problem was found; still perform the final human preview |
+| <span style="color:#D97706;font-weight:700;">👀 Check first</span> | Open the named slides and confirm suggestions that need context or human judgment |
+| <span style="color:#DC2626;font-weight:700;">⛔ Fix first</span> | Resolve the listed blocker, save a separate delivery copy, and check again |
 
 Repeated object-level findings are grouped in HTML so 200 instances of one root cause do not become 200 noisy tasks. Full evidence remains in JSON.
 

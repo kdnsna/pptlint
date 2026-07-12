@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 360" width="1200" height="360" role="img" aria-label="PPTLint">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0A1628"/>
+      <stop offset="0.55" stop-color="#122036"/>
+      <stop offset="1" stop-color="#1B2C46"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.80" cy="0.22" r="0.55">
+      <stop offset="0" stop-color="#E85D2C" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#E85D2C" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="before" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3A2030"/>
+      <stop offset="1" stop-color="#2A1822"/>
+    </linearGradient>
+    <linearGradient id="after" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#163A22"/>
+      <stop offset="1" stop-color="#0F2A18"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="360" fill="url(#bg)"/>
+  <rect width="1200" height="360" fill="url(#glow)"/>
+
+  <!-- faint dot grid -->
+  <g fill="#FFFFFF" opacity="0.05">
+    <circle cx="120" cy="40" r="2"/><circle cx="200" cy="40" r="2"/><circle cx="280" cy="40" r="2"/><circle cx="360" cy="40" r="2"/>
+    <circle cx="120" cy="100" r="2"/><circle cx="200" cy="100" r="2"/><circle cx="280" cy="100" r="2"/><circle cx="360" cy="100" r="2"/>
+    <circle cx="120" cy="160" r="2"/><circle cx="200" cy="160" r="2"/><circle cx="280" cy="160" r="2"/><circle cx="360" cy="160" r="2"/>
+  </g>
+
+  <!-- brand -->
+  <text x="72" y="158" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="74" font-weight="800" fill="#FFFFFF" letter-spacing="2">PPTLint</text>
+  <rect x="74" y="180" width="118" height="5" rx="2.5" fill="#E85D2C"/>
+  <text x="74" y="218" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="19" font-weight="600" fill="#9FB2CC" letter-spacing="3">POWERPOINT PRE-DELIVERY CHECKS</text>
+  <text x="74" y="250" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" fill="#6E82A0">Local · Read-only · Deterministic</text>
+
+  <!-- before / after slide metaphor -->
+  <g transform="translate(720,96)">
+    <rect x="0" y="0" width="190" height="150" rx="14" fill="url(#before)" stroke="#5A2A3A" stroke-width="1"/>
+    <rect x="18" y="26" width="120" height="10" rx="5" fill="#7A4A5A"/>
+    <rect x="18" y="48" width="150" height="8" rx="4" fill="#5E3744"/>
+    <rect x="18" y="66" width="140" height="8" rx="4" fill="#5E3744"/>
+    <rect x="18" y="92" width="92" height="34" rx="6" fill="#E85D2C" opacity="0.85"/>
+    <text x="95" y="138" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="22" font-weight="800" fill="#E8A98C">49</text>
+
+    <path d="M204 70 l24 0 m-8 -8 l8 8 l-8 8" stroke="#E85D2C" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <rect x="234" y="0" width="190" height="150" rx="14" fill="url(#after)" stroke="#1F5A33" stroke-width="1"/>
+    <rect x="252" y="26" width="120" height="10" rx="5" fill="#3FA56A"/>
+    <rect x="252" y="48" width="150" height="8" rx="4" fill="#2C7A47"/>
+    <rect x="252" y="66" width="140" height="8" rx="4" fill="#2C7A47"/>
+    <rect x="252" y="92" width="92" height="34" rx="6" fill="#10B981"/>
+    <text x="329" y="138" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="22" font-weight="800" fill="#9FE7C4">100</text>
+  </g>
+</svg>

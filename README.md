@@ -5,13 +5,8 @@
   <a href="README.zh-CN.md">English</a>
 </p>
 
-<div align="center">
-  <h1>PPTLint</h1>
-</div>
-
 <p align="center">
-  <strong>PowerPoint 交付前检查 · 本地运行 · 只读 · 确定性结果</strong><br>
-  在把 PPT 发出去之前，先挡住那些“你电脑上看不出来、客户电脑上却翻车”的问题。
+  <img src="site/assets/readme-hero.svg" alt="PPTLint — PowerPoint 交付前质量检查" width="1200">
 </p>
 
 <p align="center">
@@ -25,33 +20,47 @@
 <table>
   <tr>
     <td width="33%" align="center" valign="top">
-      <div style="border:1px solid #e5e7eb;border-radius:14px;padding:24px 18px;background:#ffffff;">
-        <div style="font-size:34px;line-height:1;">🏠</div>
-        <h3 style="margin:12px 0 6px;color:#0A1628;">产品首页</h3>
-        <p style="color:#6B7280;font-size:14px;line-height:1.6;margin:0 0 16px;">30 秒看懂 PPTLint 在交付前帮你挡住什么，以及它为什么“只读不改”。</p>
-        <a href="https://kdnsna.github.io/pptlint/" style="display:inline-block;padding:9px 20px;background:#E85D2C;color:#ffffff;border-radius:9px;text-decoration:none;font-weight:600;font-size:14px;">立即访问 →</a>
+      <div style="border:1px solid #ECECF1;border-radius:16px;overflow:hidden;box-shadow:0 8px 24px rgba(10,22,40,0.10);background:#ffffff;">
+        <div style="background-color:#E85D2C;background:linear-gradient(135deg,#E85D2C 0%,#F2874E 100%);padding:22px 18px;text-align:center;">
+          <div style="font-size:30px;line-height:1;">🏠</div>
+        </div>
+        <div style="padding:18px 18px 22px;">
+          <h3 style="margin:0 0 8px;color:#0A1628;font-size:18px;">产品首页</h3>
+          <p style="margin:0 0 16px;color:#6B7280;font-size:14px;line-height:1.6;">30 秒看懂 PPTLint 在交付前帮你挡住什么，以及它为什么“只读不改”。</p>
+          <a href="https://kdnsna.github.io/pptlint/" style="display:inline-block;padding:9px 20px;background:#E85D2C;color:#ffffff;border-radius:9px;text-decoration:none;font-weight:600;font-size:14px;">立即访问 →</a>
+        </div>
       </div>
     </td>
     <td width="33%" align="center" valign="top">
-      <div style="border:1px solid #e5e7eb;border-radius:14px;padding:24px 18px;background:#ffffff;">
-        <div style="font-size:34px;line-height:1;">🔬</div>
-        <h3 style="margin:12px 0 6px;color:#0A1628;">案例实验室</h3>
-        <p style="color:#6B7280;font-size:14px;line-height:1.6;margin:0 0 16px;">12 个一眼能懂的前后对比，覆盖投屏翻车、换电脑变样、隐私外发与可编辑交接。</p>
-        <a href="https://kdnsna.github.io/pptlint/lab/" style="display:inline-block;padding:9px 20px;background:#E85D2C;color:#ffffff;border-radius:9px;text-decoration:none;font-weight:600;font-size:14px;">立即访问 →</a>
+      <div style="border:1px solid #ECECF1;border-radius:16px;overflow:hidden;box-shadow:0 8px 24px rgba(10,22,40,0.10);background:#ffffff;">
+        <div style="background-color:#E85D2C;background:linear-gradient(135deg,#E85D2C 0%,#F2874E 100%);padding:22px 18px;text-align:center;">
+          <div style="font-size:30px;line-height:1;">🔬</div>
+        </div>
+        <div style="padding:18px 18px 22px;">
+          <h3 style="margin:0 0 8px;color:#0A1628;font-size:18px;">案例实验室</h3>
+          <p style="margin:0 0 16px;color:#6B7280;font-size:14px;line-height:1.6;">12 个一眼能懂的前后对比，覆盖投屏翻车、换电脑变样、隐私外发与可编辑交接。</p>
+          <a href="https://kdnsna.github.io/pptlint/lab/" style="display:inline-block;padding:9px 20px;background:#E85D2C;color:#ffffff;border-radius:9px;text-decoration:none;font-weight:600;font-size:14px;">立即访问 →</a>
+        </div>
       </div>
     </td>
     <td width="33%" align="center" valign="top">
-      <div style="border:1px solid #e5e7eb;border-radius:14px;padding:24px 18px;background:#ffffff;">
-        <div style="font-size:34px;line-height:1;">📈</div>
-        <h3 style="margin:12px 0 6px;color:#0A1628;">真实 Proof Loop</h3>
-        <p style="color:#6B7280;font-size:14px;line-height:1.6;margin:0 0 16px;">同一份 PPT 从 49 分到 100 分，修改前后文件、完整报告和机器可读数据全部公开。</p>
-        <a href="https://kdnsna.github.io/pptlint/proof-loop/comparison.html" style="display:inline-block;padding:9px 20px;background:#E85D2C;color:#ffffff;border-radius:9px;text-decoration:none;font-weight:600;font-size:14px;">立即访问 →</a>
+      <div style="border:1px solid #ECECF1;border-radius:16px;overflow:hidden;box-shadow:0 8px 24px rgba(10,22,40,0.10);background:#ffffff;">
+        <div style="background-color:#E85D2C;background:linear-gradient(135deg,#E85D2C 0%,#F2874E 100%);padding:22px 18px;text-align:center;">
+          <div style="font-size:30px;line-height:1;">📈</div>
+        </div>
+        <div style="padding:18px 18px 22px;">
+          <h3 style="margin:0 0 8px;color:#0A1628;font-size:18px;">真实 Proof Loop</h3>
+          <p style="margin:0 0 16px;color:#6B7280;font-size:14px;line-height:1.6;">同一份 PPT 从 49 分到 100 分，修改前后文件、完整报告和机器可读数据全部公开。</p>
+          <a href="https://kdnsna.github.io/pptlint/proof-loop/comparison.html" style="display:inline-block;padding:9px 20px;background:#E85D2C;color:#ffffff;border-radius:9px;text-decoration:none;font-weight:600;font-size:14px;">立即访问 →</a>
+        </div>
       </div>
     </td>
   </tr>
 </table>
 
-> **PPT 做完以后，别急着发。** 你电脑上看不出来的问题，往往会在领导、客户或会议室的电脑上暴露。
+<div style="border-left:4px solid #E85D2C;background:#FFF7F2;padding:14px 18px;border-radius:0 10px 10px 0;color:#0A1628;font-size:15px;line-height:1.7;margin:26px 0;">
+  <strong>PPT 做完以后，别急着发。</strong> 你电脑上看不出来的问题，往往会在领导、客户或会议室的电脑上暴露。
+</div>
 
 <p align="center">
   <a href="https://kdnsna.github.io/pptlint/lab/">
@@ -117,9 +126,9 @@ uvx pptlint check output.pptx --scenario document --lang zh-CN
 
 | 结论 | 普通用户该做什么 |
 |---|---|
-| ✅ 可以交付 | 没有发现高置信的交付问题，仍应做最终人工预览 |
-| 👀 建议检查 | 打开报告点名的页面，确认低置信或需要业务判断的内容 |
-| ⛔ 暂勿交付 | 先处理报告列出的阻断问题，再另存副本并复检 |
+| <span style="color:#10B981;font-weight:700;">✅ 可以交付</span> | 没有发现高置信的交付问题，仍应做最终人工预览 |
+| <span style="color:#D97706;font-weight:700;">👀 建议检查</span> | 打开报告点名的页面，确认低置信或需要业务判断的内容 |
+| <span style="color:#DC2626;font-weight:700;">⛔ 暂勿交付</span> | 先处理报告列出的阻断问题，再另存副本并复检 |
 
 同一条规则在 200 个对象上重复出现时，HTML 会合并成一个问题组；完整对象级证据仍保留在 JSON 中。PPTLint 不会用几百条重复提醒制造焦虑。
 
