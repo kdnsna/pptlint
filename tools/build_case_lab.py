@@ -35,7 +35,7 @@ def case_card(case: dict[str, object], *, linked: bool = True) -> str:
 
 def head(*, title: str, description: str, prefix: str = "") -> str:
     canonical = "https://kdnsna.github.io/pptlint/lab/" + prefix
-    return f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="{esc(description)}"><link rel="canonical" href="{canonical}"><meta property="og:type" content="website"><meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(description)}"><meta property="og:image" content="https://kdnsna.github.io/pptlint/assets/pptlint-before-after-hero.png"><meta name="twitter:card" content="summary_large_image"><title>{esc(title)}</title><link rel="stylesheet" href="{'../' if prefix else ''}lab.css"></head><body>'''
+    return f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="{'../../' if prefix else '../'}favicon.svg" type="image/svg+xml"><meta name="description" content="{esc(description)}"><link rel="canonical" href="{canonical}"><meta property="og:type" content="website"><meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(description)}"><meta property="og:image" content="https://kdnsna.github.io/pptlint/assets/pptlint-before-after-hero.png"><meta name="twitter:card" content="summary_large_image"><title>{esc(title)}</title><link rel="stylesheet" href="{'../' if prefix else ''}lab.css"></head><body>'''
 
 
 def topbar(*, prefix: str = "") -> str:
