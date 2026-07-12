@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.0 — 2026-07-12
+
+- Add the complete `pptlint-repair-plan/v1` protocol with stable task IDs, source identity, locations, repair modes, risk, executors, and machine-verifiable acceptance criteria.
+- Cover every built-in rule through a central repair catalog; unknown rules fail safe to `human-decision`.
+- Generate complete briefs for generic agents, Ultimate PPT Master, PowerPoint Copilot, and manual PowerPoint work instead of limiting plans to three priority items.
+- Show the safe repair path beside each report finding and upload the machine-readable repair plan from the GitHub Action.
+
 ## 1.0.1 — 2026-07-12
 
 - Restore a verifiable release path after the parallel 1.0 merge and keep the public package, source version, and generated proof in sync.

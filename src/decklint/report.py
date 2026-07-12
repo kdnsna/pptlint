@@ -8,6 +8,7 @@ from . import __version__
 from .model import DeckModel
 from .render import RenderResult
 from .readiness import assess_readiness, classify_finding
+from .repair_catalog import recipe_for
 from .schema import Finding, identified_findings
 from .scoring import ScoreCard
 
@@ -232,6 +233,43 @@ def _escape(value: object) -> str:
     return html.escape(str(value), quote=True)
 
 
+def _repair_controls(finding: dict[str, object], *, zh: bool) -> str:
+    recipe = recipe_for(str(finding.get("rule_id", "")))
+    location = (
+        f"第 {finding['slide_index']} 页" if zh and finding.get("slide_index") else
+        f"Slide {finding['slide_index']}" if finding.get("slide_index") else
+        "整个文件" if zh else "Whole file"
+    )
+    steps = finding.get("fixSteps")
+    step_text = " ".join(str(step) for step in steps) if isinstance(steps, list) else ""
+    brief = (
+        f"PPTLint 修复任务。位置：{location}。问题：{finding.get('impact', '')}"
+        f"。目标：{finding.get('remediation', '')}。建议步骤：{step_text}"
+        "。只修改独立副本；处理后重新运行 PPTLint，确认原问题消失且没有新增高把握问题。"
+        if zh
+        else f"PPTLint repair task. Location: {location}. Problem: {finding.get('impact', '')}. "
+        f"Target: {finding.get('remediation', '')}. Suggested steps: {step_text}. "
+        "Edit only a separate copy, then rerun PPTLint and confirm the original finding is absent with no new high-confidence problem."
+    )
+    copy_button = (
+        f'<button type="button" class="repair-copy" data-copy="{_escape(brief)}">'
+        f'{"复制给助手处理" if zh else "Copy for an assistant"}</button>'
+    )
+    label = {
+        "cleanup-copy": "PPTLint 可以清理副本" if zh else "PPTLint can clean a copy",
+        "guided-powerpoint": "我自己在 PowerPoint 里改" if zh else "Fix it myself in PowerPoint",
+        "agent-rebuild": "复制给助手处理" if zh else "Copy for an assistant",
+        "human-decision": "需要你先确认，不建议自动修改" if zh else "Confirm first; automatic changes are not recommended",
+    }[recipe.mode]
+    primary = (
+        copy_button
+        if recipe.mode == "agent-rebuild"
+        else f'<span class="repair-choice repair-{_escape(recipe.mode)}">{_escape(label)}</span>'
+    )
+    secondary = copy_button if recipe.mode in {"cleanup-copy", "guided-powerpoint"} else ""
+    return f'<div class="repair-controls" data-repair-mode="{_escape(recipe.mode)}">{primary}{secondary}</div>'
+
+
 def _action_location(action: dict[str, object], *, zh: bool) -> str:
     slides = action.get("affectedSlides")
     if isinstance(slides, list) and slides:
@@ -425,7 +463,9 @@ def _render_html(report: dict[str, object]) -> str:
                 f'<p class="impact">{"影响：" if zh else "Impact: "}{_escape(finding["impact"])}</p>'
                 '<ol class="fix-steps">'
                 + "".join(f"<li>{_escape(step)}</li>" for step in finding["fixSteps"])
-                + f'</ol><details class="technical-details"><summary>{"技术证据" if zh else "Technical details"}</summary>'
+                + "</ol>"
+                + _repair_controls(finding, zh=zh)
+                + f'<details class="technical-details"><summary>{"技术证据" if zh else "Technical details"}</summary>'
                 f"<code>{_escape(finding['rule_id'])}</code><em>{_escape(points)}</em>"
                 f"<p>{_escape(evidence)}</p></details></li>"
             )
@@ -458,7 +498,9 @@ def _render_html(report: dict[str, object]) -> str:
             f'<p class="impact">{"影响：" if zh else "Impact: "}{_escape(finding["impact"])}</p>'
             '<ol class="fix-steps">'
             + "".join(f"<li>{_escape(step)}</li>" for step in finding["fixSteps"])
-            + f'</ol><details class="technical-details"><summary>{"技术证据" if zh else "Technical details"}</summary>'
+            + "</ol>"
+            + _repair_controls(finding, zh=zh)
+            + f'<details class="technical-details"><summary>{"技术证据" if zh else "Technical details"}</summary>'
             f"<code>{_escape(finding['rule_id'])}</code><em>{_escape(points)}</em>"
             f"<p>{_escape(' | '.join(str(item['evidence']) for item in group[:5]))}</p></details></li>"
         )
@@ -496,6 +538,7 @@ main{{max-width:1240px;margin:auto;padding:48px 24px 80px}}.hero{{display:grid;g
 .slide-card header{{grid-column:1/-1;display:flex;align-items:baseline;gap:14px;border-bottom:1px solid #ded8cd}}.slide-card header h2{{margin:0 0 10px;flex:1}}.slide-card header span,.slide-card header b{{font:700 11px ui-monospace,monospace;color:var(--muted)}}
 .slide-preview{{position:relative;align-self:start;background:#ddd;box-shadow:0 12px 28px #17203320}}.slide-preview img{{width:100%;display:block}}.overlay{{position:absolute;border:3px solid var(--high);background:#d92d2015}}.overlay.severity-critical{{border-color:var(--critical)}}.overlay.severity-medium{{border-color:var(--medium)}}
 ul{{list-style:none;margin:0;padding:0;display:grid;gap:10px}}.finding{{border-left:4px solid var(--low);padding:12px;background:#f7f8fa}}.finding.severity-critical{{border-color:var(--critical)}}.finding.severity-high{{border-color:var(--high)}}.finding.severity-medium{{border-color:var(--medium)}}.finding code{{display:inline-block;color:var(--muted);font-size:11px}}.finding em{{float:right;color:var(--muted);font:700 11px ui-monospace,monospace}}.finding strong{{display:block;margin:0 0 3px}}.finding p,.finding small{{margin:0;color:var(--muted)}}.technical-details{{margin-top:10px;color:var(--muted)}}.technical-details summary{{cursor:pointer;font-size:12px}}.technical-details p{{clear:both}}.deck-findings{{margin:0 0 32px}}.scoring-policy{{border-left:4px solid #8a3d22;padding:10px 14px;margin:12px 0 0}}.scoring-policy p{{margin:6px 0 0;color:var(--muted)}}
+.repair-controls{{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 2px}}.repair-choice,.repair-copy{{border:1px solid #98a2b3;background:white;color:var(--ink);border-radius:4px;padding:7px 9px;font:700 12px/1.2 ui-sans-serif,system-ui}}.repair-copy{{cursor:pointer;border-color:#175cd3;color:#175cd3}}.repair-human-decision{{border-color:var(--medium);background:#fff3d6}}
 @media(max-width:800px){{.hero,.readiness{{grid-template-columns:1fr}}.checklist>div{{grid-template-columns:1fr 1fr}}.handoff>div{{grid-template-columns:repeat(2,1fr)}}.overall{{width:110px;height:110px}}.scores{{grid-template-columns:repeat(2,1fr)}}.slide-card{{grid-template-columns:1fr}}}}@media(max-width:480px){{.checklist>div{{grid-template-columns:1fr}}main{{padding-left:16px;padding-right:16px}}}}
 </style></head><body><main>
 <section class="hero"><div><span class="eyebrow">PPTLint · {"PPT 发送前体检" if zh else "PowerPoint delivery check"}</span><h1>{_escape(file_info["name"])}</h1><p>{("本地检查 · " + str(file_info["slides"]) + " 页 · 原文件未改动") if zh else ("Checked locally · " + str(file_info["slides"]) + (" slide" if int(file_info["slides"]) == 1 else " slides") + " · source file unchanged")}</p></div></section>
@@ -510,7 +553,7 @@ ul{{list-style:none;margin:0;padding:0;display:grid;gap:10px}}.finding{{border-l
 <nav class="report-tools" aria-label="{"报告筛选" if zh else "Report filters"}"><strong>{"筛选" if zh else "Filter"}</strong><button class="active" data-filter="all">{"全部" if zh else "All"}</button><button data-filter="blocker">{"必须处理" if zh else "Must fix"}</button><button data-filter="review">{"需要确认" if zh else "Review"}</button><button data-filter="advisory">{"建议查看" if zh else "Suggestions"}</button><span class="page-nav">{page_nav}</span></nav>
 <section class="slide-grid">{"".join(slide_cards)}</section>
 <script id="decklint-data" type="application/json">{safe_json}</script>
-<script>(function(){{var buttons=document.querySelectorAll('[data-filter]');buttons.forEach(function(button){{button.addEventListener('click',function(){{var value=button.getAttribute('data-filter');buttons.forEach(function(item){{item.classList.toggle('active',item===button);}});document.querySelectorAll('.finding').forEach(function(item){{item.classList.toggle('is-hidden',value!=='all'&&item.getAttribute('data-disposition')!==value);}});document.querySelectorAll('.slide-card').forEach(function(card){{var visible=card.querySelectorAll('.finding:not(.is-hidden)').length>0||value==='all';card.classList.toggle('is-hidden',!visible);}});}});}});}})();</script>
+<script>(function(){{var buttons=document.querySelectorAll('[data-filter]');buttons.forEach(function(button){{button.addEventListener('click',function(){{var value=button.getAttribute('data-filter');buttons.forEach(function(item){{item.classList.toggle('active',item===button);}});document.querySelectorAll('.finding').forEach(function(item){{item.classList.toggle('is-hidden',value!=='all'&&item.getAttribute('data-disposition')!==value);}});document.querySelectorAll('.slide-card').forEach(function(card){{var visible=card.querySelectorAll('.finding:not(.is-hidden)').length>0||value==='all';card.classList.toggle('is-hidden',!visible);}});}});}});document.querySelectorAll('.repair-copy').forEach(function(button){{button.addEventListener('click',function(){{var text=button.getAttribute('data-copy')||'';navigator.clipboard.writeText(text).then(function(){{button.textContent={json.dumps("已复制" if zh else "Copied")};}});}});}});}})();</script>
 </main></body></html>"""
 
 

@@ -3,7 +3,7 @@
 - [x] 1. Restore release and proof consistency
   - Regenerate current proof, replace stale public metrics, localize reports, expand Action inputs, and publish v0.7.1.
   - _Requirements: 1, 7_
-- [ ] 2. Add the open repair-plan contract
+- [x] 2. Add the open repair-plan contract
   - Build the catalog, schemas, complete plan generator, adapters, report actions, and Action artifact.
   - _Requirements: 2, 3, 7, 8_
 - [ ] 3. Add explicit cleanup copies

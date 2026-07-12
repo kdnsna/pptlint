@@ -31,7 +31,7 @@
   ],
   "file": {
     "name": "good-deck.pptx",
-    "sha256": "967b52610daeddc3ede3d587193e76d2f82ae96821d9eceb8d9e21ffaac26797",
+    "sha256": "eb9150fe40db93a351118973184b55132a4348ab00adcd032601f0dbb178c16a",
     "slides": 1
   },
   "findings": [],
@@ -129,5 +129,5 @@
     "low": 0,
     "medium": 0
   },
-  "toolVersion": "1.0.1"
+  "toolVersion": "1.1.0"
 }

@@ -205,7 +205,7 @@ def test_plan_writes_agent_ready_brief_from_current_report(tmp_path: Path) -> No
 
     assert main(["plan", str(report.with_suffix(".json")), "--output", str(brief)]) == 0
     text = brief.read_text(encoding="utf-8")
-    assert "# PPTLint 修复简报" in text
-    assert "保留原文件" in text
+    assert "# PPTLint 完整修复任务" in text
+    assert "不覆盖原文件" in text
     assert "integrity.broken-relationship" in text
     assert "pptlint check deck.pptx" in text

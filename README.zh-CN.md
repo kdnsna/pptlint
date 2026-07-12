@@ -138,10 +138,13 @@ The proof pack separates resolved, remaining, and newly introduced findings.
 Create a repair brief for a coding agent:
 
 ```bash
-uvx pptlint plan pptlint-report.json --output repair-brief.md
+uvx pptlint plan pptlint-report.json --format json --output repair-plan.json
+uvx pptlint plan pptlint-report.json --adapter generic-agent --output repair-brief.md
+uvx pptlint plan pptlint-report.json --adapter ultimate-ppt-master --output ultimate-brief.md
+uvx pptlint plan pptlint-report.json --adapter powerpoint-copilot --output copilot-prompt.md
 ```
 
-The brief tells the agent to preserve the source and not damage an existing design merely to raise a score.
+The plan covers every finding rather than only the first three. Each task names the location, consequence, safe repair mode, recommended executors, and verification criteria. Unknown rules always require a human decision.
 
 ## Team delivery policy
 

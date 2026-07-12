@@ -90,7 +90,7 @@ def test_github_action_exposes_the_cli_contract() -> None:
         "report-mode",
         "policy",
     } <= set(action["inputs"])
-    assert {"readiness", "score", "html-report", "json-report"} <= set(action["outputs"])
+    assert {"readiness", "score", "html-report", "json-report", "repair-plan"} <= set(action["outputs"])
     run_scripts = "\n".join(step.get("run", "") for step in action["runs"]["steps"])
     assert "pip install" in run_scripts
     assert "pptlint check" in run_scripts
@@ -206,8 +206,9 @@ def test_proof_loop_case_is_schema_valid_and_matches_public_claims() -> None:
     assert "http://" not in site and "https://" in site
 
 
-def test_version_is_101() -> None:
-    assert decklint.__version__ == "1.0.1"
+def test_version_matches_project_metadata() -> None:
+    project = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
+    assert f'version = "{decklint.__version__}"' in project
 
 
 def test_homepage_leads_with_agent_instruction_and_real_evidence() -> None:

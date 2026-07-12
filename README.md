@@ -162,10 +162,13 @@ uvx pptlint proof before.pptx after.pptx \
 如果要把修复工作交给 Agent：
 
 ```bash
-uvx pptlint plan pptlint-report.json --lang zh-CN --output repair-brief.md
+uvx pptlint plan pptlint-report.json --format json --output repair-plan.json
+uvx pptlint plan pptlint-report.json --adapter generic-agent --lang zh-CN --output repair-brief.md
+uvx pptlint plan pptlint-report.json --adapter ultimate-ppt-master --lang zh-CN --output ultimate-brief.md
+uvx pptlint plan pptlint-report.json --adapter powerpoint-copilot --lang zh-CN --output copilot-prompt.md
 ```
 
-修复简报会提醒 Agent 保留原文件，也不会为了提高分数破坏现有设计。
+修复计划会覆盖报告中的全部问题，而不是只取前三项。每项都说清位置、实际后果、谁适合处理以及复检条件；未知规则一律要求人工判断，不会擅自编造修改指令。
 
 ## 团队交付规范
 

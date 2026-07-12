@@ -13,6 +13,7 @@ from .comparison_report import build_comparison_report, write_comparison_reports
 from .model import DeckLoadError, load_deck
 from .policy import POLICY_TEMPLATE, apply_exceptions, apply_policy, load_policy
 from .render import RenderError, render_deck
+from .repair_plan import ADAPTERS, build_repair_plan, render_repair_brief, write_repair_plan
 from .report import build_report, write_reports
 from .rules import audit_deck
 from .scoring import score_findings
@@ -107,6 +108,8 @@ def build_parser() -> argparse.ArgumentParser:
     plan.add_argument("report", type=Path, help="PPTLint JSON report")
     plan.add_argument("--output", type=Path, default=Path("pptlint-repair-brief.md"))
     plan.add_argument("--lang", choices=("en", "zh-CN"), default=None)
+    plan.add_argument("--format", choices=("markdown", "json"), default="markdown")
+    plan.add_argument("--adapter", choices=ADAPTERS, default="generic-agent")
     policy = subcommands.add_parser("policy", help="Create a delivery policy template.")
     policy.add_argument("action", choices=("init",))
     policy.add_argument("output", type=Path, nargs="?", default=Path("pptlint-policy.yml"))
@@ -317,60 +320,19 @@ def _run_plan(args: argparse.Namespace) -> int:
         report = load_audit_report(args.report.expanduser())
         output = args.output.expanduser()
         language = args.lang or str(report.get("language", "en"))
-        actions = report.get("priorityActions", [])
-        if not isinstance(actions, list):
-            raise ValueError("Report priorityActions must be an array")
-        file_info = report.get("file", {})
-        readiness = report.get("readiness", {})
-        if not isinstance(file_info, dict) or not isinstance(readiness, dict):
-            raise ValueError("Report file and readiness fields must be objects")
-        zh = language == "zh-CN"
-        lines = [
-            "# PPTLint 修复简报" if zh else "# PPTLint repair brief",
-            "",
-            (f"- 文件：`{file_info.get('name', '')}`" if zh else f"- File: `{file_info.get('name', '')}`"),
-            (f"- 交付结论：`{readiness.get('status', 'unknown')}`" if zh else f"- Readiness: `{readiness.get('status', 'unknown')}`"),
-            (f"- 使用场景：`{report.get('scenario', 'present')}`" if zh else f"- Scenario: `{report.get('scenario', 'present')}`"),
-            "- 原则：保留原文件，只修改独立副本；不要为了分数破坏已有设计。" if zh else "- Rule: preserve the source, edit a copy, and do not damage the design merely to increase a score.",
-            "",
-            "## 优先处理" if zh else "## Priority actions",
-            "",
-        ]
-        if not actions:
-            lines.append("当前没有优先修复动作。" if zh else "No priority repair action is required.")
-        for index, action in enumerate(actions, 1):
-            if not isinstance(action, dict):
-                continue
-            lines.extend(
-                [
-                    f"### {index}. {action.get('impact', '')}",
-                    "",
-                    (f"- 位置：{_action_location(action, zh=True)}" if zh else f"- Location: {_action_location(action, zh=False)}"),
-                    (f"- 规则：`{action.get('ruleId', '')}`" if zh else f"- Rule: `{action.get('ruleId', '')}`"),
-                ]
+        repair_plan = build_repair_plan(report)
+        if args.format == "json":
+            write_repair_plan(output, repair_plan)
+        else:
+            output.parent.mkdir(parents=True, exist_ok=True)
+            output.write_text(
+                render_repair_brief(repair_plan, adapter=args.adapter, language=language),
+                encoding="utf-8",
             )
-            steps = action.get("fixSteps", [])
-            if isinstance(steps, list):
-                lines.extend(f"  {number}. {step}" for number, step in enumerate(steps, 1))
-            lines.append("")
-        source_name = str(file_info.get("name", "deck.pptx"))
-        lines.extend(
-            [
-                "## 复检" if zh else "## Recheck",
-                "",
-                "```bash",
-                f"pptlint check {source_name} --scenario {report.get('scenario', 'present')} --output pptlint-report",
-                "```",
-                "",
-                "100 分只代表规则检查结果，不代表审美满分或绝对零风险。" if zh else "A score of 100 is a rule-check result, not an aesthetic grade or a zero-risk guarantee.",
-            ]
-        )
-        output.parent.mkdir(parents=True, exist_ok=True)
-        output.write_text("\n".join(lines) + "\n", encoding="utf-8")
     except (ComparisonError, OSError, UnicodeError, ValueError) as exc:
         print(f"PPTLint could not create the repair brief: {exc}", file=sys.stderr)
         return 2
-    print(f"Repair brief: {output}")
+    print(f"{'Repair plan' if args.format == 'json' else 'Repair brief'}: {output}")
     return 0
 
 

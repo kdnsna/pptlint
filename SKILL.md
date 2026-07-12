@@ -44,8 +44,11 @@ pptlint check input.pptx --policy company-ppt.yml --lang zh-CN
 如需交给 Coding Agent 修改：
 
 ```bash
-pptlint plan pptlint-report.json --output repair-brief.md
+pptlint plan pptlint-report.json --format json --output repair-plan.json
+pptlint plan pptlint-report.json --adapter generic-agent --output repair-brief.md
 ```
+
+优先把 JSON 修复计划作为任务真相源；适配后的 Markdown 只是执行简报。必须处理全部任务，对 `human-decision` 任务先向用户确认。
 
 ## 修改后复检
 

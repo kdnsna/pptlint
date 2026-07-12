@@ -48,6 +48,9 @@ outputs:
   json-report:
     description: Path to the generated JSON report.
     value: ${{ steps.audit.outputs.json-report }}
+  repair-plan:
+    description: Path to the complete machine-readable repair plan.
+    value: ${{ steps.audit.outputs.repair-plan }}
   exit-code:
     description: PPTLint CLI exit code (0 pass, 1 changes required, 2 operational error).
     value: ${{ steps.audit.outputs.exit-code }}
@@ -80,6 +83,7 @@ runs:
         report_prefix="$report_dir/pptlint-report"
         html_report="$report_prefix.html"
         json_report="$report_prefix.json"
+        repair_plan="$report_dir/pptlint-repair-plan.json"
         args=(pptlint check "$INPUT_PATH" --profile "$INPUT_PROFILE" --scenario "$INPUT_SCENARIO" --lang "$INPUT_LANGUAGE" --report-mode "$INPUT_REPORT_MODE" --fail-on "$INPUT_FAIL_ON" --renderer "$INPUT_RENDERER" --output "$report_prefix")
         if [[ -n "$INPUT_MIN_SCORE" ]]; then args+=(--min-score "$INPUT_MIN_SCORE"); fi
         if [[ -n "$INPUT_POLICY" ]]; then args+=(--policy "$INPUT_POLICY"); fi
@@ -89,10 +93,14 @@ runs:
         set -e
         score=$(JSON_REPORT="$json_report" python -c 'import json, os; print(json.load(open(os.environ["JSON_REPORT"]))["scores"]["overall"])' 2>/dev/null || printf '0')
         readiness=$(JSON_REPORT="$json_report" python -c 'import json, os; print(json.load(open(os.environ["JSON_REPORT"]))["readiness"]["status"])' 2>/dev/null || printf 'error')
+        if [[ -f "$json_report" ]]; then
+          pptlint plan "$json_report" --format json --output "$repair_plan"
+        fi
         printf 'readiness=%s\n' "$readiness" >> "$GITHUB_OUTPUT"
         printf 'score=%s\n' "$score" >> "$GITHUB_OUTPUT"
         printf 'html-report=%s\n' "$html_report" >> "$GITHUB_OUTPUT"
         printf 'json-report=%s\n' "$json_report" >> "$GITHUB_OUTPUT"
+        printf 'repair-plan=%s\n' "$repair_plan" >> "$GITHUB_OUTPUT"
         printf 'exit-code=%s\n' "$status" >> "$GITHUB_OUTPUT"
     - name: Upload PPTLint reports
       if: always()
@@ -102,6 +110,7 @@ runs:
         path: |
           ${{ steps.audit.outputs.html-report }}
           ${{ steps.audit.outputs.json-report }}
+          ${{ steps.audit.outputs.repair-plan }}
         if-no-files-found: warn
     - name: Enforce quality gate
       if: always()

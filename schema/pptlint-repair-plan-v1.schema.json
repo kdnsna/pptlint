@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kdnsna/pptlint/blob/main/schema/pptlint-repair-plan-v1.schema.json",
+  "title": "PPTLint Repair Plan v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "toolVersion", "source", "summary", "tasks"],
+  "properties": {
+    "schemaVersion": { "const": "pptlint-repair-plan/v1" },
+    "toolVersion": { "type": "string" },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "sha256", "slides", "reportSchema", "profile", "scenario"],
+      "properties": {
+        "name": { "type": "string" },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "slides": { "type": "integer", "minimum": 0 },
+        "reportSchema": { "type": "string" },
+        "profile": { "type": "string" },
+        "scenario": { "enum": ["present", "screen", "document"] }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["taskCount", "byRepairMode"],
+      "properties": {
+        "taskCount": { "type": "integer", "minimum": 0 },
+        "byRepairMode": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["cleanup-copy", "guided-powerpoint", "agent-rebuild", "human-decision"],
+          "properties": {
+            "cleanup-copy": { "type": "integer", "minimum": 0 },
+            "guided-powerpoint": { "type": "integer", "minimum": 0 },
+            "agent-rebuild": { "type": "integer", "minimum": 0 },
+            "human-decision": { "type": "integer", "minimum": 0 }
+          }
+        }
+      }
+    },
+    "tasks": { "type": "array", "items": { "$ref": "#/$defs/task" } }
+  },
+  "$defs": {
+    "bbox": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["x", "y", "w", "h"],
+      "properties": {
+        "x": { "type": "number" }, "y": { "type": "number" },
+        "w": { "type": "number", "minimum": 0 }, "h": { "type": "number", "minimum": 0 }
+      }
+    },
+    "criterion": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": { "enum": ["finding-absent", "no-new-high-confidence", "source-hash-unchanged"] },
+        "findingId": { "type": "string" }, "ruleId": { "type": "string" },
+        "slideIndex": { "type": ["integer", "null"], "minimum": 1 },
+        "shapeId": { "type": ["string", "null"] },
+        "value": { "type": "boolean" },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    },
+    "task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["taskId", "findingId", "ruleId", "location", "consequence", "target", "steps", "repairMode", "risk", "recommendedExecutors", "acceptanceCriteria"],
+      "properties": {
+        "taskId": { "type": "string", "pattern": "^repair-[a-f0-9]{16}$" },
+        "findingId": { "type": "string" }, "ruleId": { "type": "string" },
+        "location": {
+          "type": "object", "additionalProperties": false,
+          "required": ["slideIndex", "shapeId", "bbox"],
+          "properties": {
+            "slideIndex": { "type": ["integer", "null"], "minimum": 1 },
+            "shapeId": { "type": ["string", "null"] },
+            "bbox": { "$ref": "#/$defs/bbox" }
+          }
+        },
+        "consequence": { "type": "string" }, "target": { "type": "string" },
+        "steps": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "repairMode": { "enum": ["cleanup-copy", "guided-powerpoint", "agent-rebuild", "human-decision"] },
+        "risk": { "enum": ["low", "medium", "high"] },
+        "recommendedExecutors": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": { "enum": ["pptlint", "powerpoint", "generic-agent", "ultimate-ppt-master", "powerpoint-copilot"] }
+        },
+        "acceptanceCriteria": { "type": "array", "minItems": 3, "items": { "$ref": "#/$defs/criterion" } }
+      }
+    }
+  }
+}

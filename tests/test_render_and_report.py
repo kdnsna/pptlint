@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 
 from decklint.model import load_deck
-from decklint.report import build_report, write_reports
+from decklint.report import _repair_controls, build_report, write_reports
 from decklint.render import RenderError, render_deck
 from decklint.rules import audit_deck
 from decklint.scoring import score_findings
@@ -137,6 +137,25 @@ def test_chinese_html_is_localized_and_actionable(tmp_path: Path) -> None:
     assert "报告可能包含幻灯片预览" in markup
     assert 'data-filter="blocker"' in markup
     assert "Impact:" not in markup
+
+
+def test_report_explains_the_safe_repair_path_for_each_mode() -> None:
+    base = {
+        "slide_index": 1,
+        "shape_id": "2",
+        "impact": "交付时可能出问题。",
+        "remediation": "按建议处理。",
+        "fixSteps": ["保存独立副本。"],
+    }
+    cases = {
+        "privacy.speaker-notes": "PPTLint 可以清理副本",
+        "readability.small-font": "我自己在 PowerPoint 里改",
+        "editability.full-slide-image": "复制给助手处理",
+        "privacy.hidden-slide": "需要你先确认，不建议自动修改",
+    }
+
+    for rule_id, label in cases.items():
+        assert label in _repair_controls({**base, "rule_id": rule_id}, zh=True)
 
 
 def test_shareable_report_redacts_sensitive_content(tmp_path: Path) -> None:
