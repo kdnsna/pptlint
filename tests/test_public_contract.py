@@ -137,7 +137,9 @@ def test_pages_home_uses_plain_language_and_new_repository_links() -> None:
     site = (ROOT / "site/index.html").read_text(encoding="utf-8")
     hero = site.split("</header>", 1)[0]
 
-    assert "Is this PowerPoint ready to send?" in hero
+    assert '<html lang="zh-CN">' in site
+    assert "你电脑上正常，到了会议室可能已经坏了" in hero
+    assert "文字被截掉" in hero
     assert "https://github.com/kdnsna/pptlint" in hero
     assert "pptlint check" in site
     assert all(term not in hero.lower() for term in ("regression", "schema", "finding", "quality gate"))
@@ -198,11 +200,11 @@ def test_version_is_070() -> None:
 def test_homepage_leads_with_agent_instruction_before_cli() -> None:
     site = (ROOT / "site" / "index.html").read_text(encoding="utf-8")
 
-    agent_text = "Ask your coding agent"
+    agent_text = "不懂代码也没关系"
     command = "pptlint check output.pptx"
     assert agent_text in site
     assert site.index(agent_text) < site.index(command)
-    assert "Open the delivery case lab" in site
+    assert "看 12 个前后对比案例" in site
     assert 'href="lab/"' in site
 
 
