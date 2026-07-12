@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from decklint.cli import main
 
 from .pptx_factory import slide_xml, write_pptx
@@ -42,6 +44,33 @@ def test_cli_can_write_a_shareable_report(tmp_path: Path) -> None:
     assert exit_code in {0, 1}
     assert payload["reportMode"] == "shareable"
     assert payload["file"]["name"] == "presentation.pptx"
+
+
+def test_start_checks_and_opens_the_local_report(tmp_path: Path, monkeypatch) -> None:
+    source = write_pptx(tmp_path / "deck.pptx")
+    output = tmp_path / "opened-report"
+    opened: list[str] = []
+    monkeypatch.setattr("decklint.cli.webbrowser.open", opened.append)
+
+    exit_code = main(
+        ["start", str(source), "--renderer", "wireframe", "--output", str(output)]
+    )
+
+    assert exit_code in {0, 1}
+    assert opened == [output.with_suffix(".html").resolve().as_uri()]
+
+
+def test_doctor_and_version_expose_supportable_diagnostics(capsys) -> None:
+    assert main(["doctor", "--json"]) == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["version"] == "1.0.0"
+    assert payload["wireframeRenderer"] is True
+    assert payload["supportedInput"] == [".pptx"]
+
+    with pytest.raises(SystemExit) as exc:
+        main(["--version"])
+    assert exc.value.code == 0
+    assert "PPTLint 1.0.0" in capsys.readouterr().out
 
 
 def test_cli_returns_one_when_high_confidence_finding_reaches_threshold(tmp_path: Path) -> None:

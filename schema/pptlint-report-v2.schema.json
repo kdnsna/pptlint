@@ -17,7 +17,23 @@
       "required": ["applied", "name"],
       "properties": {
         "applied": { "type": "boolean" },
-        "name": { "type": "string" }
+        "name": { "type": "string" },
+        "waivers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["ruleId", "slides", "reason", "expires", "matchedCount", "active"],
+            "properties": {
+              "ruleId": { "type": "string" },
+              "slides": { "type": "array", "items": { "type": "integer", "minimum": 1 }, "uniqueItems": true },
+              "reason": { "type": "string" },
+              "expires": { "type": "string" },
+              "matchedCount": { "type": "integer", "minimum": 0 },
+              "active": { "type": "boolean" }
+            }
+          }
+        }
       }
     },
     "profile": { "enum": ["baseline", "ai-generated"] },

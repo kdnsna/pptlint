@@ -90,6 +90,8 @@ Or run it directly:
 uvx pptlint check output.pptx --scenario present
 ```
 
+Use `uvx pptlint start output.pptx` to check the deck and open the offline report. Run `uvx pptlint doctor` for a safe local diagnostic before filing an issue.
+
 `present` is the default meeting-room scenario. Use `screen` for close screen reading or `document` for report-like decks.
 
 Each run writes:
@@ -150,6 +152,8 @@ uvx pptlint check output.pptx --policy pptlint-policy.yml
 
 Policies can define approved fonts and colors, minimum type size, and rules for external links, notes, hidden slides, and alt text. Unknown policy fields fail explicitly instead of being ignored.
 
+Document approved exceptions with a rule, optional slide scope, business reason, and expiry date. Active and expired exceptions remain visible in the report audit trail.
+
 ## Scope and boundaries
 
 | Delivery question | What PPTLint checks |
@@ -166,12 +170,14 @@ PPTLint does not judge aesthetics, persuasion, or factual accuracy. Low-confiden
 ## GitHub Actions
 
 ```yaml
-- uses: kdnsna/pptlint@v0
+- uses: kdnsna/pptlint@v1
   with:
     path: output.pptx
     profile: ai-generated
     renderer: wireframe
 ```
+
+The Action uploads redacted `shareable` reports by default. Use `report-mode: full` only in a controlled repository that needs slide previews.
 
 Reports are uploaded even when the check fails.
 

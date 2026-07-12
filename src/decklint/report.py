@@ -111,6 +111,7 @@ def build_report(
     language: str = "en",
     scenario: str = "present",
     policy_name: str | None = None,
+    policy_waivers: list[dict[str, object]] | None = None,
     report_mode: str = "full",
 ) -> dict[str, object]:
     if language not in CHECK_COPY:
@@ -139,6 +140,12 @@ def build_report(
         )
         and sum(1 for shape in slide.shapes if shape.text.strip()) <= 2
     )
+    policy_info: dict[str, object] = {
+        "applied": policy_name is not None,
+        "name": policy_name or "",
+    }
+    if policy_waivers:
+        policy_info["waivers"] = policy_waivers
     report: dict[str, object] = {
         "schemaVersion": "pptlint-report/v2",
         "toolVersion": __version__,
@@ -146,7 +153,7 @@ def build_report(
         "language": language,
         "profile": profile,
         "scenario": scenario,
-        "policy": {"applied": policy_name is not None, "name": policy_name or ""},
+        "policy": policy_info,
         "file": {"name": deck.filename, "sha256": deck.sha256, "slides": len(deck.slides)},
         "renderer": rendering.metadata(),
         "scores": scores.to_dict(),
@@ -214,6 +221,10 @@ def build_report(
         for slide in report["slides"]:
             slide["title"] = ""
             slide["preview"] = ""
+        policy_section = report.get("policy")
+        if isinstance(policy_section, dict):
+            for waiver in policy_section.get("waivers", []):
+                waiver["reason"] = "[redacted from shareable report]"
     return report
 
 
@@ -250,12 +261,14 @@ def _render_html(report: dict[str, object]) -> str:
     priority_actions = report["priorityActions"]
     delivery_checklist = report["deliveryChecklist"]
     metrics = report["metrics"]
+    delivery_policy = report.get("policy", {})
     language = str(report.get("language", "en"))
     assert isinstance(file_info, dict) and isinstance(scores, dict) and isinstance(findings, list)
     assert isinstance(slides, list) and isinstance(renderer, dict)
     assert isinstance(readiness, dict) and isinstance(priority_actions, list)
     assert isinstance(delivery_checklist, list)
     assert isinstance(metrics, dict)
+    assert isinstance(delivery_policy, dict)
     zh = language == "zh-CN"
     report_mode = str(report.get("reportMode", "full"))
     categories = scores["categories"]
@@ -349,6 +362,22 @@ def _render_html(report: dict[str, object]) -> str:
         ]
     )
     handoff_panel = f'<section class="handoff"><span class="eyebrow">{"交接事实" if zh else "Handoff facts"}</span><h2>{"这份文件里面到底有什么" if zh else "What is actually inside this file"}</h2><div>{handoff_cards}</div></section>'
+    waivers = delivery_policy.get("waivers", [])
+    assert isinstance(waivers, list)
+    waiver_items = "".join(
+        f'<li><strong>{_escape(item["ruleId"])}</strong> · '
+        f'{"第 " + "、".join(str(value) for value in item["slides"]) + " 页" if zh and item["slides"] else "全部页面" if zh else "Slides " + ", ".join(str(value) for value in item["slides"]) if item["slides"] else "All slides"}'
+        f'<p>{_escape(item["reason"])}</p><small>{"有效" if item["active"] and zh else "已过期" if zh else "Active" if item["active"] else "Expired"} · '
+        f'{"匹配" if zh else "Matched"} {_escape(item["matchedCount"])} · {_escape(item["expires"] or ("无到期日" if zh else "no expiry"))}</small></li>'
+        for item in waivers
+        if isinstance(item, dict)
+    )
+    waiver_panel = (
+        f'<section class="waivers"><span class="eyebrow">{"策略例外" if zh else "Policy waivers"}</span>'
+        f'<h2>{"已记录的业务例外" if zh else "Documented exceptions"}</h2><ul>{waiver_items}</ul></section>'
+        if waiver_items
+        else ""
+    )
     finding_groups: dict[int, list[dict[str, object]]] = {}
     for finding in findings:
         assert isinstance(finding, dict)
@@ -463,6 +492,7 @@ main{{max-width:1240px;margin:auto;padding:48px 24px 80px}}.hero{{display:grid;g
 .handoff{{margin:28px 0}}.handoff h2{{font-size:clamp(25px,3vw,36px);margin:6px 0 16px}}.handoff>div{{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}}.handoff article{{background:var(--panel);padding:15px;border-top:3px solid var(--ink)}}.handoff span,.handoff b{{display:block}}.handoff span{{font-size:11px;color:var(--muted)}}.handoff b{{font-size:21px;margin-top:5px}}
 .notice{{padding:12px 16px;background:#fff3d6;border-left:4px solid var(--medium);margin-bottom:24px}}.slide-grid{{display:grid;gap:28px}}.slide-card{{display:grid;grid-template-columns:minmax(360px,1.1fr) minmax(300px,.9fr);gap:24px;background:var(--panel);border:1px solid #d6d0c4;padding:20px}}
 .report-tools{{position:sticky;top:0;z-index:10;display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:#172033;color:white;padding:12px 16px;margin:24px 0}}.report-tools button,.report-tools a{{border:1px solid #ffffff55;background:transparent;color:white;padding:7px 10px;cursor:pointer;text-decoration:none}}.report-tools button.active{{background:white;color:#172033}}.page-nav{{display:flex;gap:5px;flex-wrap:wrap;margin-left:auto}}.privacy-notice{{padding:14px 18px;background:#fff3d6;border-left:5px solid #dc6803;margin:20px 0;font-weight:650}}.is-hidden{{display:none!important}}
+.waivers{{margin:28px 0;padding:22px;background:#eef4ff;border-left:5px solid #175cd3}}.waivers h2{{margin:5px 0 14px}}.waivers li{{background:white;padding:12px;margin-bottom:8px}}.waivers p{{margin:5px 0;color:var(--muted)}}
 .slide-card header{{grid-column:1/-1;display:flex;align-items:baseline;gap:14px;border-bottom:1px solid #ded8cd}}.slide-card header h2{{margin:0 0 10px;flex:1}}.slide-card header span,.slide-card header b{{font:700 11px ui-monospace,monospace;color:var(--muted)}}
 .slide-preview{{position:relative;align-self:start;background:#ddd;box-shadow:0 12px 28px #17203320}}.slide-preview img{{width:100%;display:block}}.overlay{{position:absolute;border:3px solid var(--high);background:#d92d2015}}.overlay.severity-critical{{border-color:var(--critical)}}.overlay.severity-medium{{border-color:var(--medium)}}
 ul{{list-style:none;margin:0;padding:0;display:grid;gap:10px}}.finding{{border-left:4px solid var(--low);padding:12px;background:#f7f8fa}}.finding.severity-critical{{border-color:var(--critical)}}.finding.severity-high{{border-color:var(--high)}}.finding.severity-medium{{border-color:var(--medium)}}.finding code{{display:inline-block;color:var(--muted);font-size:11px}}.finding em{{float:right;color:var(--muted);font:700 11px ui-monospace,monospace}}.finding strong{{display:block;margin:0 0 3px}}.finding p,.finding small{{margin:0;color:var(--muted)}}.technical-details{{margin-top:10px;color:var(--muted)}}.technical-details summary{{cursor:pointer;font-size:12px}}.technical-details p{{clear:both}}.deck-findings{{margin:0 0 32px}}.scoring-policy{{border-left:4px solid #8a3d22;padding:10px 14px;margin:12px 0 0}}.scoring-policy p{{margin:6px 0 0;color:var(--muted)}}
@@ -473,6 +503,7 @@ ul{{list-style:none;margin:0;padding:0;display:grid;gap:10px}}.finding{{border-l
 {readiness_panel}
 {checklist_panel}
 {handoff_panel}
+{waiver_panel}
 <details class="secondary-score"><summary>{"辅助分数" if zh else "Secondary score"}: {_escape(scores["overall"])}/100</summary><p>{"仅用于比较同一份文件修改前后的变化。" if zh else "Use this only to compare the same presentation before and after changes."}</p><section class="scores">{score_cards}</section>{scoring_policy}<details class="technical-details"><summary>{"运行信息" if zh else "Run details"}</summary><p>{_escape(report["profile"])} profile · {_escape(renderer["used"])} renderer</p></details></details>
 {f'<div class="notice">{_escape(renderer["detail"])}</div>' if renderer.get("detail") else ""}
 {f'<section class="deck-findings"><h2>{"影响整个文件的问题" if zh else "Items that affect the whole file"}</h2><ul>{deck_items}</ul></section>' if deck_items else ""}

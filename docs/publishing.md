@@ -3,7 +3,7 @@
 ## GitHub release
 
 1. Run the full verification commands from `CONTRIBUTING.md`.
-2. Tag the verified main commit with the exact version from `pyproject.toml` and update the floating composite-action tag `v0` to the same commit.
+2. Tag the verified main commit with the exact version from `pyproject.toml` and update the matching floating composite-action major tag (for example `v1`) to the same commit.
 3. Create a GitHub release using the matching changelog section and attach the wheel and source archive from `dist/`.
 
 ## PyPI trusted publishing

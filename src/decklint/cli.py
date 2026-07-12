@@ -1,13 +1,17 @@
 from __future__ import annotations
 
 import argparse
+import json
+import shutil
 import sys
+import webbrowser
 from pathlib import Path
 
+from . import __version__
 from .comparison import ComparisonError, load_audit_report
 from .comparison_report import build_comparison_report, write_comparison_reports
 from .model import DeckLoadError, load_deck
-from .policy import POLICY_TEMPLATE, apply_policy, load_policy
+from .policy import POLICY_TEMPLATE, apply_exceptions, apply_policy, load_policy
 from .render import RenderError, render_deck
 from .report import build_report, write_reports
 from .rules import audit_deck
@@ -50,11 +54,15 @@ def _add_check_arguments(command: argparse.ArgumentParser, *, output: str, fail_
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="pptlint", description="Preflight checks for AI-generated PowerPoint files."
+        prog="pptlint", description="Local, read-only preflight checks for PowerPoint delivery."
     )
+    parser.add_argument("--version", action="version", version=f"PPTLint {__version__}")
     subcommands = parser.add_subparsers(dest="command", required=True)
     check = subcommands.add_parser("check", help="Check whether a PPTX is ready to deliver.")
     _add_check_arguments(check, output="pptlint-report", fail_on="none")
+    start = subcommands.add_parser("start", help="Check a PPTX and open the local HTML report.")
+    _add_check_arguments(start, output="pptlint-report", fail_on="none")
+    start.add_argument("--no-open", action="store_true", help="Write reports without opening a browser")
     audit = subcommands.add_parser("audit", help="Audit a PPTX and write offline HTML and JSON reports.")
     _add_check_arguments(audit, output="decklint-report", fail_on="high")
     compare = subcommands.add_parser("compare", help="Compare two PPTLint audit reports.")
@@ -102,6 +110,8 @@ def build_parser() -> argparse.ArgumentParser:
     policy = subcommands.add_parser("policy", help="Create a delivery policy template.")
     policy.add_argument("action", choices=("init",))
     policy.add_argument("output", type=Path, nargs="?", default=Path("pptlint-policy.yml"))
+    doctor = subcommands.add_parser("doctor", help="Show local PPTLint capabilities.")
+    doctor.add_argument("--json", action="store_true", dest="as_json")
     return parser
 
 
@@ -142,8 +152,10 @@ def _build_audit_report(
     deck = load_deck(source)
     findings = audit_deck(deck, profile=profile, scenario=scenario)
     policy = load_policy(policy_path) if policy_path is not None else None
+    waiver_records: list[dict[str, object]] = []
     if policy is not None:
         findings.extend(apply_policy(deck, policy))
+        findings, waiver_records = apply_exceptions(findings, policy)
         findings.sort(key=lambda item: (item.slide_index or 0, item.rule_id, item.shape_id or ""))
     scores = score_findings(findings)
     rendering = render_deck(
@@ -161,6 +173,7 @@ def _build_audit_report(
         language=language,
         scenario=scenario,
         policy_name=policy.name if policy is not None else None,
+        policy_waivers=waiver_records,
         report_mode=report_mode,
     )
     return report, findings
@@ -208,7 +221,7 @@ def _run_audit(args: argparse.Namespace) -> int:
         print(f"JSON report: {json_path}")
         print("Note: 100 is this rule-check score, not an aesthetic grade or a zero-risk guarantee.")
     failed = _threshold_failed(findings, args.fail_on)
-    if args.command == "check" and report["readiness"]["status"] == "blocked":
+    if args.command in {"check", "start"} and report["readiness"]["status"] == "blocked":
         failed = True
     if args.min_score is not None and int(report["scores"]["overall"]) < args.min_score:
         failed = True
@@ -375,8 +388,30 @@ def _run_policy(args: argparse.Namespace) -> int:
     return 0
 
 
+def _run_doctor(args: argparse.Namespace) -> int:
+    soffice = shutil.which("soffice") or shutil.which("libreoffice")
+    result = {
+        "version": __version__,
+        "python": sys.version.split()[0],
+        "realRenderer": soffice or "",
+        "wireframeRenderer": True,
+        "supportedInput": [".pptx"],
+        "localOnly": True,
+    }
+    if args.as_json:
+        print(json.dumps(result, ensure_ascii=False, sort_keys=True))
+    else:
+        print(f"PPTLint {result['version']}")
+        print(f"Python: {result['python']}")
+        print(f"Real slide renderer: {soffice or 'not found; wireframe fallback available'}")
+        print("Input: .pptx · local only · source files are never modified")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
+    if args.command == "doctor":
+        return _run_doctor(args)
     if args.command == "compare":
         return _run_compare(args)
     if args.command == "proof":
@@ -385,4 +420,7 @@ def main(argv: list[str] | None = None) -> int:
         return _run_plan(args)
     if args.command == "policy":
         return _run_policy(args)
-    return _run_audit(args)
+    result = _run_audit(args)
+    if args.command == "start" and result in {0, 1} and not args.no_open:
+        webbrowser.open(Path(f"{args.output.expanduser()}.html").resolve().as_uri())
+    return result

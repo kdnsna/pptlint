@@ -79,11 +79,23 @@ def test_committed_proof_reports_match_schema_and_scoring_contract() -> None:
 def test_github_action_exposes_the_cli_contract() -> None:
     action = yaml.safe_load((ROOT / "action.yml").read_text(encoding="utf-8"))
 
-    assert {"path", "profile", "fail-on", "min-score", "renderer"} <= set(action["inputs"])
+    assert {
+        "path",
+        "profile",
+        "fail-on",
+        "min-score",
+        "renderer",
+        "scenario",
+        "language",
+        "report-mode",
+        "policy",
+    } <= set(action["inputs"])
     assert {"readiness", "score", "html-report", "json-report"} <= set(action["outputs"])
     run_scripts = "\n".join(step.get("run", "") for step in action["runs"]["steps"])
     assert "pip install" in run_scripts
     assert "pptlint check" in run_scripts
+    assert "--report-mode" in run_scripts
+    assert action["inputs"]["report-mode"]["default"] == "shareable"
     assert "upload-artifact" in json.dumps(action)
     assert "mktemp -d" in run_scripts
     assert "$RUNNER_TEMP" in run_scripts
@@ -193,8 +205,8 @@ def test_proof_loop_case_is_schema_valid_and_matches_public_claims() -> None:
     assert "http://" not in site and "https://" in site
 
 
-def test_version_is_080() -> None:
-    assert decklint.__version__ == "0.8.0"
+def test_version_is_100() -> None:
+    assert decklint.__version__ == "1.0.0"
 
 
 def test_homepage_leads_with_agent_instruction_and_real_evidence() -> None:

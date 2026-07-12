@@ -100,6 +100,14 @@ PPTLint 在本机只读检查 `.pptx`，生成离线 HTML 与 JSON 报告。它*
 uvx pptlint check output.pptx --scenario present --lang zh-CN
 ```
 
+希望检查完成后直接打开本地报告，可以使用：
+
+```bash
+uvx pptlint start output.pptx --scenario present --lang zh-CN
+```
+
+排查安装、Python 或真实渲染器问题时运行 `uvx pptlint doctor`；反馈问题时优先附上该诊断结果，不要上传原 PPT。
+
 默认 `present` 代表会议室投屏。屏幕阅读或文档型 PPT 可改用：
 
 ```bash
@@ -170,6 +178,18 @@ uvx pptlint check output.pptx --policy pptlint-policy.yml --lang zh-CN
 
 策略可以约束批准字体、品牌色、最小字号、外部链接、备注、隐藏页和图片说明。未知字段会直接报错，不会悄悄忽略。
 
+确有业务原因需要保留例外时，在策略中记录规则、页面、原因和到期日：
+
+```yaml
+exceptions:
+  - ruleId: readability.small-font
+    slides: [12]
+    reason: 法律免责声明已经材料责任人确认
+    expires: 2026-12-31
+```
+
+生效和过期的例外都会记录在报告中；没有理由的例外会被拒绝。
+
 ## 检查范围与边界
 
 | 你真正关心的问题 | PPTLint 检查什么 |
@@ -186,14 +206,14 @@ PPTLint 不判断审美、论点、事实正确性或说服力；低置信提醒
 ## GitHub Actions
 
 ```yaml
-- uses: kdnsna/pptlint@v0
+- uses: kdnsna/pptlint@v1
   with:
     path: output.pptx
     profile: ai-generated
     renderer: wireframe
 ```
 
-即使检查没有通过，HTML 和 JSON 报告仍会上传。
+即使检查没有通过，HTML 和 JSON 报告仍会上传。Action 默认生成 `shareable` 安全分享版；仅在受控仓库确需页面预览时设置 `report-mode: full`。
 
 ## 稳定接口与开发
 

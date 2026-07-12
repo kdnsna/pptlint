@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.0 — 2026-07-12
+
+- Add `pptlint start` to check a deck and open its offline report in one command.
+- Add `pptlint doctor` and `pptlint --version` for supportable local diagnostics.
+- Add documented policy exceptions with page scope, business reason, expiry, and matched counts.
+- Exercise the installed CLI, diagnostics, generated public assets, and documentation contracts in CI.
+
 ## 0.8.0 — 2026-07-12
 
 - Make Chinese reports consistently Chinese, including messages, impact labels, scores, run details, and page summaries.
