@@ -50,7 +50,7 @@
         </div>
         <div style="padding:18px 18px 22px;">
           <h3 style="margin:0 0 8px;color:#0A1628;font-size:18px;">真实 Proof Loop</h3>
-          <p style="margin:0 0 16px;color:#6B7280;font-size:14px;line-height:1.6;">同一份 PPT 从 49 分到 100 分，修改前后文件、完整报告和机器可读数据全部公开。</p>
+          <p style="margin:0 0 16px;color:#6B7280;font-size:14px;line-height:1.6;">同一份 PPT 按当前规则从 83 分到 100 分，修改前后文件、完整报告和机器可读数据全部公开。</p>
           <a href="https://kdnsna.github.io/pptlint/proof-loop/comparison.html" style="display:inline-block;padding:9px 20px;background:#E85D2C;color:#ffffff;border-radius:9px;text-decoration:none;font-weight:600;font-size:14px;">立即访问 →</a>
         </div>
       </div>
@@ -64,12 +64,12 @@
 
 <p align="center">
   <a href="https://kdnsna.github.io/pptlint/lab/">
-    <img src="site/assets/pptlint-before-after-hero.png" alt="同一份可编辑 PPT 修改前后对比：49 分到 100 分" width="860">
+    <img src="site/assets/readme-hero.svg" alt="同一份可编辑 PPT 修改前后对比：83 分到 100 分" width="860">
   </a>
 </p>
 
 <p align="center">
-  <sub>同一份可编辑 PPT，交付修复前（左）与修复后（右）——分数从 49 到 100。点击查看 12 个前后对比案例 →</sub>
+  <sub>同一份可编辑 PPT，交付修复前（左）与修复后（右）——按当前规则从 83 到 100。点击查看 12 个前后对比案例 →</sub>
 </p>
 
 ## 它解决的不是“好不好看”，而是“能不能放心发”
@@ -116,7 +116,7 @@ uvx pptlint check output.pptx --scenario document --lang zh-CN
 
 - [🏠 产品首页](https://kdnsna.github.io/pptlint/)：30 秒理解 PPTLint 在交付前帮你挡住什么。
 - [🔬 案例实验室](https://kdnsna.github.io/pptlint/lab/)：12 个交付风险前后对比，覆盖投屏、换电脑、隐私、可编辑交接、文件体积和团队规范。
-- [📈 真实 Proof Loop](https://kdnsna.github.io/pptlint/proof-loop/comparison.html)：同一份 9 页可编辑 PPT 从 49 → 100，修改前后文件、完整报告和机器可读数据全部公开。
+- [📈 真实 Proof Loop](https://kdnsna.github.io/pptlint/proof-loop/comparison.html)：同一份 9 页可编辑 PPT 按当前规则从 83 → 100，修改前后文件、完整报告和机器可读数据全部公开。
 - [修改前 PPTX](examples/proof-loop/before.pptx) 与 [修改后 PPTX](examples/proof-loop/after.pptx)。
 - [检查方法档案](https://kdnsna.github.io/pptlint/benchmark/)：说明 PPTLint 如何面对不同 AI PPT 项目。
 

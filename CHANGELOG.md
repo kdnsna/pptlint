@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.7.1 — 2026-07-12
+
+- Align the package description, release instructions, public tests, and generated case pages.
+- Replace invalid case-lab `--rule` examples with a command supported by the published CLI contract.
+- Emit one valid HTML document for the case lab and verify public commands in tests.
+- Regenerate the public Proof Loop with the current Chinese report contract.
+
 ## 0.7.0 — 2026-07-12
 
 - Launch the Delivery Lab with 12 complete before/after risk demonstrations.

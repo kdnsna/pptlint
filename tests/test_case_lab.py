@@ -5,6 +5,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from decklint.cli import build_parser
+
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -24,7 +26,19 @@ def test_case_lab_has_twelve_complete_honest_cases() -> None:
         markup = page.read_text(encoding="utf-8")
         assert case["title"] in markup
         assert "可控演示" in markup
-        assert "不是客户证言" in markup
+        assert "并非客户证言" in markup
+        assert "--rule" not in markup
+        assert markup.count("</body>") == 1
+        assert markup.count("</html>") == 1
+
+
+def test_case_lab_recheck_command_matches_cli_contract() -> None:
+    args = build_parser().parse_args(
+        ["check", "deck.pptx", "--scenario", "present", "--lang", "zh-CN"]
+    )
+    assert args.command == "check"
+    assert args.scenario == "present"
+    assert args.lang == "zh-CN"
 
 
 def test_case_lab_has_attributed_market_audits() -> None:
@@ -45,3 +59,10 @@ def test_generated_case_lab_is_current() -> None:
         check=False,
     )
     assert result.returncode == 0, result.stderr or result.stdout
+
+
+def test_case_lab_index_is_well_formed_enough_for_static_hosting() -> None:
+    markup = (ROOT / "site" / "lab" / "index.html").read_text(encoding="utf-8")
+    assert markup.count("</body>") == 1
+    assert markup.count("</html>") == 1
+    assert markup.index("document.querySelectorAll('.filter')") < markup.index("</body>")
