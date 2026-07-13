@@ -4,6 +4,8 @@ This file separates versions that were actually published from internal developm
 
 ## Unreleased
 
+- Ignore explicit ZIP directory entries when validating OOXML content types; older PowerPoint files can contain these harmless entries and must not be capped as critically damaged.
+- Keep one-click Ultimate repair limited to page-scoped visual tasks, show selected page and task counts, and leave accessibility, metadata, external-link, and deck-level decisions on the manual path.
 - Turn every local-app finding into a visible outcome plus concrete PowerPoint desktop steps instead of hiding the useful guidance in downloaded reports.
 - Let users choose between manual adjustment and targeted Ultimate PPT Master repair while locking exact text, numbers, slide count, order, and all unselected slides.
 - Reuse the existing loopback Ultimate Bridge and Agent launch contracts; fall back to a copyable command when the Bridge or auto-launch is unavailable.

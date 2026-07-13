@@ -138,6 +138,29 @@ def test_app_hands_only_selected_eligible_tasks_to_ultimate(tmp_path: Path, monk
         _stop(server, session, thread)
 
 
+def test_app_keeps_accessibility_and_deck_level_tasks_out_of_one_click(tmp_path: Path) -> None:
+    source = write_pptx(
+        tmp_path / "manual-only.pptx",
+        slides=[slide_xml(title=None, include_picture=True, picture_alt="")],
+    )
+    server, session, url, thread = _start()
+    client = LocalClient(url, session.token)
+    try:
+        status, body, _ = client.request(
+            "POST", "/api/check?filename=manual-only.pptx&scenario=present", source.read_bytes()
+        )
+        assert status == 200
+        tasks = json.loads(body)["tasks"]
+        accessibility = [task for task in tasks if task["ruleId"].startswith("accessibility.")]
+        deck_level = [task for task in tasks if task["slideIndex"] is None]
+
+        assert accessibility
+        assert all(task["ultimateEligible"] is False for task in accessibility)
+        assert all(task["ultimateEligible"] is False for task in deck_level)
+    finally:
+        _stop(server, session, thread)
+
+
 def test_app_checks_cleans_and_downloads_a_separate_copy(tmp_path: Path) -> None:
     source = write_pptx(
         tmp_path / "客户汇报.pptx",

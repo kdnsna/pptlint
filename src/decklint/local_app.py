@@ -34,6 +34,20 @@ from .scoring import score_findings
 MAX_UPLOAD_BYTES = 200 * 1024 * 1024
 ULTIMATE_BRIDGE = "http://127.0.0.1:43188"
 MAX_BRIDGE_SOURCE_BYTES = 40 * 1024 * 1024
+ULTIMATE_VISUAL_RULES = {
+    "readability.off-canvas-text",
+    "readability.text-overlap",
+    "readability.text-clipping-risk",
+    "readability.small-font",
+    "readability.low-contrast",
+    "readability.dense-text",
+    "consistency.font-outlier",
+    "consistency.repeated-layout",
+    "editability.full-slide-image",
+    "policy.font-not-allowed",
+    "policy.font-size-below-minimum",
+    "policy.color-not-allowed",
+}
 
 
 def _safe_filename(value: str) -> str:
@@ -96,18 +110,27 @@ def _bridge_json(path: str, *, payload: dict[str, object] | None = None) -> dict
     return result
 
 
+def _ultimate_eligible(task: dict[str, object]) -> bool:
+    location = task.get("location")
+    return (
+        task.get("ruleId") in ULTIMATE_VISUAL_RULES
+        and task.get("repairMode") in {"guided-powerpoint", "agent-rebuild"}
+        and "ultimate-ppt-master" in task.get("recommendedExecutors", [])
+        and isinstance(location, dict)
+        and isinstance(location.get("slideIndex"), int)
+    )
+
+
 def _ultimate_tasks(record: DeckRecord, selected_ids: set[str]) -> list[dict[str, object]]:
     tasks = record.plan.get("tasks", [])
     if not isinstance(tasks, list):
         return []
-    allowed_modes = {"guided-powerpoint", "agent-rebuild"}
     return [
         task
         for task in tasks
         if isinstance(task, dict)
         and str(task.get("taskId", "")) in selected_ids
-        and task.get("repairMode") in allowed_modes
-        and "ultimate-ppt-master" in task.get("recommendedExecutors", [])
+        and _ultimate_eligible(task)
     ]
 
 
@@ -305,10 +328,7 @@ def _report_response(session: AppSession, deck_id: str, record: DeckRecord) -> d
                     "repairMode": task.get("repairMode"),
                     "risk": task.get("risk"),
                     "steps": task.get("steps", []),
-                    "ultimateEligible": (
-                        task.get("repairMode") in {"guided-powerpoint", "agent-rebuild"}
-                        and "ultimate-ppt-master" in task.get("recommendedExecutors", [])
-                    ),
+                    "ultimateEligible": _ultimate_eligible(task),
                 }
             )
             operation = operation_by_rule.get(str(task.get("ruleId", "")))
@@ -358,11 +378,11 @@ function downloads(items){return '<div class="downloads">'+(items||[]).map(x=>`<
 function wireDrop(id,fn){const box=document.getElementById(id),input=box.querySelector('input');box.addEventListener('click',()=>input.click());box.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();input.click()}});input.addEventListener('change',()=>input.files[0]&&fn(input.files[0]));['dragenter','dragover'].forEach(e=>box.addEventListener(e,x=>{x.preventDefault();box.classList.add('drag')}));['dragleave','drop'].forEach(e=>box.addEventListener(e,x=>{x.preventDefault();box.classList.remove('drag')}));box.addEventListener('drop',e=>e.dataTransfer.files[0]&&fn(e.dataTransfer.files[0]))}
 async function api(path,opt={}){opt.headers={...(opt.headers||{}),...auth()};const r=await fetch(path,opt);const data=await r.json();if(!r.ok)throw new Error(data.error||'运行失败');return data}
 async function check(file){const card=document.getElementById('check-card');card.classList.add('spinner');try{const scenario=document.getElementById('scenario').value;const data=await api(`/api/check?filename=${encodeURIComponent(file.name)}&scenario=${scenario}`,{method:'POST',headers:{'Content-Type':'application/vnd.openxmlformats-officedocument.presentationml.presentation'},body:file});state.deck=data;renderCheck(data);renderActions(data)}catch(e){showError('check-result',e.message)}finally{card.classList.remove('spinner')}}
-function taskMarkup(t){const loc=t.slideIndex?`第 ${t.slideIndex} 页`:'整个文件',eligible=t.ultimateEligible;return `<details class="task"><summary><span></span><span class="task-title"><b>${loc} · ${esc(t.consequence)}</b><small>${esc(modeLabels[t.repairMode]||t.repairMode)} · 风险 ${esc(t.risk)}</small></span></summary><div class="task-body"><b>希望改成什么样</b><p>${esc(t.target)}</p><b>自己在 PowerPoint 里这样改</b><ol>${(t.steps||[]).map(step=>`<li>${esc(step)}</li>`).join('')}</ol><label class="task-route">${eligible?`<input class="ultimate-task" type="checkbox" value="${esc(t.taskId)}" checked>`:'<input type="checkbox" disabled>'}<span><b>${eligible?'同时交给 Ultimate 优化这一页':'这一项需要人工确认或由 PPTLint 清理'}</b><small>${eligible?'只改命中页，原文和页数保持不变。':'不会被一键优化擅自处理。'}</small></span></label></div></details>`}
-function renderCheck(d){const r=d.readiness||{},cls=r.status||'review',label={ready:'可以交付',review:'发送前再看一眼',blocked:'先处理再发送'}[cls]||'需要检查',tasks=d.tasks||[];document.getElementById('check-result').innerHTML=`<div class="status ${cls}"><div><b>${label}</b><div>${tasks.length} 项处理任务，逐项展开即可照着改</div></div></div><div class="metrics"><div class="metric"><span>辅助分数</span><strong>${d.score}</strong></div><div class="metric"><span>可一键优化</span><strong>${tasks.filter(t=>t.ultimateEligible).length}</strong></div><div class="metric"><span>需你判断</span><strong>${d.modeCounts['human-decision']||0}</strong></div></div><div class="tasks">${tasks.map(taskMarkup).join('')}</div>${downloads(d.downloads)}`;document.getElementById('check-result').classList.add('show');document.querySelectorAll('.ultimate-task').forEach(item=>item.addEventListener('change',updateUltimateCount));updateUltimateCount()}
+function taskMarkup(t){const loc=t.slideIndex?`第 ${t.slideIndex} 页`:'整个文件',eligible=t.ultimateEligible;return `<details class="task"><summary><span></span><span class="task-title"><b>${loc} · ${esc(t.consequence)}</b><small>${esc(modeLabels[t.repairMode]||t.repairMode)} · 风险 ${esc(t.risk)}</small></span></summary><div class="task-body"><b>希望改成什么样</b><p>${esc(t.target)}</p><b>自己在 PowerPoint 里这样改</b><ol>${(t.steps||[]).map(step=>`<li>${esc(step)}</li>`).join('')}</ol><label class="task-route">${eligible?`<input class="ultimate-task" type="checkbox" value="${esc(t.taskId)}" data-slide="${esc(t.slideIndex)}" checked>`:'<input type="checkbox" disabled>'}<span><b>${eligible?'同时交给 Ultimate 优化这一页':'这一项需要人工确认或由 PPTLint 清理'}</b><small>${eligible?'只改命中页，原文和页数保持不变。':'不会被一键优化擅自处理。'}</small></span></label></div></details>`}
+function renderCheck(d){const r=d.readiness||{},cls=r.status||'review',label={ready:'可以交付',review:'发送前再看一眼',blocked:'先处理再发送'}[cls]||'需要检查',tasks=d.tasks||[],eligiblePages=new Set(tasks.filter(t=>t.ultimateEligible).map(t=>t.slideIndex)).size;document.getElementById('check-result').innerHTML=`<div class="status ${cls}"><div><b>${label}</b><div>${tasks.length} 项处理任务，逐项展开即可照着改</div></div></div><div class="metrics"><div class="metric"><span>辅助分数</span><strong>${d.score}</strong></div><div class="metric"><span>可一键优化页</span><strong>${eligiblePages}</strong></div><div class="metric"><span>需你判断</span><strong>${d.modeCounts['human-decision']||0}</strong></div></div><div class="tasks">${tasks.map(taskMarkup).join('')}</div>${downloads(d.downloads)}`;document.getElementById('check-result').classList.add('show');document.querySelectorAll('.ultimate-task').forEach(item=>item.addEventListener('change',updateUltimateCount));updateUltimateCount()}
 function renderActions(d){const box=document.getElementById('cleanup-checks'),ops=d.cleanupOperations||[];box.innerHTML=ops.length?ops.map(op=>`<label><input type="checkbox" value="${op}">${opLabels[op]}</label>`).join(''):'<span style="color:var(--muted)">没有可由 PPTLint 自动清理的项目。</span>';document.getElementById('cleanup-btn').disabled=!ops.length;document.getElementById('copy-btn').disabled=false;updateUltimateCount()}
 function selectedUltimateTasks(){return [...document.querySelectorAll('.ultimate-task:checked')].map(item=>item.value)}
-function updateUltimateCount(){const count=selectedUltimateTasks().length,button=document.getElementById('ultimate-btn');button.disabled=!state.deck||!count;button.textContent=`优化已选 ${count} 项`}
+function updateUltimateCount(){const items=[...document.querySelectorAll('.ultimate-task:checked')],count=items.length,pages=new Set(items.map(item=>item.dataset.slide)).size,button=document.getElementById('ultimate-btn');button.disabled=!state.deck||!count;button.textContent=`优化已选 ${pages} 页 · ${count} 项`}
 function showMessage(text,html=false,error=false){const el=document.getElementById('action-message');el[html?'innerHTML':'textContent']=text;el.classList.toggle('error',error);el.classList.add('show')}
 async function cleanup(){const ops=[...document.querySelectorAll('#cleanup-checks input:checked')].map(x=>x.value);if(!ops.length){showMessage('请先勾选至少一项。',false,true);return}try{const data=await api('/api/fix',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({deckId:state.deck.deckId,operations:ops})});showMessage(`${data.passed?'清理并复检完成':'副本已生成，但仍有需处理的问题。'}${downloads(data.downloads)}`,true)}catch(e){showMessage(e.message,false,true)}}
 async function copyBrief(){await navigator.clipboard.writeText(state.deck.agentBrief);document.getElementById('copy-btn').textContent='已复制完整任务'}

@@ -494,13 +494,18 @@ def load_deck(path: Path) -> DeckModel:
             if item.get("PartName")
         }
         missing_content_types = sorted(
-            name
-            for name in names
-            if name != "[Content_Types].xml"
-            and name not in override_content_types
-            and name.rsplit(".", 1)[-1].lower() not in default_content_types
+            info.filename
+            for info in infos
+            if not info.is_dir()
+            and info.filename != "[Content_Types].xml"
+            and info.filename not in override_content_types
+            and info.filename.rsplit(".", 1)[-1].lower() not in default_content_types
         )
-        media_infos = [info for info in infos if info.filename.startswith("ppt/media/")]
+        media_infos = [
+            info
+            for info in infos
+            if not info.is_dir() and info.filename.startswith("ppt/media/")
+        ]
         media_hashes: dict[str, int] = {}
         for info in media_infos:
             media_hash = hashlib.sha256(package.read(info.filename)).hexdigest()

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import zipfile
 from pathlib import Path
 
 from decklint.model import load_deck
@@ -150,6 +151,19 @@ def test_missing_content_type_is_an_integrity_blocker(tmp_path: Path) -> None:
 
     assert finding.severity == "critical"
     assert finding.confidence == "high"
+
+
+def test_explicit_zip_directory_entries_do_not_require_content_types(tmp_path: Path) -> None:
+    source = write_pptx(tmp_path / "explicit-directories.pptx")
+    with zipfile.ZipFile(source, "a") as package:
+        package.writestr("ppt/", b"")
+        package.writestr("ppt/slides/", b"")
+        package.writestr("ppt/slides/_rels/", b"")
+
+    deck = load_deck(source)
+
+    assert deck.missing_content_types == []
+    assert "integrity.missing-content-type" not in rule_ids(source)
 
 
 def test_blank_slide_requires_human_review(tmp_path: Path) -> None:
