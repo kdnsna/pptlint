@@ -8,10 +8,11 @@ from urllib.parse import urlparse
 
 import jsonschema
 
+import decklint.local_app as local_app
 from decklint.local_app import create_app_server
 from decklint.model import load_deck
 
-from .pptx_factory import write_pptx
+from .pptx_factory import slide_xml, write_pptx
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -71,7 +72,9 @@ def test_app_binds_only_loopback_and_serves_a_self_contained_chinese_ui() -> Non
         status, body, headers = client.request("GET", client.root_path)
         markup = body.decode("utf-8")
         assert status == 200
-        assert "先检查，再修改" in markup
+        assert "把难改的页点出来" in markup
+        assert "自己在 PowerPoint 里改" in markup
+        assert "交给 Ultimate 优化" in markup
         assert "PPTLint Verified" in markup
         assert "不上传" in markup
         assert markup.count('role="button" tabindex="0"') == 2
@@ -81,6 +84,58 @@ def test_app_binds_only_loopback_and_serves_a_self_contained_chinese_ui() -> Non
     finally:
         _stop(server, session, thread)
     assert not root.exists()
+
+
+def test_app_hands_only_selected_eligible_tasks_to_ultimate(tmp_path: Path, monkeypatch) -> None:
+    source = write_pptx(tmp_path / "needs-polish.pptx", slides=[slide_xml(body_size=1000)])
+    bridge_calls: list[tuple[str, dict[str, object] | None]] = []
+
+    def fake_bridge(path: str, *, payload: dict[str, object] | None = None) -> dict[str, object]:
+        bridge_calls.append((path, payload))
+        if path == "/health":
+            return {"ok": True, "version": "6.1.0", "allowLaunch": True}
+        if path == "/handoff":
+            assert payload is not None
+            source_note = str(payload["sourceMarkdown"])
+            assert "原文、数字、数据、结论、页数、页面顺序和未命中页面全部锁定" in source_note
+            attachments = payload["attachments"]
+            assert isinstance(attachments, list)
+            assert {item["name"] for item in attachments} == {
+                "needs-polish.pptx",
+                "pptlint-repair-plan.json",
+            }
+            return {"ok": True, "projectPath": "/tmp/ultimate-repair"}
+        assert path == "/agent/launch"
+        return {"ok": True, "launched": True, "command": "codex repair"}
+
+    monkeypatch.setattr(local_app, "_bridge_json", fake_bridge)
+    server, session, url, thread = _start()
+    client = LocalClient(url, session.token)
+    try:
+        status, body, _ = client.request(
+            "POST", "/api/check?filename=needs-polish.pptx&scenario=present", source.read_bytes()
+        )
+        assert status == 200
+        checked = json.loads(body)
+        eligible = [task for task in checked["tasks"] if task["ultimateEligible"]]
+        assert eligible
+        payload = json.dumps(
+            {"deckId": checked["deckId"], "taskIds": [eligible[0]["taskId"]]}
+        ).encode("utf-8")
+        status, body, _ = client.request(
+            "POST", "/api/ultimate-handoff", payload, content_type="application/json"
+        )
+        result = json.loads(body)
+        assert status == 200
+        assert result["launched"] is True
+        assert result["taskCount"] == 1
+        assert [path for path, _ in bridge_calls] == [
+            "/health",
+            "/handoff",
+            "/agent/launch",
+        ]
+    finally:
+        _stop(server, session, thread)
 
 
 def test_app_checks_cleans_and_downloads_a_separate_copy(tmp_path: Path) -> None:

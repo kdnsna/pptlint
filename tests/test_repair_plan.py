@@ -95,6 +95,16 @@ def test_every_adapter_renders_all_tasks() -> None:
         assert "原文件 SHA-256" in brief
 
 
+def test_chinese_repair_plan_describes_the_visible_result_not_the_first_action() -> None:
+    report = make_report(findings=[_finding()])
+    report["language"] = "zh-CN"
+
+    plan = build_repair_plan(report)
+
+    assert "目标观看距离下清楚可读" in plan["tasks"][0]["target"]
+    assert plan["tasks"][0]["steps"][0] == "Open slide 2."
+
+
 def test_cli_writes_machine_readable_plan_with_all_report_findings(tmp_path: Path) -> None:
     report = make_report(findings=[_finding(finding_id=str(index)) for index in range(5)])
     report_path = tmp_path / "report.json"

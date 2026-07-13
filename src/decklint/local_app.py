@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import base64
 import hashlib
 import json
 import os
@@ -14,7 +15,9 @@ from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from tempfile import mkdtemp
+from urllib.error import HTTPError, URLError
 from urllib.parse import parse_qs, quote, unquote, urlparse
+from urllib.request import Request, urlopen
 
 from . import __version__
 from .cleanup import OPERATIONS, CleanupError, create_cleanup_copy, sha256_path
@@ -29,6 +32,8 @@ from .scoring import score_findings
 
 
 MAX_UPLOAD_BYTES = 200 * 1024 * 1024
+ULTIMATE_BRIDGE = "http://127.0.0.1:43188"
+MAX_BRIDGE_SOURCE_BYTES = 40 * 1024 * 1024
 
 
 def _safe_filename(value: str) -> str:
@@ -62,6 +67,171 @@ def _mode_counts(plan: dict[str, object]) -> dict[str, int]:
 
 def _verification_hash(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _bridge_json(path: str, *, payload: dict[str, object] | None = None) -> dict[str, object]:
+    data = None if payload is None else json.dumps(payload, ensure_ascii=False).encode("utf-8")
+    request = Request(
+        f"{ULTIMATE_BRIDGE}{path}",
+        data=data,
+        method="GET" if data is None else "POST",
+        headers={"Content-Type": "application/json"},
+    )
+    try:
+        with urlopen(request, timeout=12) as response:
+            result = json.loads(response.read().decode("utf-8"))
+    except HTTPError as exc:
+        detail = exc.read().decode("utf-8", errors="replace")
+        try:
+            message = str(json.loads(detail).get("message") or detail)
+        except json.JSONDecodeError:
+            message = detail
+        raise ValueError(f"Ultimate Bridge 拒绝了请求：{message}") from exc
+    except (URLError, TimeoutError, OSError) as exc:
+        raise ValueError(
+            "未连接 Ultimate PPT Master。请先在 Ultimate 仓库运行 `npm run bridge -- --allow-launch`。"
+        ) from exc
+    if not isinstance(result, dict):
+        raise ValueError("Ultimate Bridge 返回了无法识别的结果。")
+    return result
+
+
+def _ultimate_tasks(record: DeckRecord, selected_ids: set[str]) -> list[dict[str, object]]:
+    tasks = record.plan.get("tasks", [])
+    if not isinstance(tasks, list):
+        return []
+    allowed_modes = {"guided-powerpoint", "agent-rebuild"}
+    return [
+        task
+        for task in tasks
+        if isinstance(task, dict)
+        and str(task.get("taskId", "")) in selected_ids
+        and task.get("repairMode") in allowed_modes
+        and "ultimate-ppt-master" in task.get("recommendedExecutors", [])
+    ]
+
+
+def _ultimate_handoff_payload(record: DeckRecord, tasks: list[dict[str, object]]) -> dict[str, object]:
+    source_bytes = record.source.read_bytes()
+    if len(source_bytes) > MAX_BRIDGE_SOURCE_BYTES:
+        raise ValueError("文件超过 40 MB，无法安全直连 Bridge；请在 Ultimate 工作台中手动导入。")
+    slide_indexes = sorted(
+        {
+            int(location["slideIndex"])
+            for task in tasks
+            if isinstance((location := task.get("location")), dict)
+            and isinstance(location.get("slideIndex"), int)
+        }
+    )
+    task_lines = []
+    for task in tasks:
+        location = task.get("location", {})
+        slide = location.get("slideIndex") if isinstance(location, dict) else None
+        steps = task.get("steps", [])
+        task_lines.extend(
+            [
+                f"## 第 {slide} 页 · {task.get('consequence', '')}",
+                f"- 目标：{task.get('target', '')}",
+                *[f"- 步骤：{step}" for step in steps if isinstance(step, str)],
+            ]
+        )
+    source_markdown = "\n".join(
+        [
+            f"# 优化 {record.source.name}",
+            "",
+            "这是 PPTLint 点名页面的局部优化任务，不是重新制作整套 PPT。",
+            f"只处理页面：{', '.join(str(value) for value in slide_indexes)}。",
+            "原文、数字、数据、结论、页数、页面顺序和未命中页面全部锁定。",
+            "如果不改变内容或页数就无法安全改善，请保留原页并在交付说明中写明原因。",
+            "",
+            *task_lines,
+        ]
+    )
+    selected_counts = {
+        mode: sum(1 for task in tasks if task.get("repairMode") == mode)
+        for mode in ("cleanup-copy", "guided-powerpoint", "agent-rebuild", "human-decision")
+    }
+    repair_plan_text = json.dumps(
+        {
+            **record.plan,
+            "tasks": tasks,
+            "summary": {"taskCount": len(tasks), "byRepairMode": selected_counts},
+        },
+        ensure_ascii=False,
+        indent=2,
+    )
+    constraints = (
+        "Only repair the PPTLint-selected slides. Preserve every character, number, datum, conclusion, "
+        "slide count, slide order, and all unselected slides. Keep native editable PowerPoint objects. "
+        "Write a new copy, run PPTLint proof, and stop rather than forcing a change that violates these locks."
+    )
+    return {
+        "form": {
+            "title": f"局部优化-{record.source.stem}",
+            "audience": "原演示文稿受众",
+            "coreMessage": "保留原文，只改善 PPTLint 命中页的可读性、层级、对齐与视觉完成度",
+            "sourceNotes": source_markdown,
+            "constraints": constraints,
+            "slideCount": str(record.plan.get("source", {}).get("slides", "")),
+            "outputMode": "pptx",
+            "stylePreset": "reference-style-only",
+            "language": "zh",
+        },
+        "sourceMarkdown": source_markdown,
+        "agentPrompt": (
+            "Use Ultimate PPT Master to repair an existing PPTX, not to create a new deck. "
+            + constraints
+            + " Read attachments/pptlint-repair-plan.json and use the source PPTX as style-only reference."
+        ),
+        "projectBrief": {
+            "schemaVersion": "v5.2-brief-v1",
+            "title": f"局部优化-{record.source.stem}",
+            "outputMode": "pptx",
+            "briefMode": "source-first",
+            "expectationFit": {
+                "riskLevel": "yellow",
+                "score": 90,
+                "readyForProduction": True,
+                "missingSignals": [],
+                "assumptions": [
+                    "exact visible text is locked",
+                    "slide count and order are locked",
+                    "only PPTLint-selected slides may change",
+                ],
+            },
+            "qualityGate": {
+                "level": "formal-business",
+                "acceptanceCriteria": [
+                    "exact text and numbers preserved",
+                    "only selected slides changed",
+                    "native editable objects preserved",
+                    "no new high-confidence PPTLint finding",
+                    "rendered before-after review completed",
+                ],
+                "reviewCommands": [
+                    "python3 scripts/audit_formal_delivery.py <project_path>",
+                    "python3 scripts/audit_design_completion.py <project_path>",
+                    "uvx pptlint proof <before.pptx> <after.pptx> --scenario present",
+                ],
+            },
+        },
+        "attachments": [
+            {
+                "id": "source-pptx",
+                "name": record.source.name,
+                "type": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                "size": len(source_bytes),
+                "dataBase64": base64.b64encode(source_bytes).decode("ascii"),
+            },
+            {
+                "id": "pptlint-repair-plan",
+                "name": "pptlint-repair-plan.json",
+                "type": "application/json",
+                "size": len(repair_plan_text.encode("utf-8")),
+                "text": repair_plan_text,
+            },
+        ],
+    }
 
 
 @dataclass
@@ -135,6 +305,10 @@ def _report_response(session: AppSession, deck_id: str, record: DeckRecord) -> d
                     "repairMode": task.get("repairMode"),
                     "risk": task.get("risk"),
                     "steps": task.get("steps", []),
+                    "ultimateEligible": (
+                        task.get("repairMode") in {"guided-powerpoint", "agent-rebuild"}
+                        and "ultimate-ppt-master" in task.get("recommendedExecutors", [])
+                    ),
                 }
             )
             operation = operation_by_rule.get(str(task.get("ruleId", "")))
@@ -165,9 +339,38 @@ def _html(token: str) -> str:
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>PPTLint 本地交付台</title>
 <style>
-:root{--ink:#0a1628;--muted:#657083;--paper:#f4f1eb;--panel:#fff;--accent:#e85d2c;--green:#0d8b63;--amber:#b66a09;--red:#c3382b}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.65 "PingFang SC","Microsoft YaHei",system-ui,sans-serif}button,input,select{font:inherit}.shell{width:min(1120px,calc(100% - 32px));margin:auto}.nav{display:flex;justify-content:space-between;align-items:center;padding:20px 0}.brand{font:900 17px/1 ui-monospace,monospace;letter-spacing:.14em}.privacy{color:var(--muted);font-size:13px}.hero{display:grid;grid-template-columns:1.2fr .8fr;gap:28px;padding:52px 0 36px}.eyebrow{font:800 12px/1 ui-monospace,monospace;letter-spacing:.13em;color:var(--accent)}h1{font-size:clamp(42px,7vw,76px);line-height:.98;letter-spacing:-.055em;margin:14px 0 22px}.lead{font-size:18px;color:var(--muted);max-width:680px}.trust{align-self:end;background:var(--ink);color:white;border-radius:24px;padding:26px;box-shadow:0 24px 70px #0a16282a}.trust strong{display:block;font-size:28px}.trust span{display:block;color:#c6cfdd;margin-top:8px}.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:18px 0 70px}.card{background:var(--panel);border:1px solid #dfe2e7;border-radius:20px;padding:24px;box-shadow:0 14px 40px #0a16280c}.card h2{font-size:24px;margin:8px 0}.num{font:800 12px ui-monospace,monospace;color:var(--accent)}.drop{display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;min-height:136px;border:2px dashed #aeb6c2;border-radius:16px;padding:28px 18px;text-align:center;background:#fafbfc;color:var(--ink);cursor:pointer;transition:.2s}.drop.drag{border-color:var(--accent);background:#fff4ee}.drop input{display:none}.drop b{display:block;width:100%;color:var(--ink);font-size:18px}.drop span{display:block;width:100%;color:var(--muted);font-size:13px}.select{display:block;width:100%;border:1px solid #ccd2da;border-radius:10px;padding:10px 12px;margin:14px 0;background:white}.result{display:none;margin-top:22px}.result.show{display:block}.status{display:flex;gap:12px;align-items:center;padding:16px;border-radius:14px;background:#edf7f3}.status.blocked{background:#fff0ed}.status.review{background:#fff6e8}.status b{font-size:20px}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}.metric{background:#f4f6f8;padding:12px;border-radius:10px}.metric strong{display:block;font-size:22px}.tasks{max-height:390px;overflow:auto;border-top:1px solid #e2e5e9}.task{padding:14px 0;border-bottom:1px solid #e2e5e9}.task b{display:block}.pill{display:inline-block;border:1px solid #cdd3db;border-radius:99px;padding:2px 8px;font-size:11px;margin:5px 4px 0 0}.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}.btn{border:0;border-radius:10px;padding:10px 14px;font-weight:750;cursor:pointer;background:var(--ink);color:white;text-decoration:none}.btn.alt{background:white;color:var(--ink);border:1px solid #b8c0cb}.btn:disabled{opacity:.38;cursor:not-allowed}.checks{display:grid;gap:8px;margin:12px 0}.checks label{display:flex;gap:8px;align-items:center;background:#f5f6f8;padding:9px 10px;border-radius:9px}.message{margin-top:12px;padding:12px;border-left:4px solid var(--green);background:#edf7f3;display:none}.message.show{display:block}.downloads{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.downloads a{color:#1457a6}.footer{padding:24px 0 54px;color:var(--muted);font-size:13px}.spinner{opacity:.6;pointer-events:none}@media(max-width:820px){.hero{grid-template-columns:1fr}.steps{grid-template-columns:1fr}.trust{align-self:auto}}@media(max-width:430px){.shell{width:min(100% - 22px,1120px)}.nav{align-items:flex-start;gap:12px}.privacy{max-width:180px;text-align:right}.hero{padding-top:28px}h1{font-size:45px}.card{padding:18px}.metrics{grid-template-columns:1fr}.actions{display:grid}.btn{text-align:center;width:100%}}
-</style></head><body><div class="shell"><nav class="nav"><div class="brand">PPTLINT / LOCAL</div><div class="privacy">只运行在本机 · 不上传 · 不调用模型</div></nav><header class="hero"><div><span class="eyebrow">POWERPOINT 发出前的最后一关</span><h1>先检查，再修改，<br>最后用证据交付。</h1><p class="lead">不需要看懂代码。把 PPT 拖进来，先看哪几页会翻车；能安全清理的内容由你逐项授权，复杂问题直接复制给助手。</p></div><aside class="trust"><strong>源文件永远不动</strong><span>默认只读检查。清理时只生成独立副本，并附上修改回执和复检报告。</span></aside></header><main class="steps"><section class="card" id="check-card"><span class="num">01 · 检查</span><h2>拖入要发的 PPT</h2><select class="select" id="scenario" aria-label="选择 PPT 使用场景"><option value="present">会议室汇报</option><option value="screen">电脑屏幕阅读</option><option value="document">文档型 PPT</option></select><label class="drop" id="check-drop" role="button" tabindex="0"><input type="file" accept=".pptx"><b>点击或拖入 .pptx</b><span>本地检查，文件不会离开这台电脑</span></label><div class="result" id="check-result" aria-live="polite"></div></section><section class="card"><span class="num">02 · 处理</span><h2>你决定改什么</h2><p>作者信息、批注和讲者备注可以在授权后清理副本。版式、字体、隐藏页和外链仍需你或助手判断。</p><div class="checks" id="cleanup-checks"><span style="color:var(--muted)">先完成第一步。</span></div><div class="actions"><button class="btn" id="cleanup-btn" disabled>生成清理副本</button><button class="btn alt" id="copy-btn" disabled>复制完整 Agent 任务</button></div><div class="message" id="cleanup-message" aria-live="polite"></div></section><section class="card"><span class="num">03 · 复检</span><h2>拖入修改后的 PPT</h2><p>复检会告诉你：哪些任务已完成、哪些仍存在、是否出现新问题。</p><label class="drop" id="verify-drop" role="button" tabindex="0"><input type="file" accept=".pptx"><b>点击或拖入修改后副本</b><span>只有复检通过，才会生成 PPTLint Verified 凭证</span></label><div class="result" id="verify-result" aria-live="polite"></div></section></main><footer class="footer">PPTLint __VERSION__ · 会话关闭后自动删除临时文件 · 无统计 · 无遥测</footer></div>
-<script>const TOKEN=__TOKEN__;const state={deck:null};const opLabels={'clear-personal-metadata':'清除作者和最后编辑者信息','remove-comments':'移除批注','remove-speaker-notes':'移除讲者备注'};function auth(){return{'X-PPTLint-Token':TOKEN}}function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}function downloads(items){return '<div class="downloads">'+(items||[]).map(x=>`<a href="${esc(x.url)}">${esc(x.label)}</a>`).join('')+'</div>'}function wireDrop(id,fn){const box=document.getElementById(id),input=box.querySelector('input');box.addEventListener('click',()=>input.click());box.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();input.click()}});input.addEventListener('change',()=>input.files[0]&&fn(input.files[0]));['dragenter','dragover'].forEach(e=>box.addEventListener(e,x=>{x.preventDefault();box.classList.add('drag')}));['dragleave','drop'].forEach(e=>box.addEventListener(e,x=>{x.preventDefault();box.classList.remove('drag')}));box.addEventListener('drop',e=>e.dataTransfer.files[0]&&fn(e.dataTransfer.files[0]))}async function api(path,opt={}){opt.headers={...(opt.headers||{}),...auth()};const r=await fetch(path,opt);const data=await r.json();if(!r.ok)throw new Error(data.error||'运行失败');return data}async function check(file){const card=document.getElementById('check-card');card.classList.add('spinner');try{const scenario=document.getElementById('scenario').value;const data=await api(`/api/check?filename=${encodeURIComponent(file.name)}&scenario=${scenario}`,{method:'POST',headers:{'Content-Type':'application/vnd.openxmlformats-officedocument.presentationml.presentation'},body:file});state.deck=data;renderCheck(data);renderCleanup(data)}catch(e){showError('check-result',e.message)}finally{card.classList.remove('spinner')}}function renderCheck(d){const r=d.readiness||{},cls=r.status||'review',label={ready:'可以交付',review:'发送前再看一眼',blocked:'先处理再发送'}[cls]||'需要检查';const tasks=d.tasks||[];document.getElementById('check-result').innerHTML=`<div class="status ${cls}"><div><b>${label}</b><div>${tasks.length}项完整修复任务</div></div></div><div class="metrics"><div class="metric"><span>辅助分数</span><strong>${d.score}</strong></div><div class="metric"><span>助手处理</span><strong>${d.modeCounts['agent-rebuild']||0}</strong></div><div class="metric"><span>需你判断</span><strong>${d.modeCounts['human-decision']||0}</strong></div></div><div class="tasks">${tasks.map(t=>`<div class="task"><b>${t.slideIndex?`第 ${t.slideIndex} 页 · `:''}${esc(t.consequence)}</b><span class="pill">${esc(t.repairMode)}</span><span class="pill">风险 ${esc(t.risk)}</span></div>`).join('')}</div>${downloads(d.downloads)}`;document.getElementById('check-result').classList.add('show')}function renderCleanup(d){const box=document.getElementById('cleanup-checks'),ops=d.cleanupOperations||[];box.innerHTML=ops.length?ops.map(op=>`<label><input type="checkbox" value="${op}">${opLabels[op]}</label>`).join(''):'<span style="color:var(--muted)">没有可由 PPTLint 自动清理的项目。</span>';document.getElementById('cleanup-btn').disabled=!ops.length;document.getElementById('copy-btn').disabled=false}async function cleanup(){const ops=[...document.querySelectorAll('#cleanup-checks input:checked')].map(x=>x.value);if(!ops.length){showMessage('请先勾选至少一项。',false);return}try{const data=await api('/api/fix',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({deckId:state.deck.deckId,operations:ops})});showMessage(`${data.passed?'清理并复检完成':'副本已生成，但仍有需处理的问题。'}${downloads(data.downloads)}`,true)}catch(e){showMessage(e.message,false)}}function showMessage(text,html){const el=document.getElementById('cleanup-message');el[html?'innerHTML':'textContent']=text;el.classList.add('show')}async function copyBrief(){await navigator.clipboard.writeText(state.deck.agentBrief);const b=document.getElementById('copy-btn');b.textContent='已复制完整任务'}async function verify(file){if(!state.deck){showError('verify-result','请先检查原 PPT。');return}try{const d=await api(`/api/verify?filename=${encodeURIComponent(file.name)}&deckId=${encodeURIComponent(state.deck.deckId)}`,{method:'POST',headers:{'Content-Type':'application/vnd.openxmlformats-officedocument.presentationml.presentation'},body:file});const label=d.passed?'复检通过 · PPTLint Verified':'复检未通过';document.getElementById('verify-result').innerHTML=`<div class="status ${d.passed?'':'review'}"><div><b>${label}</b><div>已完成 ${d.completed} · 仍存在 ${d.remaining} · 无法确认 ${d.unable} · 回归 ${d.regressions}</div></div></div>${downloads(d.downloads)}`;document.getElementById('verify-result').classList.add('show')}catch(e){showError('verify-result',e.message)}}function showError(id,msg){const el=document.getElementById(id);el.innerHTML=`<div class="status blocked"><b>${esc(msg)}</b></div>`;el.classList.add('show')}wireDrop('check-drop',check);wireDrop('verify-drop',verify);document.getElementById('cleanup-btn').addEventListener('click',cleanup);document.getElementById('copy-btn').addEventListener('click',copyBrief);</script></body></html>'''
+:root{--ink:#0a1628;--muted:#657083;--paper:#f4f1eb;--panel:#fff;--accent:#e85d2c;--green:#0d8b63;--amber:#b66a09;--red:#c3382b;--line:#dfe2e7}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.65 "PingFang SC","Microsoft YaHei",system-ui,sans-serif}button,input,select{font:inherit}.shell{width:min(1240px,calc(100% - 32px));margin:auto}.nav{display:flex;justify-content:space-between;align-items:center;padding:20px 0}.brand{font:900 17px/1 ui-monospace,monospace;letter-spacing:.14em}.privacy{color:var(--muted);font-size:13px}.hero{display:grid;grid-template-columns:1.2fr .8fr;gap:28px;padding:52px 0 36px}.eyebrow{font:800 12px/1 ui-monospace,monospace;letter-spacing:.13em;color:var(--accent)}h1{font-size:clamp(42px,6.2vw,72px);line-height:.98;letter-spacing:-.055em;margin:14px 0 22px}.lead{font-size:18px;color:var(--muted);max-width:720px}.trust{align-self:end;background:var(--ink);color:white;border-radius:24px;padding:26px;box-shadow:0 24px 70px #0a16282a}.trust strong{display:block;font-size:28px}.trust span{display:block;color:#c6cfdd;margin-top:8px}.steps{display:grid;grid-template-columns:minmax(280px,.9fr) minmax(390px,1.35fr) minmax(280px,.9fr);gap:16px;margin:18px 0 70px;align-items:start}.card{min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:24px;box-shadow:0 14px 40px #0a16280c}.card h2{font-size:24px;margin:8px 0}.card>p{color:var(--muted)}.num{font:800 12px ui-monospace,monospace;color:var(--accent)}.drop{display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;min-height:136px;border:2px dashed #aeb6c2;border-radius:16px;padding:28px 18px;text-align:center;background:#fafbfc;color:var(--ink);cursor:pointer;transition:.2s}.drop.drag{border-color:var(--accent);background:#fff4ee}.drop input{display:none}.drop b{display:block;width:100%;color:var(--ink);font-size:18px}.drop span{display:block;width:100%;color:var(--muted);font-size:13px}.select{display:block;width:100%;border:1px solid #ccd2da;border-radius:10px;padding:10px 12px;margin:14px 0;background:white}.result{display:none;margin-top:22px}.result.show{display:block}.status{display:flex;gap:12px;align-items:center;padding:16px;border-radius:14px;background:#edf7f3}.status.blocked{background:#fff0ed}.status.review{background:#fff6e8}.status b{font-size:20px}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}.metric{background:#f4f6f8;padding:12px;border-radius:10px}.metric strong{display:block;font-size:22px}.tasks{max-height:580px;overflow:auto;border-top:1px solid #e2e5e9}.task{border-bottom:1px solid #e2e5e9}.task summary{display:grid;grid-template-columns:auto 1fr;gap:10px;padding:14px 2px;cursor:pointer;list-style:none}.task summary::-webkit-details-marker{display:none}.task summary:before{content:"+";display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:#eef1f5;font-weight:900}.task[open] summary:before{content:"−"}.task-title b{display:block}.task-title small{color:var(--muted)}.task-body{padding:0 2px 16px 32px}.task-body p{margin:4px 0 8px}.task-body ol{margin:6px 0;padding-left:20px;color:var(--muted)}.task-route{display:flex;align-items:flex-start;gap:8px;background:#f5f6f8;border-radius:10px;padding:9px 10px;margin-top:10px}.task-route input{margin-top:5px}.pill{display:inline-block;border:1px solid #cdd3db;border-radius:99px;padding:2px 8px;font-size:11px;margin:5px 4px 0 0}.choice{border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}.choice strong{display:block;font-size:17px}.choice p{margin:4px 0;color:var(--muted)}.choice.recommended{border-color:#9fb7ff;background:#f5f7ff}.choice-tag{font:800 10px ui-monospace,monospace;color:#3557c8}.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:12px}.btn{border:0;border-radius:10px;padding:11px 14px;font-weight:750;cursor:pointer;background:var(--ink);color:white;text-decoration:none}.btn.accent{background:var(--accent)}.btn.alt{background:white;color:var(--ink);border:1px solid #b8c0cb}.btn:disabled{opacity:.38;cursor:not-allowed}.checks{display:grid;gap:8px;margin:10px 0}.checks label{display:flex;gap:8px;align-items:center;background:#f5f6f8;padding:9px 10px;border-radius:9px}.subhead{margin:20px 0 6px;font-size:13px}.message{margin-top:12px;padding:12px;border-left:4px solid var(--green);background:#edf7f3;display:none;overflow-wrap:anywhere}.message.show{display:block}.message.error{border-color:var(--red);background:#fff0ed}.message code{display:block;margin-top:8px;padding:8px;background:white;white-space:pre-wrap}.downloads{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.downloads a{color:#1457a6}.platform-note{font-size:12px;color:var(--muted);margin-top:10px}.footer{padding:24px 0 54px;color:var(--muted);font-size:13px}.spinner{opacity:.6;pointer-events:none}@media(max-width:1000px){.steps{grid-template-columns:1fr 1fr}.steps .card:nth-child(2){grid-column:span 1}.steps .card:nth-child(3){grid-column:1/-1}}@media(max-width:760px){.hero,.steps{grid-template-columns:1fr}.steps .card:nth-child(3){grid-column:auto}.trust{align-self:auto}}@media(max-width:430px){.shell{width:min(100% - 22px,1240px)}.nav{align-items:flex-start;gap:10px}.brand{font-size:14px;white-space:nowrap}.privacy{max-width:160px;text-align:right}.hero{padding-top:28px}h1{font-size:40px}.card{padding:18px}.metrics{grid-template-columns:1fr}.actions{display:grid}.btn{text-align:center;width:100%}}
+</style></head><body><div class="shell">
+<nav class="nav"><div class="brand">PPTLINT / LOCAL</div><div class="privacy">只运行在本机 · 不上传 · 不调用模型</div></nav>
+<header class="hero"><div><span class="eyebrow">POWERPOINT 发出前的最后一关</span><h1>把难改的页点出来，<br>再把它真正改好。</h1><p class="lead">先看哪里影响阅读和交付。你可以照着 PowerPoint 步骤自己改，也可以只把命中页交给 Ultimate PPT Master 优化；原文、页数和其他页面默认锁定。</p></div><aside class="trust"><strong>先看清，再动手</strong><span>源文件永远不动。任何清理或优化都生成独立副本，完成后仍由 PPTLint 复检。</span></aside></header>
+<main class="steps">
+<section class="card" id="check-card"><span class="num">01 · 找到难改的页</span><h2>拖入要发的 PPT</h2><select class="select" id="scenario" aria-label="选择 PPT 使用场景"><option value="present">会议室汇报</option><option value="screen">电脑屏幕阅读</option><option value="document">文档型 PPT</option></select><label class="drop" id="check-drop" role="button" tabindex="0"><input type="file" accept=".pptx"><b>点击或拖入 .pptx</b><span>本地检查，文件不会离开这台电脑</span></label><div class="result" id="check-result" aria-live="polite"></div></section>
+<section class="card"><span class="num">02 · 选择怎么改</span><h2>自己改，或一键优化</h2><div class="choice"><strong>A · 自己在 PowerPoint 里改</strong><p>展开左侧每项问题，按页码、目标和具体菜单步骤逐项处理。</p><div class="platform-note">步骤以 PowerPoint 桌面版为主；WPS 中可在“开始 / 设计 / 图片工具”的同名命令中完成。</div></div><div class="choice recommended"><span class="choice-tag">推荐 · 只改命中页</span><strong>B · 交给 Ultimate 优化</strong><p>保留全部原文、数字、页数和未命中页面，只优化已勾选的可处理页面。</p><div class="actions"><button class="btn accent" id="ultimate-btn" disabled>优化已选 0 项</button><button class="btn alt" id="copy-btn" disabled>复制完整任务</button></div></div><h3 class="subhead">可安全清理的隐私内容</h3><div class="checks" id="cleanup-checks"><span style="color:var(--muted)">先完成第一步。</span></div><button class="btn alt" id="cleanup-btn" disabled>生成清理副本</button><div class="message" id="action-message" aria-live="polite"></div></section>
+<section class="card"><span class="num">03 · 证明真的改好</span><h2>拖入修改后的 PPT</h2><p>复检会告诉你哪些问题已解决、哪些仍存在，以及是否因为修改产生新问题。</p><label class="drop" id="verify-drop" role="button" tabindex="0"><input type="file" accept=".pptx"><b>点击或拖入修改后副本</b><span>只有复检通过，才会生成 PPTLint Verified 凭证</span></label><div class="result" id="verify-result" aria-live="polite"></div></section>
+</main><footer class="footer">PPTLint __VERSION__ · 会话关闭后自动删除临时文件 · 无统计 · 无遥测</footer></div>
+<script>
+const TOKEN=__TOKEN__;const state={deck:null};
+const opLabels={'clear-personal-metadata':'清除作者和最后编辑者信息','remove-comments':'移除批注','remove-speaker-notes':'移除讲者备注'};
+const modeLabels={'cleanup-copy':'PPTLint 可清理副本','guided-powerpoint':'适合自己调整','agent-rebuild':'适合 Ultimate 优化','human-decision':'需要你先确认'};
+function auth(){return{'X-PPTLint-Token':TOKEN}}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function downloads(items){return '<div class="downloads">'+(items||[]).map(x=>`<a href="${esc(x.url)}">${esc(x.label)}</a>`).join('')+'</div>'}
+function wireDrop(id,fn){const box=document.getElementById(id),input=box.querySelector('input');box.addEventListener('click',()=>input.click());box.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();input.click()}});input.addEventListener('change',()=>input.files[0]&&fn(input.files[0]));['dragenter','dragover'].forEach(e=>box.addEventListener(e,x=>{x.preventDefault();box.classList.add('drag')}));['dragleave','drop'].forEach(e=>box.addEventListener(e,x=>{x.preventDefault();box.classList.remove('drag')}));box.addEventListener('drop',e=>e.dataTransfer.files[0]&&fn(e.dataTransfer.files[0]))}
+async function api(path,opt={}){opt.headers={...(opt.headers||{}),...auth()};const r=await fetch(path,opt);const data=await r.json();if(!r.ok)throw new Error(data.error||'运行失败');return data}
+async function check(file){const card=document.getElementById('check-card');card.classList.add('spinner');try{const scenario=document.getElementById('scenario').value;const data=await api(`/api/check?filename=${encodeURIComponent(file.name)}&scenario=${scenario}`,{method:'POST',headers:{'Content-Type':'application/vnd.openxmlformats-officedocument.presentationml.presentation'},body:file});state.deck=data;renderCheck(data);renderActions(data)}catch(e){showError('check-result',e.message)}finally{card.classList.remove('spinner')}}
+function taskMarkup(t){const loc=t.slideIndex?`第 ${t.slideIndex} 页`:'整个文件',eligible=t.ultimateEligible;return `<details class="task"><summary><span></span><span class="task-title"><b>${loc} · ${esc(t.consequence)}</b><small>${esc(modeLabels[t.repairMode]||t.repairMode)} · 风险 ${esc(t.risk)}</small></span></summary><div class="task-body"><b>希望改成什么样</b><p>${esc(t.target)}</p><b>自己在 PowerPoint 里这样改</b><ol>${(t.steps||[]).map(step=>`<li>${esc(step)}</li>`).join('')}</ol><label class="task-route">${eligible?`<input class="ultimate-task" type="checkbox" value="${esc(t.taskId)}" checked>`:'<input type="checkbox" disabled>'}<span><b>${eligible?'同时交给 Ultimate 优化这一页':'这一项需要人工确认或由 PPTLint 清理'}</b><small>${eligible?'只改命中页，原文和页数保持不变。':'不会被一键优化擅自处理。'}</small></span></label></div></details>`}
+function renderCheck(d){const r=d.readiness||{},cls=r.status||'review',label={ready:'可以交付',review:'发送前再看一眼',blocked:'先处理再发送'}[cls]||'需要检查',tasks=d.tasks||[];document.getElementById('check-result').innerHTML=`<div class="status ${cls}"><div><b>${label}</b><div>${tasks.length} 项处理任务，逐项展开即可照着改</div></div></div><div class="metrics"><div class="metric"><span>辅助分数</span><strong>${d.score}</strong></div><div class="metric"><span>可一键优化</span><strong>${tasks.filter(t=>t.ultimateEligible).length}</strong></div><div class="metric"><span>需你判断</span><strong>${d.modeCounts['human-decision']||0}</strong></div></div><div class="tasks">${tasks.map(taskMarkup).join('')}</div>${downloads(d.downloads)}`;document.getElementById('check-result').classList.add('show');document.querySelectorAll('.ultimate-task').forEach(item=>item.addEventListener('change',updateUltimateCount));updateUltimateCount()}
+function renderActions(d){const box=document.getElementById('cleanup-checks'),ops=d.cleanupOperations||[];box.innerHTML=ops.length?ops.map(op=>`<label><input type="checkbox" value="${op}">${opLabels[op]}</label>`).join(''):'<span style="color:var(--muted)">没有可由 PPTLint 自动清理的项目。</span>';document.getElementById('cleanup-btn').disabled=!ops.length;document.getElementById('copy-btn').disabled=false;updateUltimateCount()}
+function selectedUltimateTasks(){return [...document.querySelectorAll('.ultimate-task:checked')].map(item=>item.value)}
+function updateUltimateCount(){const count=selectedUltimateTasks().length,button=document.getElementById('ultimate-btn');button.disabled=!state.deck||!count;button.textContent=`优化已选 ${count} 项`}
+function showMessage(text,html=false,error=false){const el=document.getElementById('action-message');el[html?'innerHTML':'textContent']=text;el.classList.toggle('error',error);el.classList.add('show')}
+async function cleanup(){const ops=[...document.querySelectorAll('#cleanup-checks input:checked')].map(x=>x.value);if(!ops.length){showMessage('请先勾选至少一项。',false,true);return}try{const data=await api('/api/fix',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({deckId:state.deck.deckId,operations:ops})});showMessage(`${data.passed?'清理并复检完成':'副本已生成，但仍有需处理的问题。'}${downloads(data.downloads)}`,true)}catch(e){showMessage(e.message,false,true)}}
+async function copyBrief(){await navigator.clipboard.writeText(state.deck.agentBrief);document.getElementById('copy-btn').textContent='已复制完整任务'}
+async function optimize(){const button=document.getElementById('ultimate-btn'),taskIds=selectedUltimateTasks();if(!taskIds.length)return;button.disabled=true;button.textContent='正在准备本地优化…';try{const data=await api('/api/ultimate-handoff',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({deckId:state.deck.deckId,taskIds})});if(!data.launched&&data.command){try{await navigator.clipboard.writeText(data.command)}catch{}}showMessage(data.launched?`已启动 Codex，只处理 ${data.taskCount} 项命中页。项目保存在：<code>${esc(data.projectPath)}</code>`:`Ultimate 项目已准备好，启动命令已复制。<code>${esc(data.command||'')}</code>`,true)}catch(e){showMessage(e.message,false,true)}finally{updateUltimateCount()}}
+async function verify(file){if(!state.deck){showError('verify-result','请先检查原 PPT。');return}try{const d=await api(`/api/verify?filename=${encodeURIComponent(file.name)}&deckId=${encodeURIComponent(state.deck.deckId)}`,{method:'POST',headers:{'Content-Type':'application/vnd.openxmlformats-officedocument.presentationml.presentation'},body:file});const label=d.passed?'复检通过 · PPTLint Verified':'复检未通过';document.getElementById('verify-result').innerHTML=`<div class="status ${d.passed?'':'review'}"><div><b>${label}</b><div>已完成 ${d.completed} · 仍存在 ${d.remaining} · 无法确认 ${d.unable} · 回归 ${d.regressions}</div></div></div>${downloads(d.downloads)}`;document.getElementById('verify-result').classList.add('show')}catch(e){showError('verify-result',e.message)}}
+function showError(id,msg){const el=document.getElementById(id);el.innerHTML=`<div class="status blocked"><b>${esc(msg)}</b></div>`;el.classList.add('show')}
+wireDrop('check-drop',check);wireDrop('verify-drop',verify);document.getElementById('cleanup-btn').addEventListener('click',cleanup);document.getElementById('copy-btn').addEventListener('click',copyBrief);document.getElementById('ultimate-btn').addEventListener('click',optimize);
+</script></body></html>'''
     return template.replace("__TOKEN__", json.dumps(token)).replace("__VERSION__", __version__)
 
 
@@ -272,6 +475,8 @@ class _Handler(BaseHTTPRequestHandler):
                 self._check(parsed)
             elif parsed.path == "/api/fix":
                 self._fix()
+            elif parsed.path == "/api/ultimate-handoff":
+                self._ultimate_handoff()
             elif parsed.path == "/api/verify":
                 self._verify(parsed)
             elif parsed.path == "/api/shutdown":
@@ -350,6 +555,44 @@ class _Handler(BaseHTTPRequestHandler):
         }
         receipt_path.write_text(json.dumps(receipt, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")
         self._json({"passed": passed, "downloads": [_download_item(self.server.session, output, "清理后 PPTX"), _download_item(self.server.session, receipt_path, "清理回执"), _download_item(self.server.session, comparison_paths[0], "清理前后对比") ]})
+
+    def _ultimate_handoff(self) -> None:
+        body = json.loads(self._body())
+        if not isinstance(body, dict):
+            raise ValueError("优化请求必须是 JSON 对象。")
+        deck_id = str(body.get("deckId", ""))
+        record = self.server.session.decks.get(deck_id)
+        if record is None:
+            raise ValueError("请先检查原 PPT。")
+        task_ids = body.get("taskIds")
+        if (
+            not isinstance(task_ids, list)
+            or not task_ids
+            or not all(isinstance(item, str) for item in task_ids)
+        ):
+            raise ValueError("请至少选择一项可由 Ultimate 优化的任务。")
+        selected_ids = set(task_ids)
+        tasks = _ultimate_tasks(record, selected_ids)
+        if len(tasks) != len(selected_ids):
+            raise ValueError("所选任务中包含不适合一键优化的高风险项目。")
+        health = _bridge_json("/health")
+        handoff = _bridge_json("/handoff", payload=_ultimate_handoff_payload(record, tasks))
+        project_path = str(handoff.get("projectPath", ""))
+        if not project_path:
+            raise ValueError("Ultimate Bridge 未返回本地项目路径。")
+        launch = _bridge_json(
+            "/agent/launch", payload={"projectPath": project_path, "agent": "codex"}
+        )
+        self._json(
+            {
+                "ok": True,
+                "taskCount": len(tasks),
+                "projectPath": project_path,
+                "launched": bool(launch.get("launched")),
+                "command": str(launch.get("command", "")),
+                "bridgeVersion": str(health.get("version", "")),
+            }
+        )
 
     def _verify(self, parsed) -> None:
         query = parse_qs(parsed.query)

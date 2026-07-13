@@ -250,7 +250,8 @@ def _repair_controls(finding: dict[str, object], *, zh: bool) -> str:
     brief = (
         f"PPTLint 修复任务。位置：{location}。问题：{finding.get('impact', '')}"
         f"。目标：{target}。建议步骤：{step_text}"
-        "。只修改独立副本；处理后重新运行 PPTLint，确认原问题消失且没有新增高把握问题。"
+        "。只修改这一处命中页面，锁定全部原文、数字、页数和其他页面。"
+        "只修改独立副本；处理后重新运行 PPTLint，确认原问题消失且没有新增高把握问题。"
         if zh
         else f"PPTLint repair task. Location: {location}. Problem: {finding.get('impact', '')}. "
         f"Target: {finding.get('remediation', '')}. Suggested steps: {step_text}. "
@@ -258,7 +259,7 @@ def _repair_controls(finding: dict[str, object], *, zh: bool) -> str:
     )
     copy_button = (
         f'<button type="button" class="repair-copy" data-copy="{_escape(brief)}">'
-        f'{"复制给助手处理" if zh else "Copy for an assistant"}</button>'
+        f'{"复制给 Ultimate 优化" if zh and "ultimate-ppt-master" in recipe.executors else "复制给助手处理" if zh else "Copy for an assistant"}</button>'
     )
     label = {
         "cleanup-copy": "PPTLint 可以清理副本" if zh else "PPTLint can clean a copy",
@@ -549,10 +550,10 @@ def _render_html(report: dict[str, object]) -> str:
 <style>
 :root{{--ink:#172033;--paper:#f4f0e7;--panel:#fffdf8;--muted:#667085;--critical:#b42318;--high:#d92d20;--medium:#dc6803;--low:#175cd3}}
 *{{box-sizing:border-box}}body{{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}}
-main{{max-width:1240px;margin:auto;padding:48px 24px 80px}}.hero{{display:grid;grid-template-columns:1fr auto;gap:28px;align-items:end;border-bottom:2px solid var(--ink);padding-bottom:28px}}
+main{{width:min(1240px,100%);margin:auto;padding:48px 24px 80px;overflow:hidden}}.hero{{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:28px;align-items:end;border-bottom:2px solid var(--ink);padding-bottom:28px}}
 .eyebrow{{font:700 12px/1.2 ui-monospace,monospace;letter-spacing:.12em;text-transform:uppercase;color:#8a3d22}}h1{{font-size:clamp(34px,6vw,72px);line-height:.95;margin:10px 0 12px;max-width:13ch}}.hero p{{color:var(--muted);margin:0}}
 .scores{{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:16px 0}}.score-card{{background:var(--panel);border:1px solid #d6d0c4;padding:16px}}.score-card span{{display:block;color:var(--muted);font-size:12px}}.score-card strong{{font-size:28px}}.secondary-score{{background:#ebe6dc;padding:14px 18px;margin:0 0 36px}}.secondary-score>summary{{font-weight:700;cursor:pointer}}.secondary-score>p{{color:var(--muted)}}
-.readiness{{display:grid;grid-template-columns:minmax(260px,.7fr) minmax(360px,1.3fr);gap:28px;margin:28px 0;background:var(--panel);border-left:8px solid #175cd3;padding:24px}}.readiness-blocked{{border-color:var(--critical)}}.readiness-review{{border-color:var(--medium)}}.readiness-ready{{border-color:#18794e}}.readiness h2{{font-size:44px;margin:4px 0}}.readiness p{{color:var(--muted)}}.priority h3{{margin-top:0}}.priority>ul>li{{padding:10px 0;border-top:1px solid #ded8cd}}.priority span{{font:700 11px ui-monospace,monospace;text-transform:uppercase;color:var(--muted)}}.priority strong{{display:block}}.priority ol,.fix-steps{{margin:6px 0 0;padding-left:20px;color:var(--muted)}}.impact{{font-weight:700;color:var(--ink)!important}}
+.readiness{{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:28px;margin:28px 0;background:var(--panel);border-left:8px solid #175cd3;padding:24px}}.readiness-blocked{{border-color:var(--critical)}}.readiness-review{{border-color:var(--medium)}}.readiness-ready{{border-color:#18794e}}.readiness h2{{font-size:44px;margin:4px 0}}.readiness p{{color:var(--muted)}}.priority{{min-width:0}}.priority h3{{margin-top:0}}.priority>ul>li{{padding:10px 0;border-top:1px solid #ded8cd;overflow-wrap:anywhere}}.priority span{{font:700 11px ui-monospace,monospace;text-transform:uppercase;color:var(--muted)}}.priority strong{{display:block}}.priority ol,.fix-steps{{margin:6px 0 0;padding-left:20px;color:var(--muted)}}.impact{{font-weight:700;color:var(--ink)!important}}
 .checklist{{margin:28px 0}}.checklist>header h2{{font-size:clamp(26px,4vw,42px);margin:5px 0 18px}}.checklist>div{{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}}.check{{background:var(--panel);border-top:5px solid #18794e;padding:18px}}.check-review{{border-color:var(--medium)}}.check-fix{{border-color:var(--critical)}}.check span{{font-weight:800;font-size:12px}}.check h3{{margin:7px 0}}.check p{{color:var(--muted);min-height:68px}}.check small{{color:var(--muted)}}
 .handoff{{margin:28px 0}}.handoff h2{{font-size:clamp(25px,3vw,36px);margin:6px 0 16px}}.handoff>div{{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}}.handoff article{{background:var(--panel);padding:15px;border-top:3px solid var(--ink)}}.handoff span,.handoff b{{display:block}}.handoff span{{font-size:11px;color:var(--muted)}}.handoff b{{font-size:21px;margin-top:5px}}
 .notice{{padding:12px 16px;background:#fff3d6;border-left:4px solid var(--medium);margin-bottom:24px}}.slide-grid{{display:grid;gap:28px}}.slide-card{{display:grid;grid-template-columns:minmax(360px,1.1fr) minmax(300px,.9fr);gap:24px;background:var(--panel);border:1px solid #d6d0c4;padding:20px}}

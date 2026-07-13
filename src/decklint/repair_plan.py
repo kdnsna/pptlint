@@ -10,6 +10,22 @@ from .repair_catalog import RepairRecipe, recipe_for
 
 ADAPTERS = ("generic-agent", "ultimate-ppt-master", "powerpoint-copilot", "powerpoint-manual")
 
+ZH_REPAIR_TARGETS = {
+    "readability.off-canvas-text": "文字完整留在安全边距内，并与同页对象对齐。",
+    "readability.text-overlap": "对象互不遮挡，间距统一，页面仍有清楚的视觉主次。",
+    "readability.text-clipping-risk": "全部文字完整显示，字号和文本框尺寸不再依赖自动压缩。",
+    "readability.font-portability-risk": "使用目标电脑可用的字体，换机后不换行、不跑版。",
+    "readability.small-font": "在目标观看距离下清楚可读，正文层级在整套 PPT 中保持一致。",
+    "readability.low-contrast": "文字与背景有稳定对比，在投影变灰或环境较亮时仍能看清。",
+    "readability.dense-text": "原文不丢失，同时让页面只有一个重点，并形成可快速扫描的层级。",
+    "editability.full-slide-image": "关键文字、数字、图表和形状恢复为可选择、可修改的原生对象。",
+    "consistency.font-outlier": "意外字体回到整套既定字体体系，标题和正文层级保持统一。",
+    "consistency.repeated-layout": "保留整套视觉语言，同时让连续页面的结构节奏有明确变化。",
+    "policy.font-not-allowed": "所有文字使用品牌或交付规范允许的字体。",
+    "policy.font-size-below-minimum": "所有文字达到交付规范要求的最小字号且完整显示。",
+    "policy.color-not-allowed": "颜色回到品牌规范，同时保留清楚的层级与对比。",
+}
+
 
 def _object(container: dict[str, object], key: str) -> dict[str, object]:
     value = container.get(key)
@@ -55,7 +71,11 @@ def _task(finding: dict[str, object], source_sha256: str, *, zh: bool) -> dict[s
     steps = finding.get("fixSteps")
     if not isinstance(steps, list) or not all(isinstance(step, str) for step in steps):
         steps = [str(finding.get("remediation") or "Review this item before changing the file.")]
-    target = steps[0] if zh and steps else str(finding.get("remediation") or steps[0])
+    target = (
+        ZH_REPAIR_TARGETS.get(rule_id, steps[1] if len(steps) > 1 else steps[0])
+        if zh and steps
+        else str(finding.get("remediation") or steps[0])
+    )
     return {
         "taskId": _task_id(finding),
         "findingId": str(finding.get("id", "")),

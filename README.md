@@ -47,7 +47,9 @@ uvx pptlint check output.pptx --scenario present --lang zh-CN
 uvx --refresh pptlint app
 ```
 
-它会在随机的 `127.0.0.1` 端口打开中文页面。文件只进入本机临时目录，关闭后删除；页面不会请求外部字体、统计、模型或接口。
+它会在随机的 `127.0.0.1` 端口打开中文页面。检查后，每项问题都会同时给出 PowerPoint 桌面版人工步骤；适合局部重排的命中页可交给本机 Ultimate PPT Master Bridge 优化，原文、数字、页数、顺序和其他页面默认锁定。Bridge 未运行或未允许启动 Agent 时，页面会降级为可复制命令。
+
+文件只进入本机临时目录，关闭后删除；页面不会请求外部字体、统计或云端模型。只有你主动点击“交给 Ultimate 优化”时，原 PPT 和所选修复任务才会写入本机 Ultimate handoff 目录。
 
 ## 从发现问题到复检通过
 

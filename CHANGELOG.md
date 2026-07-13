@@ -2,6 +2,13 @@
 
 This file separates versions that were actually published from internal development milestones that never had a PyPI release or Git tag.
 
+## Unreleased
+
+- Turn every local-app finding into a visible outcome plus concrete PowerPoint desktop steps instead of hiding the useful guidance in downloaded reports.
+- Let users choose between manual adjustment and targeted Ultimate PPT Master repair while locking exact text, numbers, slide count, order, and all unselected slides.
+- Reuse the existing loopback Ultimate Bridge and Agent launch contracts; fall back to a copyable command when the Bridge or auto-launch is unavailable.
+- Improve desktop/mobile hierarchy and report wrapping without changing checking rules, CLI commands, or published JSON schemas.
+
 ## Published releases
 
 ### 1.3.1 — 2026-07-13
