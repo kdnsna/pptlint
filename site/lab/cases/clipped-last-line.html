@@ -5,6 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="最后一行，在另一台电脑上消失了：字体替换后文字重新换行，文本框高度没变，结论被截掉。">
   <link rel="canonical" href="https://kdnsna.github.io/pptlint/lab/cases/clipped-last-line.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="最后一行，在另一台电脑上消失了 · PPTLint 案例">
+  <meta property="og:description" content="字体替换后文字重新换行，文本框高度没变，结论被截掉。">
+  <meta property="og:url" content="https://kdnsna.github.io/pptlint/lab/cases/clipped-last-line.html">
+  <meta property="og:image" content="https://kdnsna.github.io/pptlint/assets/pptlint-before-after-hero.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="最后一行，在另一台电脑上消失了 · PPTLint 案例">
+  <meta name="twitter:description" content="字体替换后文字重新换行，文本框高度没变，结论被截掉。">
+  <meta name="twitter:image" content="https://kdnsna.github.io/pptlint/assets/pptlint-before-after-hero.png">
   <title>最后一行，在另一台电脑上消失了 · PPTLint 案例</title>
   <link rel="icon" href="../../favicon.svg">
   <link rel="stylesheet" href="../../shared.css">
@@ -14,15 +23,15 @@
     <div class="container nav__inner">
       <a class="nav__logo" href="../../">PPTLINT</a>
       <div class="nav__links">
-        <a class="nav__link" href="../../">产品首页</a>
-        <a class="nav__link" href="../">案例实验室</a>
+        <a class="nav__link" href="../../">首页</a>
+        <a class="nav__link" href="../" aria-current="page">案例</a>
         <a class="nav__link" href="../../proof-loop/comparison.html">Proof Loop</a>
         <a class="nav__link" href="https://github.com/kdnsna/pptlint">GitHub</a>
       </div>
     </div>
   </nav>
 
-  <header class="case-hero">
+  <main><header class="case-hero">
     <div class="container">
       <span class="case-hero__kicker reveal">现场可读性 · 可控演示</span>
       <h1 class="case-hero__title reveal">最后一行，在另一台电脑上消失了</h1>
@@ -53,7 +62,7 @@
               <span class="score-badge score-badge--bad">74<small>修改前</small></span>
             </figure>
             <div class="deck__arrow">
-              <span class="deck__arrow-chip">PPTLint 检查 + 人工处理</span>
+              <span class="deck__arrow-chip">检查 → 按计划修改 → 复检</span>
               <span class="deck__arrow-line">→</span>
             </div>
             <figure class="pslide pslide--after">
@@ -61,8 +70,8 @@
               <div class="pslide__body">
                 <div class="pslide__brandbar"></div>
                 <div class="pslide__kicker">已按报告处理</div>
-                <div class="pslide__headline">结论先行，一眼看懂</div>
-                <div class="pslide__sub">现场可读 · 层次清晰</div>
+                <div class="pslide__headline">末行完整显示</div>
+                <div class="pslide__sub">留足高度 · 换机复测</div>
                 <div class="pslide__cleanchart"><i style="height:46%"></i><i style="height:62%"></i><i style="height:74%"></i><i style="height:100%"></i></div>
               </div>
               <span class="pslide__flag pslide__flag--good">复检通过</span>
@@ -74,7 +83,7 @@
       </div>
       <div class="case-finding reveal">
         <div class="case-finding__item"><strong>PPTLint 发现</strong>末行超出文本框，存在截断风险</div>
-        <div class="case-finding__item"><strong>人工处理</strong>精简文字并留出安全高度</div>
+        <div class="case-finding__item"><strong>处理结果</strong>精简文字并留出安全高度</div>
       </div>
     </div>
   </section>
@@ -90,18 +99,18 @@
           <p class="step__body">末行超出文本框，存在截断风险</p>
         </div>
         <div class="step reveal">
-          <div class="step__num">02 · 人工处理</div>
-          <h3 class="step__title">处理后复检</h3>
-          <p class="step__body">精简文字并留出安全高度</p>
+          <div class="step__num">02 · 选择处理方式</div>
+          <h3 class="step__title">交给人或 Agent 重建、重排</h3>
+          <p class="step__body">推荐：PowerPoint、通用 Agent、Ultimate PPT Master。精简文字并留出安全高度</p>
         </div>
         <div class="step reveal">
           <div class="step__num">03 · 同场景复检</div>
-          <h3 class="step__title">复检命令</h3>
-          <p class="step__body"><code>pptlint check deck.pptx --scenario present --lang zh-CN</code></p>
+          <h3 class="step__title">验收方式</h3>
+          <p class="step__body">原问题消失，不新增高置信问题，原文件保持不变。<br><code>pptlint check deck.pptx --scenario present --lang zh-CN</code></p>
         </div>
       </div>
       <div class="disclosure reveal" style="margin-top:24px;">
-        规则：<code>readability.text-clipping-risk</code>。PPTLint 不会替你改文件，也不会把审美偏好当成错误来报。本页是一个可控演示，用来说明这条规则在真实交付里是怎么检查、边界在哪里。
+        规则：<code>readability.text-clipping-risk</code> · 处理方式：<code>agent-rebuild</code>。PPTLint 负责发现和复检；只有明确标为可清理的内容，才会在授权后写入独立副本。 本页是可控演示，不是客户证言；PPTLint 也不会把审美偏好当成错误。
       </div>
     </div>
   </section>
@@ -119,7 +128,7 @@
         </div>
       </div>
     </div>
-  </section>
+  </section></main>
 
   <footer class="footer">
     <div class="container">

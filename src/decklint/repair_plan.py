@@ -49,19 +49,20 @@ def _acceptance(finding: dict[str, object], source_sha256: str) -> list[dict[str
     ]
 
 
-def _task(finding: dict[str, object], source_sha256: str) -> dict[str, object]:
+def _task(finding: dict[str, object], source_sha256: str, *, zh: bool) -> dict[str, object]:
     rule_id = str(finding.get("rule_id", ""))
     recipe: RepairRecipe = recipe_for(rule_id)
     steps = finding.get("fixSteps")
     if not isinstance(steps, list) or not all(isinstance(step, str) for step in steps):
         steps = [str(finding.get("remediation") or "Review this item before changing the file.")]
+    target = steps[0] if zh and steps else str(finding.get("remediation") or steps[0])
     return {
         "taskId": _task_id(finding),
         "findingId": str(finding.get("id", "")),
         "ruleId": rule_id,
         "location": _location(finding),
         "consequence": str(finding.get("impact") or finding.get("message") or ""),
-        "target": str(finding.get("remediation") or steps[0]),
+        "target": target,
         "steps": steps,
         "repairMode": recipe.mode,
         "risk": recipe.risk,
@@ -76,7 +77,10 @@ def build_repair_plan(report: dict[str, object]) -> dict[str, object]:
     if not isinstance(findings, list) or not all(isinstance(item, dict) for item in findings):
         raise ValueError("Report findings must be an object array")
     source_sha256 = str(file_info.get("sha256", ""))
-    tasks = [_task(finding, source_sha256) for finding in findings]
+    tasks = [
+        _task(finding, source_sha256, zh=report.get("language") == "zh-CN")
+        for finding in findings
+    ]
     tasks.sort(
         key=lambda item: (
             int(_object(item, "location").get("slideIndex") or 0),

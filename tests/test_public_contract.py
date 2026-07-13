@@ -125,18 +125,18 @@ def test_readme_leads_with_single_product_promise() -> None:
     assert "uvx pptlint check" in readme
     assert "不上传文件" in readme
     assert not {"门禁", "回归", "Schema", "finding"} & set(first_screen.split())
-    assert "README.zh-CN.md" in readme
+    assert "README.en.md" in readme
     assert "https://kdnsna.github.io/pptlint/lab/" in readme
     assert "proof-loop/comparison.html" in readme
 
 
 def test_english_readme_and_skill_keep_the_full_workflow() -> None:
-    readme = (ROOT / "README.zh-CN.md").read_text(encoding="utf-8")
+    readme = (ROOT / "README.en.md").read_text(encoding="utf-8")
     first_screen = "\n".join(readme.splitlines()[:100])
     skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
 
-    assert "Do not send the PowerPoint yet" in first_screen
-    assert "safe to send" in readme
+    assert "Do not send a finished PowerPoint" in first_screen
+    assert "delivery preflight" in readme
     assert "pptlint check" in first_screen
     assert not {"regression", "schema", "finding", "quality gate"} & set(first_screen.lower().split())
     assert "pptlint proof" in readme
@@ -166,8 +166,9 @@ def test_benchmark_page_is_reproducible_and_does_not_claim_a_winner() -> None:
     assert len(config["projects"]) == 5
     assert len(config["tasks"]) == 3
     assert len(plan["runs"]) == 45
-    assert "No overall winner" in page
-    assert "Results will appear only after" in page
+    assert 'name="robots" content="noindex,nofollow"' in page
+    assert "Research plan only" in page
+    assert "45 controlled runs are still pending" in page
     assert all(project["repository"] in page for project in config["projects"])
 
 

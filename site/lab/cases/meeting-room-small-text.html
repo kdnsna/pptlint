@@ -5,6 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="电脑上清楚，会议室后排看不见：12 号正文塞进投影页，坐远两排就只剩一片灰。">
   <link rel="canonical" href="https://kdnsna.github.io/pptlint/lab/cases/meeting-room-small-text.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="电脑上清楚，会议室后排看不见 · PPTLint 案例">
+  <meta property="og:description" content="12 号正文塞进投影页，坐远两排就只剩一片灰。">
+  <meta property="og:url" content="https://kdnsna.github.io/pptlint/lab/cases/meeting-room-small-text.html">
+  <meta property="og:image" content="https://kdnsna.github.io/pptlint/assets/pptlint-before-after-hero.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="电脑上清楚，会议室后排看不见 · PPTLint 案例">
+  <meta name="twitter:description" content="12 号正文塞进投影页，坐远两排就只剩一片灰。">
+  <meta name="twitter:image" content="https://kdnsna.github.io/pptlint/assets/pptlint-before-after-hero.png">
   <title>电脑上清楚，会议室后排看不见 · PPTLint 案例</title>
   <link rel="icon" href="../../favicon.svg">
   <link rel="stylesheet" href="../../shared.css">
@@ -14,15 +23,15 @@
     <div class="container nav__inner">
       <a class="nav__logo" href="../../">PPTLINT</a>
       <div class="nav__links">
-        <a class="nav__link" href="../../">产品首页</a>
-        <a class="nav__link" href="../">案例实验室</a>
+        <a class="nav__link" href="../../">首页</a>
+        <a class="nav__link" href="../" aria-current="page">案例</a>
         <a class="nav__link" href="../../proof-loop/comparison.html">Proof Loop</a>
         <a class="nav__link" href="https://github.com/kdnsna/pptlint">GitHub</a>
       </div>
     </div>
   </nav>
 
-  <header class="case-hero">
+  <main><header class="case-hero">
     <div class="container">
       <span class="case-hero__kicker reveal">现场可读性 · 可控演示</span>
       <h1 class="case-hero__title reveal">电脑上清楚，会议室后排看不见</h1>
@@ -75,7 +84,7 @@
               <span class="score-badge score-badge--bad">67<small>修改前</small></span>
             </figure>
             <div class="deck__arrow">
-              <span class="deck__arrow-chip">PPTLint 检查 + 人工处理</span>
+              <span class="deck__arrow-chip">检查 → 按计划修改 → 复检</span>
               <span class="deck__arrow-line">→</span>
             </div>
             <figure class="pslide pslide--after">
@@ -96,7 +105,7 @@
       </div>
       <div class="case-finding reveal">
         <div class="case-finding__item"><strong>PPTLint 发现</strong>一页 268 字，最小字号 12 pt</div>
-        <div class="case-finding__item"><strong>人工处理</strong>结论先行，正文拆页，最小字号 18 pt</div>
+        <div class="case-finding__item"><strong>处理结果</strong>结论先行，正文拆页，最小字号 18 pt</div>
       </div>
     </div>
   </section>
@@ -112,18 +121,18 @@
           <p class="step__body">一页 268 字，最小字号 12 pt</p>
         </div>
         <div class="step reveal">
-          <div class="step__num">02 · 人工处理</div>
-          <h3 class="step__title">处理后复检</h3>
-          <p class="step__body">结论先行，正文拆页，最小字号 18 pt</p>
+          <div class="step__num">02 · 选择处理方式</div>
+          <h3 class="step__title">在 PowerPoint 中按步骤处理</h3>
+          <p class="step__body">推荐：PowerPoint、通用 Agent、Ultimate PPT Master。结论先行，正文拆页，最小字号 18 pt</p>
         </div>
         <div class="step reveal">
           <div class="step__num">03 · 同场景复检</div>
-          <h3 class="step__title">复检命令</h3>
-          <p class="step__body"><code>pptlint check deck.pptx --scenario present --lang zh-CN</code></p>
+          <h3 class="step__title">验收方式</h3>
+          <p class="step__body">原问题消失，不新增高置信问题，原文件保持不变。<br><code>pptlint check deck.pptx --scenario present --lang zh-CN</code></p>
         </div>
       </div>
       <div class="disclosure reveal" style="margin-top:24px;">
-        规则：<code>readability.small-font</code>。PPTLint 不会替你改文件，也不会把审美偏好当成错误来报。本页是一个可控演示，用来说明这条规则在真实交付里是怎么检查、边界在哪里。
+        规则：<code>readability.small-font</code> · 处理方式：<code>guided-powerpoint</code>。PPTLint 负责发现和复检；只有明确标为可清理的内容，才会在授权后写入独立副本。 本页是可控演示，不是客户证言；PPTLint 也不会把审美偏好当成错误。
       </div>
     </div>
   </section>
@@ -141,7 +150,7 @@
         </div>
       </div>
     </div>
-  </section>
+  </section></main>
 
   <footer class="footer">
     <div class="container">

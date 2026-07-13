@@ -1,6 +1,6 @@
 {
   "schemaVersion": "pptlint-public-sample-validation/v1",
-  "toolVersion": "1.3.0",
+  "toolVersion": "1.3.1",
   "manifest": "public-sample-sources.json",
   "summary": {
     "declaredSamples": 33,

@@ -43,11 +43,14 @@ def test_case_lab_recheck_command_matches_cli_contract() -> None:
 
 def test_case_lab_has_attributed_market_audits() -> None:
     data = json.loads((ROOT / "site" / "lab" / "cases.json").read_text(encoding="utf-8"))
-    audits = data["marketAudits"]
+    audits = data["featuredSamples"]
     assert len(audits) >= 4
-    assert all(str(audit["source"]).startswith("https://github.com/") for audit in audits)
-    assert all(str(audit["sourceFile"]).endswith(".pptx") for audit in audits)
     assert all(len(audit["sha256"]) == 64 for audit in audits)
+    validation = json.loads(
+        (ROOT / "validation" / "public-sample-validation.json").read_text(encoding="utf-8")
+    )
+    known = {item["sha256"] for item in validation["results"]}
+    assert {audit["sha256"] for audit in audits} <= known
 
 
 def test_generated_case_lab_is_current() -> None:

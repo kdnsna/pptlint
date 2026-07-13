@@ -7,6 +7,13 @@
   <link rel="canonical" href="https://kdnsna.github.io/pptlint/">
   <meta property="og:title" content="PPT 发出去之前，先检查一次">
   <meta property="og:description" content="你电脑上看着好好的 PPT，换台电脑或一投屏可能就散了。PPTLint 在本地默认只读检查，不上传、不改原文件。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kdnsna.github.io/pptlint/">
+  <meta property="og:image" content="https://kdnsna.github.io/pptlint/assets/pptlint-before-after-hero.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="PPT 发出去之前，先检查一次">
+  <meta name="twitter:description" content="本地检查 PPTX 的交付风险，生成修复任务，修改后再验证。">
+  <meta name="twitter:image" content="https://kdnsna.github.io/pptlint/assets/pptlint-before-after-hero.png">
   <title>PPTLint — PPT 发出去之前，先检查一次</title>
   <link rel="icon" href="favicon.svg">
   <link rel="stylesheet" href="shared.css">
@@ -16,7 +23,8 @@
     <div class="container nav__inner">
       <a class="nav__logo" href="./">PPTLINT</a>
       <div class="nav__links">
-        <a class="nav__link" href="lab/">12 个真实案例</a>
+        <a class="nav__link" href="./" aria-current="page">首页</a>
+        <a class="nav__link" href="lab/">案例</a>
         <a class="nav__link" href="proof-loop/comparison.html">Proof Loop</a>
         <a class="nav__link" href="https://github.com/kdnsna/pptlint">GitHub</a>
         <a class="nav__cta" href="#start">检查我的 PPT</a>
@@ -24,7 +32,7 @@
     </div>
   </nav>
 
-  <header class="hero">
+  <main><header class="hero">
     <div class="container">
       <p class="hero__eyebrow reveal">发出去之前的最后一道关</p>
       <h1 class="hero__title reveal">在你电脑上好好的，<br>到了会议室可能已经散了。</h1>
@@ -45,7 +53,7 @@
       <!-- PPT 展示容器：真实幻灯片模板 修改前 → 修改后 -->
       <div class="showcase reveal reveal--scale">
         <div class="showcase__stage">
-          <span class="showcase__eyebrow">同一份 9 页 PPT · 一次完整检查与修复</span>
+          <span class="showcase__eyebrow">同一份 9 页 PPT · 检查 → 按计划修改 → 复检</span>
           <div class="deck">
             <!-- 修改前：拥挤、低对比、杂乱 -->
             <figure class="pslide pslide--before">
@@ -66,7 +74,7 @@
             </figure>
 
             <div class="deck__arrow">
-              <span class="deck__arrow-chip">PPTLint 检查 + 修复</span>
+              <span class="deck__arrow-chip">检查 → 修改 → 复检</span>
               <span class="deck__arrow-line">→</span>
             </div>
 
@@ -84,7 +92,7 @@
               <span class="score-badge score-badge--good">100<small>修改后</small></span>
             </figure>
           </div>
-          <p class="showcase__caption">基于一份真实的 9 页可编辑 PPTX，按当前规则完整检查与修复：<b>83 → 100</b></p>
+          <p class="showcase__caption">真实 9 页可编辑 PPTX：<b>83 → 100</b>。100 分仍有低置信提醒需要人工确认。</p>
         </div>
       </div>
     </div>
@@ -159,69 +167,31 @@
   <section class="section section--white">
     <div class="container">
       <h2 class="section__title reveal">不是漂亮的演示数字：改前改后的文件全都公开</h2>
-      <p class="section__desc reveal">我们拿同一份 9 页可编辑 PPT 做了完整检查。第一遍得 83 分；照着报告处理之后，拿到 100 分。原有 103 项问题已处理，未引入新的高置信阻断问题。</p>
-      <div class="metrics reveal" style="margin-bottom: 32px;">
+      <p class="section__desc reveal">我们拿同一份 9 页可编辑 PPT 做了完整闭环。103 项高置信问题得到处理；同时把仍需人工确认和修改后新出现的低置信提示完整公开。</p>
+      <div class="metrics metrics--proof reveal" style="margin-bottom: 32px;">
         <div class="metric">
           <span class="metric__value">83 → 100</span>
           <span class="metric__label">同一份 PPT，改前改后</span>
         </div>
         <div class="metric">
           <span class="metric__value" data-count="103">103</span>
-          <span class="metric__label">原有问题与提醒被处理</span>
+          <span class="metric__label">高置信问题已处理</span>
+        </div>
+        <div class="metric">
+          <span class="metric__value" data-count="21">21</span>
+          <span class="metric__label">低置信提醒仍需确认</span>
+        </div>
+        <div class="metric">
+          <span class="metric__value" data-count="3">3</span>
+          <span class="metric__label">新增低置信提示</span>
         </div>
         <div class="metric metric--success">
           <span class="metric__value" data-count="0">0</span>
-          <span class="metric__label">新增高把握问题</span>
-        </div>
-        <div class="metric metric--success">
-          <span class="metric__value">PASS</span>
-          <span class="metric__label">high 回归门禁</span>
+          <span class="metric__label">新增高置信问题</span>
         </div>
       </div>
 
-      <!-- 报告前后对比：展示容器复用 -->
-      <div class="showcase showcase--report reveal reveal--scale" style="margin-top: 8px;">
-        <div class="showcase__stage">
-          <span class="showcase__eyebrow">改前 / 改后 · 两份可打开的 HTML 报告</span>
-          <div class="deck">
-            <figure class="pslide pslide--before" style="transform: rotate(-1deg);">
-              <div class="pslide__chrome"><span></span><span></span><span></span><em>report_before.html</em></div>
-              <div class="pslide__body">
-                <div class="pslide__kicker" style="color:#EF4444;">改造前报告 · 83 分</div>
-                <div class="report-lines">
-                  <div class="rl"><b>critical</b><span class="bar"><i style="width:60%;background:#EF4444;"></i></span><span class="n" style="color:#EF4444;">9</span></div>
-                  <div class="rl"><b>high</b><span class="bar"><i style="width:100%;background:#EF4444;"></i></span><span class="n" style="color:#EF4444;">92</span></div>
-                  <div class="rl"><b>medium</b><span class="bar"><i style="width:6%;background:#F59E0B;"></i></span><span class="n">0</span></div>
-                  <div class="rl"><b>low</b><span class="bar"><i style="width:12%;background:#9CA3AF;"></i></span><span class="n">2</span></div>
-                </div>
-              </div>
-              <span class="score-badge score-badge--bad" style="top:40px;">83</span>
-            </figure>
-
-            <div class="deck__arrow">
-              <span class="deck__arrow-chip">定向修复后复检</span>
-              <span class="deck__arrow-line">→</span>
-            </div>
-
-            <figure class="pslide pslide--after" style="transform: rotate(1deg);">
-              <div class="pslide__chrome"><span></span><span></span><span></span><em>report_after.html</em></div>
-              <div class="pslide__body">
-                <div class="pslide__kicker" style="color:#10B981;">改造后报告 · 100 分</div>
-                <div class="report-lines">
-                  <div class="rl"><b>critical</b><span class="bar"><i style="width:0%;"></i></span><span class="n" style="color:#10B981;">0</span></div>
-                  <div class="rl"><b>high</b><span class="bar"><i style="width:0%;"></i></span><span class="n" style="color:#10B981;">0</span></div>
-                  <div class="rl"><b>medium</b><span class="bar"><i style="width:0%;"></i></span><span class="n" style="color:#10B981;">0</span></div>
-                  <div class="rl"><b>low</b><span class="bar"><i style="width:0%;"></i></span><span class="n" style="color:#10B981;">0</span></div>
-                </div>
-              </div>
-              <span class="score-badge score-badge--good" style="top:40px;">100</span>
-            </figure>
-          </div>
-          <p class="showcase__caption">两份报告都能在浏览器里直接打开，逐条核对每一项 finding。</p>
-        </div>
-      </div>
-
-      <p class="note reveal">100 分只代表这次规则检查通过，不代表审美满分，也不代表绝对零风险。</p>
+      <div class="disclosure reveal"><strong>为什么 100 分还是“建议确认”？</strong><br>分数只扣除高置信问题。修改后仍有 21 项持续存在和 3 项新出现的低置信提醒，需要人判断；因此它不是“所有问题为 0”，也不是绝对安全证明。</div>
       <div class="link-strip reveal" style="margin-top: 28px;">
         <a href="lab/">看 12 个前后对比案例 →</a>
         <a href="proof-loop/comparison.html">打开完整的改前改后报告 →</a>
@@ -229,7 +199,7 @@
         <a href="proof-loop/after.pptx">下载改造后 PPTX →</a>
       </div>
     </div>
-  </section>
+  </section></main>
 
   <footer class="footer">
     <div class="container">
@@ -248,12 +218,11 @@
   <script>
     function copyPrompt() {
       const text = '请安装最新版 PPTLint，运行 pptlint app，帮我打开本地中文拖放页面。不要上传 PPT，不要修改原文件。';
-      navigator.clipboard.writeText(text).then(() => {
-        const btn = document.querySelector('.prompt-card .btn');
-        const original = btn.textContent;
-        btn.textContent = '已复制到剪贴板';
-        setTimeout(() => btn.textContent = original, 1600);
-      });
+      const btn = document.querySelector('.prompt-card .btn');
+      const original = btn.textContent;
+      const update = message => { btn.textContent = message; setTimeout(() => btn.textContent = original, 1800); };
+      if (!navigator.clipboard || !navigator.clipboard.writeText) { update('请手动选中文字复制'); return; }
+      navigator.clipboard.writeText(text).then(() => update('已复制到剪贴板')).catch(() => update('复制失败，请手动复制'));
     }
   </script>
 </body>

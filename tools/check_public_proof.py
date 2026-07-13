@@ -23,16 +23,19 @@ def main() -> int:
 
     overall = comparison["scores"]["overall"]
     resolved = len(comparison["resolved"])
+    persistent = len(comparison["persistent"])
+    new = len(comparison["new"])
     new_high = sum(
         1
         for item in comparison["new"]
         if item.get("confidence") == "high" and item.get("severity") in {"high", "critical"}
     )
     current_claims = {
-        ROOT / "site" / "index.html": [f'{overall["before"]} → {overall["after"]}', str(resolved)],
-        ROOT / "README.zh-CN.md": [f'{overall["before"]} → {overall["after"]}', str(resolved)],
-        ROOT / "README.md": [f'{overall["before"]} → {overall["after"]}', str(resolved)],
-        ROOT / "site" / "lab" / "index.html": [f'{overall["before"]} → {overall["after"]}'],
+        ROOT / "site" / "index.html": [f'{overall["before"]} → {overall["after"]}', str(resolved), str(persistent), str(new), str(new_high)],
+        ROOT / "README.en.md": [str(overall["before"]), str(overall["after"]), str(resolved), str(persistent), str(new), str(new_high)],
+        ROOT / "README.md": [f'{overall["before"]} → {overall["after"]}', str(resolved), str(persistent), str(new), str(new_high)],
+        ROOT / "site" / "lab" / "index.html": [f'{overall["before"]} → {overall["after"]}', str(resolved), str(persistent), str(new), str(new_high)],
+        ROOT / "site" / "proof-loop" / "comparison.html": [str(overall["before"]), str(overall["after"]), str(resolved), str(persistent), str(new), str(new_high)],
     }
     for path, snippets in current_claims.items():
         text = path.read_text(encoding="utf-8")

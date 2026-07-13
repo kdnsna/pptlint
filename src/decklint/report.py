@@ -242,9 +242,14 @@ def _repair_controls(finding: dict[str, object], *, zh: bool) -> str:
     )
     steps = finding.get("fixSteps")
     step_text = " ".join(str(step) for step in steps) if isinstance(steps, list) else ""
+    target = (
+        str(steps[0])
+        if zh and isinstance(steps, list) and steps
+        else str(finding.get("remediation", ""))
+    )
     brief = (
         f"PPTLint 修复任务。位置：{location}。问题：{finding.get('impact', '')}"
-        f"。目标：{finding.get('remediation', '')}。建议步骤：{step_text}"
+        f"。目标：{target}。建议步骤：{step_text}"
         "。只修改独立副本；处理后重新运行 PPTLint，确认原问题消失且没有新增高把握问题。"
         if zh
         else f"PPTLint repair task. Location: {location}. Problem: {finding.get('impact', '')}. "
@@ -540,7 +545,7 @@ def _render_html(report: dict[str, object]) -> str:
     safe_json = raw_json.replace("&", "\\u0026").replace("<", "\\u003c").replace(">", "\\u003e")
     return f"""<!doctype html>
 <html lang="{_escape(language)}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>PPTLint report · {_escape(file_info["name"])}</title>
+<title>{"PPTLint 检查报告" if zh else "PPTLint report"} · {_escape(file_info["name"])}</title>
 <style>
 :root{{--ink:#172033;--paper:#f4f0e7;--panel:#fffdf8;--muted:#667085;--critical:#b42318;--high:#d92d20;--medium:#dc6803;--low:#175cd3}}
 *{{box-sizing:border-box}}body{{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}}
@@ -556,7 +561,7 @@ main{{max-width:1240px;margin:auto;padding:48px 24px 80px}}.hero{{display:grid;g
 .slide-card header{{grid-column:1/-1;display:flex;align-items:baseline;gap:14px;border-bottom:1px solid #ded8cd}}.slide-card header h2{{margin:0 0 10px;flex:1}}.slide-card header span,.slide-card header b{{font:700 11px ui-monospace,monospace;color:var(--muted)}}
 .slide-preview{{position:relative;align-self:start;background:#ddd;box-shadow:0 12px 28px #17203320}}.slide-preview img{{width:100%;display:block}}.overlay{{position:absolute;border:3px solid var(--high);background:#d92d2015}}.overlay.severity-critical{{border-color:var(--critical)}}.overlay.severity-medium{{border-color:var(--medium)}}
 ul{{list-style:none;margin:0;padding:0;display:grid;gap:10px}}.finding{{border-left:4px solid var(--low);padding:12px;background:#f7f8fa}}.finding.severity-critical{{border-color:var(--critical)}}.finding.severity-high{{border-color:var(--high)}}.finding.severity-medium{{border-color:var(--medium)}}.finding code{{display:inline-block;color:var(--muted);font-size:11px}}.finding em{{float:right;color:var(--muted);font:700 11px ui-monospace,monospace}}.finding strong{{display:block;margin:0 0 3px}}.finding p,.finding small{{margin:0;color:var(--muted)}}.technical-details{{margin-top:10px;color:var(--muted)}}.technical-details summary{{cursor:pointer;font-size:12px}}.technical-details p{{clear:both}}.deck-findings{{margin:0 0 32px}}.scoring-policy{{border-left:4px solid #8a3d22;padding:10px 14px;margin:12px 0 0}}.scoring-policy p{{margin:6px 0 0;color:var(--muted)}}
-.repair-controls{{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 2px}}.repair-choice,.repair-copy{{border:1px solid #98a2b3;background:white;color:var(--ink);border-radius:4px;padding:7px 9px;font:700 12px/1.2 ui-sans-serif,system-ui}}.repair-copy{{cursor:pointer;border-color:#175cd3;color:#175cd3}}.repair-human-decision{{border-color:var(--medium);background:#fff3d6}}
+.repair-controls{{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 2px}}.repair-choice,.repair-copy{{border:1px solid #98a2b3;background:white;color:var(--ink);border-radius:4px;padding:7px 9px;font:700 12px/1.2 ui-sans-serif,system-ui}}.repair-copy{{cursor:pointer;border-color:#175cd3;color:#175cd3}}.repair-human-decision{{border-color:var(--medium);background:#fff3d6}}button:focus-visible,a:focus-visible,summary:focus-visible{{outline:3px solid #fdb022;outline-offset:3px}}
 @media(max-width:800px){{.hero,.readiness{{grid-template-columns:1fr}}.checklist>div{{grid-template-columns:1fr 1fr}}.handoff>div{{grid-template-columns:repeat(2,1fr)}}.overall{{width:110px;height:110px}}.scores{{grid-template-columns:repeat(2,1fr)}}.slide-card{{grid-template-columns:1fr}}}}@media(max-width:480px){{.checklist>div{{grid-template-columns:1fr}}main{{padding-left:16px;padding-right:16px}}}}
 </style></head><body><main>
 <section class="hero"><div><span class="eyebrow">PPTLint · {"PPT 发送前体检" if zh else "PowerPoint delivery check"}</span><h1>{_escape(file_info["name"])}</h1><p>{("本地检查 · " + str(file_info["slides"]) + " 页 · 原文件未改动") if zh else ("Checked locally · " + str(file_info["slides"]) + (" slide" if int(file_info["slides"]) == 1 else " slides") + " · source file unchanged")}</p></div></section>
@@ -565,13 +570,13 @@ ul{{list-style:none;margin:0;padding:0;display:grid;gap:10px}}.finding{{border-l
 {checklist_panel}
 {handoff_panel}
 {waiver_panel}
-<details class="secondary-score"><summary>{"辅助分数" if zh else "Secondary score"}: {_escape(scores["overall"])}/100</summary><p>{"仅用于比较同一份文件修改前后的变化。" if zh else "Use this only to compare the same presentation before and after changes."}</p><section class="scores">{score_cards}</section>{scoring_policy}<details class="technical-details"><summary>{"运行信息" if zh else "Run details"}</summary><p>{_escape(report["profile"])} profile · {_escape(renderer["used"])} renderer</p></details></details>
+<details class="secondary-score"><summary>{"辅助分数" if zh else "Secondary score"}: {_escape(scores["overall"])}/100</summary><p>{"仅用于比较同一份文件修改前后的变化。" if zh else "Use this only to compare the same presentation before and after changes."}</p><section class="scores">{score_cards}</section>{scoring_policy}<details class="technical-details"><summary>{"运行信息" if zh else "Run details"}</summary><p>{(("基准检查方案" if report["profile"] == "baseline" else str(report["profile"])) + " · " + ("线框预览" if renderer["used"] == "wireframe" else str(renderer["used"]))) if zh else (str(report["profile"]) + " profile · " + str(renderer["used"]) + " renderer")}</p></details></details>
 {f'<div class="notice">{_escape(renderer["detail"])}</div>' if renderer.get("detail") else ""}
 {f'<section class="deck-findings"><h2>{"影响整个文件的问题" if zh else "Items that affect the whole file"}</h2><ul>{deck_items}</ul></section>' if deck_items else ""}
-<nav class="report-tools" aria-label="{"报告筛选" if zh else "Report filters"}"><strong>{"筛选" if zh else "Filter"}</strong><button class="active" data-filter="all">{"全部" if zh else "All"}</button><button data-filter="blocker">{"必须处理" if zh else "Must fix"}</button><button data-filter="review">{"需要确认" if zh else "Review"}</button><button data-filter="advisory">{"建议查看" if zh else "Suggestions"}</button><span class="page-nav">{page_nav}</span></nav>
+<nav class="report-tools" aria-label="{"报告筛选" if zh else "Report filters"}"><strong>{"筛选" if zh else "Filter"}</strong><button type="button" class="active" aria-pressed="true" data-filter="all">{"全部" if zh else "All"}</button><button type="button" aria-pressed="false" data-filter="blocker">{"必须处理" if zh else "Must fix"}</button><button type="button" aria-pressed="false" data-filter="review">{"需要确认" if zh else "Review"}</button><button type="button" aria-pressed="false" data-filter="advisory">{"建议查看" if zh else "Suggestions"}</button><span class="page-nav">{page_nav}</span></nav>
 <section class="slide-grid">{"".join(slide_cards)}</section>
 <script id="decklint-data" type="application/json">{safe_json}</script>
-<script>(function(){{var buttons=document.querySelectorAll('[data-filter]');buttons.forEach(function(button){{button.addEventListener('click',function(){{var value=button.getAttribute('data-filter');buttons.forEach(function(item){{item.classList.toggle('active',item===button);}});document.querySelectorAll('.finding').forEach(function(item){{item.classList.toggle('is-hidden',value!=='all'&&item.getAttribute('data-disposition')!==value);}});document.querySelectorAll('.slide-card').forEach(function(card){{var visible=card.querySelectorAll('.finding:not(.is-hidden)').length>0||value==='all';card.classList.toggle('is-hidden',!visible);}});}});}});document.querySelectorAll('.repair-copy').forEach(function(button){{button.addEventListener('click',function(){{var text=button.getAttribute('data-copy')||'';navigator.clipboard.writeText(text).then(function(){{button.textContent={json.dumps("已复制" if zh else "Copied")};}});}});}});}})();</script>
+<script>(function(){{var buttons=document.querySelectorAll('[data-filter]');buttons.forEach(function(button){{button.addEventListener('click',function(){{var value=button.getAttribute('data-filter');buttons.forEach(function(item){{var active=item===button;item.classList.toggle('active',active);item.setAttribute('aria-pressed',String(active));}});document.querySelectorAll('.finding').forEach(function(item){{item.classList.toggle('is-hidden',value!=='all'&&item.getAttribute('data-disposition')!==value);}});document.querySelectorAll('.slide-card').forEach(function(card){{var visible=card.querySelectorAll('.finding:not(.is-hidden)').length>0||value==='all';card.classList.toggle('is-hidden',!visible);}});}});}});document.querySelectorAll('.repair-copy').forEach(function(button){{button.addEventListener('click',function(){{var text=button.getAttribute('data-copy')||'';var done=function(label){{button.textContent=label;}};if(!navigator.clipboard||!navigator.clipboard.writeText){{done({json.dumps("请手动复制" if zh else "Copy manually")});return;}}navigator.clipboard.writeText(text).then(function(){{done({json.dumps("已复制" if zh else "Copied")});}}).catch(function(){{done({json.dumps("复制失败" if zh else "Copy failed")});}});}});}});}})();</script>
 </main></body></html>"""
 
 

@@ -3,5 +3,16 @@
   <url><loc>https://kdnsna.github.io/pptlint/</loc></url>
   <url><loc>https://kdnsna.github.io/pptlint/lab/</loc></url>
   <url><loc>https://kdnsna.github.io/pptlint/proof-loop/comparison.html</loc></url>
-  <url><loc>https://kdnsna.github.io/pptlint/benchmark/</loc></url>
+  <url><loc>https://kdnsna.github.io/pptlint/lab/cases/meeting-room-small-text.html</loc></url>
+  <url><loc>https://kdnsna.github.io/pptlint/lab/cases/clipped-last-line.html</loc></url>
+  <url><loc>https://kdnsna.github.io/pptlint/lab/cases/overlapping-text.html</loc></url>
+  <url><loc>https://kdnsna.github.io/pptlint/lab/cases/font-portability.html</loc></url>
+  <url><loc>https://kdnsna.github.io/pptlint/lab/cases/low-contrast-projector.html</loc></url>
+  <url><loc>https://kdnsna.github.io/pptlint/lab/cases/flattened-slide.html</loc></url>
+  <url><loc>https://kdnsna.github.io/pptlint/lab/cases/speaker-notes-leak.html</loc></url>
+  <url><loc>https://kdnsna.github.io/pptlint/lab/cases/hidden-slide-metadata.html</loc></url>
+  <url><loc>https://kdnsna.github.io/pptlint/lab/cases/external-file-link.html</loc></url>
+  <url><loc>https://kdnsna.github.io/pptlint/lab/cases/broken-package.html</loc></url>
+  <url><loc>https://kdnsna.github.io/pptlint/lab/cases/bloated-media.html</loc></url>
+  <url><loc>https://kdnsna.github.io/pptlint/lab/cases/brand-policy.html</loc></url>
 </urlset>

@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       confirm-version:
-        description: Version to publish, for example 0.3.0.
+        description: Version to publish, for example 1.3.1.
         required: true
 permissions:
   contents: read
@@ -31,6 +31,8 @@ jobs:
           "$RUNNER_TEMP/pptlint-smoke/bin/pptlint" fix --help
           "$RUNNER_TEMP/pptlint-smoke/bin/pptlint" app --help
           "$RUNNER_TEMP/pptlint-smoke/bin/pptlint" policy init --help
+          "$RUNNER_TEMP/pptlint-smoke/bin/decklint" --version 2>"$RUNNER_TEMP/decklint-warning.txt"
+          ! grep -q "v0.4" "$RUNNER_TEMP/decklint-warning.txt"
       - uses: actions/upload-artifact@v4
         with:
           name: pypi-distributions
@@ -76,7 +78,7 @@ jobs:
           "$RUNNER_TEMP/pptlint-published/bin/pip" install --no-cache-dir "pptlint==$VERSION"
           "$RUNNER_TEMP/pptlint-published/bin/pptlint" --version | grep "PPTLint $VERSION"
           "$RUNNER_TEMP/pptlint-published/bin/pptlint" check examples/good-deck.pptx --renderer wireframe --output "$RUNNER_TEMP/published-report"
-      - name: Create immutable release and update major Action tag
+      - name: Create release and update major Action tag
         env:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ inputs.confirm-version }}
@@ -89,8 +91,9 @@ jobs:
             git tag -a "$tag" -m "PPTLint $tag"
             git push origin "$tag"
           fi
+          python tools/build_release_notes.py --version "$VERSION" --output "$RUNNER_TEMP/release-notes.md"
           if ! gh release view "$tag" >/dev/null 2>&1; then
-            gh release create "$tag" dist/* --title "PPTLint $tag" --generate-notes
+            gh release create "$tag" dist/* --title "PPTLint $tag" --notes-file "$RUNNER_TEMP/release-notes.md"
           fi
           major="v${VERSION%%.*}"
           git tag -f -a "$major" -m "PPTLint $major" "$tag"

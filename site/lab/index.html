@@ -5,6 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="12 个一眼看懂的 PowerPoint 交付风险前后对比，以及热门 AI PPT 项目的公开样本实测。">
   <link rel="canonical" href="https://kdnsna.github.io/pptlint/lab/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="PPTLint 交付案例实验室">
+  <meta property="og:description" content="12 个交付风险前后对比，以及 33 份公开 PPTX 的固定来源验证。">
+  <meta property="og:url" content="https://kdnsna.github.io/pptlint/lab/">
+  <meta property="og:image" content="https://kdnsna.github.io/pptlint/assets/pptlint-before-after-hero.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="PPTLint 交付案例实验室">
+  <meta name="twitter:description" content="12 个交付风险前后对比，以及 33 份公开 PPTX 的固定来源验证。">
+  <meta name="twitter:image" content="https://kdnsna.github.io/pptlint/assets/pptlint-before-after-hero.png">
   <title>PPTLint 交付案例实验室</title>
   <link rel="icon" href="../favicon.svg">
   <link rel="stylesheet" href="../shared.css">
@@ -14,24 +23,25 @@
     <div class="container nav__inner">
       <a class="nav__logo" href="../">PPTLINT</a>
       <div class="nav__links">
-        <a class="nav__link" href="../">产品首页</a>
+        <a class="nav__link" href="../">首页</a>
+        <a class="nav__link" href="./" aria-current="page">案例</a>
         <a class="nav__link" href="../proof-loop/comparison.html">Proof Loop</a>
         <a class="nav__link" href="https://github.com/kdnsna/pptlint">GitHub</a>
       </div>
     </div>
   </nav>
 
-  <header class="hero">
+  <main><header class="hero">
     <div class="container">
       <div class="lab-hero">
         <div>
           <p class="hero__eyebrow reveal">PPTLint 交付案例实验室</p>
           <h1 class="hero__title reveal">好看的 PPT，<br>未必就能直接发出去。</h1>
-          <p class="hero__subtitle reveal">这里不评审美，也不替你改文件。我们把会议室、换电脑、可编辑交接和隐私外发里真会翻车的地方，拆成 12 个一眼就能看懂的前后对比。</p>
+          <p class="hero__subtitle reveal">这里不评审美。PPTLint 先发现问题、生成修复任务；你明确授权时，它能清理独立副本里的备注、批注和作者信息，复杂版式仍交给人或 Agent。</p>
         </div>
         <div class="lab-hero__stat reveal reveal--scale">
-          <div class="lab-hero__stat-big"><span data-count="12">12</span> + <span data-count="4">4</span></div>
-          <p style="color: rgba(255,255,255,0.72); margin: 0 0 14px; position: relative;">12 个可控前后演示 · 4 个热门开源项目样本实测</p>
+          <div class="lab-hero__stat-big"><span data-count="33">33</span> / <span data-count="383">383</span></div>
+          <p style="color: rgba(255,255,255,0.72); margin: 0 0 14px; position: relative;">33 份固定来源 PPTX · 383 页 · 4 个项目族 · 0 失败</p>
           <div class="lab-hero__tags">
             <span>本地</span><span>只读</span><span>不上传</span><span>不调用模型</span>
           </div>
@@ -47,16 +57,17 @@
         <p class="text-muted">每个案例都公开检查规则、处理边界和复检方式。</p>
       </div>
 
-      <div class="filters reveal">
-        <button class="filter active" data-category="all">全部</button>
-        <button class="filter" data-category="readability">现场可读性</button>
-        <button class="filter" data-category="stability">换电脑稳定性</button>
-        <button class="filter" data-category="editable">可编辑交接</button>
-        <button class="filter" data-category="privacy">隐私与外发</button>
-        <button class="filter" data-category="integrity">文件完整性</button>
-        <button class="filter" data-category="size">文件体积</button>
-        <button class="filter" data-category="policy">团队规范</button>
+      <div class="filters reveal" aria-label="案例筛选">
+        <button type="button" class="filter active" aria-pressed="true" data-category="all">全部</button>
+        <button type="button" class="filter" aria-pressed="false" data-category="readability">现场可读性</button>
+        <button type="button" class="filter" aria-pressed="false" data-category="stability">换电脑稳定性</button>
+        <button type="button" class="filter" aria-pressed="false" data-category="editable">可编辑交接</button>
+        <button type="button" class="filter" aria-pressed="false" data-category="privacy">隐私与外发</button>
+        <button type="button" class="filter" aria-pressed="false" data-category="integrity">文件完整性</button>
+        <button type="button" class="filter" aria-pressed="false" data-category="size">文件体积</button>
+        <button type="button" class="filter" aria-pressed="false" data-category="policy">团队规范</button>
       </div>
+      <p id="filter-status" class="filter-status" aria-live="polite">当前显示 12 个案例</p>
 
       <div class="card-grid card-grid--3" id="case-grid">
         <article class="card reveal" data-category="readability">
@@ -200,41 +211,41 @@
   <section class="section section--white">
     <div class="container">
       <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
-        <h2 class="section__title reveal" style="margin-bottom: 0;">开源项目样本实测</h2>
-        <p class="text-muted">公开 AI PPT 项目的样本，仅做演示性检查，不代表对该项目的评价。</p>
+        <h2 class="section__title reveal" style="margin-bottom: 0;">33 份公开样本验证</h2>
+        <p class="text-muted">383 页 · 4 个项目族 · 0 运行失败 · 修复计划覆盖率 100%。以下是 4 个精选样本。</p>
       </div>
       <div class="table-wrap reveal reveal--scale">
         <table class="table">
           <thead>
-            <tr><th>项目</th><th>结果</th><th>分数</th><th>发现组</th><th>备注</th></tr>
+            <tr><th>项目</th><th>结果</th><th>分数</th><th>发现项</th><th>备注</th></tr>
           </thead>
           <tbody>
             <tr>
-              <td><a class="card__link" href="https://github.com/hugohe3/ppt-master" target="_blank" rel="noopener">PPT Master / Attention</a></td>
+              <td><a class="card__link" href="https://raw.githubusercontent.com/hugohe3/ppt-master/1c87905f6de3f4d4480be3bc5e610bff38702450/examples/ppt169_attention_is_all_you_need/exports/attention_is_all_you_need_narrated.pptx" target="_blank" rel="noopener">PPT Master / Attention</a></td>
               <td><span class="badge badge--warn">需复核</span></td>
-              <td class="mono">86</td>
-              <td class="mono">10</td>
+              <td class="mono">88</td>
+              <td class="mono">458</td>
               <td class="text-muted">设计表现强；会议室场景下的小字号与图片说明需要人工确认。</td>
             </tr>
             <tr>
-              <td><a class="card__link" href="https://github.com/hugohe3/ppt-master" target="_blank" rel="noopener">PPT Master / Brutalist</a></td>
+              <td><a class="card__link" href="https://raw.githubusercontent.com/hugohe3/ppt-master/1c87905f6de3f4d4480be3bc5e610bff38702450/examples/ppt169_brutalist_ai_newspaper_2026/exports/brutalist_ai_newspaper_2026.pptx" target="_blank" rel="noopener">PPT Master / Brutalist</a></td>
               <td><span class="badge badge--warn">需复核</span></td>
-              <td class="mono">78</td>
-              <td class="mono">11</td>
+              <td class="mono">81</td>
+              <td class="mono">434</td>
               <td class="text-muted">强风格页面不应被粗暴改造；重点核查备注关系和交接稳定性。</td>
             </tr>
             <tr>
-              <td><a class="card__link" href="https://github.com/icip-cas/PPTAgent" target="_blank" rel="noopener">PPTAgent / Agents</a></td>
+              <td><a class="card__link" href="https://raw.githubusercontent.com/icip-cas/PPTAgent/2419d30b134a71486523e95ded60b32489fd3c61/resource/build_effective_agents/build_effective_agents.pptx" target="_blank" rel="noopener">PPTAgent / Agents</a></td>
               <td><span class="badge badge--warn">需复核</span></td>
               <td class="mono">99</td>
-              <td class="mono">3</td>
+              <td class="mono">4</td>
               <td class="text-muted">亚像素越界已校准，不再误判为阻断；保留少量交接提醒。</td>
             </tr>
             <tr>
-              <td><a class="card__link" href="https://github.com/icip-cas/PPTAgent" target="_blank" rel="noopener">PPTAgent / iPhone</a></td>
+              <td><a class="card__link" href="https://raw.githubusercontent.com/icip-cas/PPTAgent/2419d30b134a71486523e95ded60b32489fd3c61/resource/iphone16pro/Iphone16Pro.pptx" target="_blank" rel="noopener">PPTAgent / iPhone</a></td>
               <td><span class="badge badge--warn">需复核</span></td>
-              <td class="mono">100</td>
-              <td class="mono">2</td>
+              <td class="mono">95</td>
+              <td class="mono">6</td>
               <td class="text-muted">高质量成品仍可能留下观看距离、版式重复或无障碍层面的提醒。</td>
             </tr>
           </tbody>
@@ -248,14 +259,14 @@
       <div class="case-cta reveal reveal--scale">
         <div>
           <h2 class="case-cta__title">真实九页 PPT：83 → 100</h2>
-          <p class="case-cta__sub">当前引擎处理 103 项，没有新增高把握问题；原文件、修改后文件和机器可读报告全部公开。</p>
+          <p class="case-cta__sub">103 项高置信问题已处理；21 项低置信提醒持续存在，新增 3 项低置信提示，新增高置信问题为 0。</p>
         </div>
         <div class="case-cta__actions">
           <a class="btn btn--primary" href="../proof-loop/comparison.html">查看完整证据</a>
         </div>
       </div>
     </div>
-  </section>
+  </section></main>
 
   <footer class="footer">
     <div class="container">
@@ -274,14 +285,20 @@
   <script>
     document.querySelectorAll('.filter').forEach(btn => {
       btn.addEventListener('click', () => {
-        document.querySelectorAll('.filter').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.filter').forEach(b => {
+          b.classList.remove('active');
+          b.setAttribute('aria-pressed', 'false');
+        });
         btn.classList.add('active');
+        btn.setAttribute('aria-pressed', 'true');
         const cat = btn.dataset.category;
+        let count = 0;
         document.querySelectorAll('#case-grid .card').forEach(card => {
           const show = (cat === 'all' || card.dataset.category === cat);
           card.style.display = show ? '' : 'none';
-          if (show) card.classList.add('in');
+          if (show) { card.classList.add('in'); count += 1; }
         });
+        document.querySelector('#filter-status').textContent = `当前显示 ${count} 个案例`;
       });
     });
   </script>

@@ -2,7 +2,7 @@
 
 This validation checks whether current PPTLint can safely parse, audit, and create a complete repair plan for pinned public AI-PPT exports. It is not a visual ranking of the generators and does not redistribute their PPTX files.
 
-Current result for PPTLint 1.3.0:
+Current result for PPTLint 1.3.1:
 
 - 33 public PPTX files, 383 slides, 198,731,251 downloaded bytes;
 - PPT Master 21, PPTAgent 9, Presenton 1, Ultimate PPT Master 2;

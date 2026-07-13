@@ -1,6 +1,6 @@
 {
-  "version": "0.7.0",
-  "updated": "2026-07-12",
+  "version": "1.3.1",
+  "updated": "2026-07-13",
   "cases": [
     {
       "slug": "meeting-room-small-text",
@@ -88,6 +88,7 @@
       "before": "3 页含内部讲者备注",
       "after": "交付副本清理备注，原稿不动",
       "rule": "privacy.speaker-notes",
+      "boundary": "讲者备注属于可授权清理项：PPTLint 可以删除独立副本中的备注文字，但不会覆盖原稿。",
       "scoreBefore": 82,
       "scoreAfter": 100,
       "kind": "controlled",
@@ -101,6 +102,7 @@
       "before": "2 张隐藏页，含个人元数据",
       "after": "删除不应外发内容并另存交付副本",
       "rule": "privacy.hidden-slide",
+      "boundary": "这个混合场景必须拆开处理：隐藏页由人确认是否删除；作者信息可另行授权 PPTLint 清理独立副本。",
       "scoreBefore": 69,
       "scoreAfter": 100,
       "kind": "controlled",
@@ -159,45 +161,25 @@
       "visual": "brand"
     }
   ],
-  "marketAudits": [
+  "featuredSamples": [
     {
-      "name": "PPT Master / Attention",
-      "source": "https://github.com/hugohe3/ppt-master",
-      "sourceFile": "https://github.com/hugohe3/ppt-master/blob/main/examples/ppt169_attention_is_all_you_need/exports/attention_is_all_you_need_narrated.pptx",
+      "label": "PPT Master / Attention",
       "sha256": "85e84a7463f67f52eb66d1cbdcf78fbb0a25a45f81fa37d311bcf7d0d1ce6b5e",
-      "result": "review",
-      "score": 86,
-      "findingGroups": 10,
       "note": "设计表现强；会议室场景下的小字号与图片说明需要人工确认。"
     },
     {
-      "name": "PPT Master / Brutalist",
-      "source": "https://github.com/hugohe3/ppt-master",
-      "sourceFile": "https://github.com/hugohe3/ppt-master/blob/main/examples/ppt169_brutalist_ai_newspaper_2026/exports/brutalist_ai_newspaper_2026.pptx",
+      "label": "PPT Master / Brutalist",
       "sha256": "a78701848dd76b4456636b764cdfa159cfe51d54d17ba1f9425957e08a92e1b9",
-      "result": "review",
-      "score": 78,
-      "findingGroups": 11,
       "note": "强风格页面不应被粗暴改造；重点核查备注关系和交接稳定性。"
     },
     {
-      "name": "PPTAgent / Agents",
-      "source": "https://github.com/icip-cas/PPTAgent",
-      "sourceFile": "https://github.com/icip-cas/PPTAgent/blob/main/resource/build_effective_agents/build_effective_agents.pptx",
+      "label": "PPTAgent / Agents",
       "sha256": "217bd88104b68f927901ac29e2a61ab057fd2b820d96b842f222bb1d3a7eb382",
-      "result": "review",
-      "score": 99,
-      "findingGroups": 3,
       "note": "亚像素越界已校准，不再误判为阻断；保留少量交接提醒。"
     },
     {
-      "name": "PPTAgent / iPhone",
-      "source": "https://github.com/icip-cas/PPTAgent",
-      "sourceFile": "https://github.com/icip-cas/PPTAgent/blob/main/resource/iphone16pro/Iphone16Pro.pptx",
+      "label": "PPTAgent / iPhone",
       "sha256": "5f953e8a2799ee63789ef6983a954f0c9183a0436cacb9eb3e329c49cc951908",
-      "result": "review",
-      "score": 100,
-      "findingGroups": 2,
       "note": "高质量成品仍可能留下观看距离、版式重复或无障碍层面的提醒。"
     }
   ]

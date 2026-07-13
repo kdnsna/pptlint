@@ -25,7 +25,11 @@ jobs:
         with:
           python-version: "3.12"
       - name: Verify generated case lab
-        run: python tools/build_case_lab.py --check
+        run: |
+          python tools/build_case_lab.py --check
+          python tools/check_public_proof.py
+          python tools/build_public_proof.py --check
+          python tools/check_public_site.py
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

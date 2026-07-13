@@ -16,7 +16,7 @@ with:
 pptlint check slides.pptx --output report
 ```
 
-The old `decklint` command remains available through v0.4 and prints a migration reminder.
+The old `decklint` command remains as a deprecated compatibility alias and prints a migration reminder. New workflows should use `pptlint` directly.
 
 ## GitHub Actions
 

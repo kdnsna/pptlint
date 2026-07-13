@@ -7,7 +7,7 @@ from .cli import main as pptlint_main
 
 def main(argv: list[str] | None = None) -> int:
     print(
-        "DeckLint is now PPTLint. The decklint command remains available through v0.4; migrate to `pptlint check`.",
+        "DeckLint is now PPTLint. The decklint command is deprecated; use `pptlint check` for all new workflows.",
         file=sys.stderr,
     )
     return pptlint_main(argv)

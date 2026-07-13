@@ -9,10 +9,10 @@
   --border: #EAEAEA;
   --border-strong: #D6D9DE;
   --surface: #F3F4F6;
-  --accent: #E85D2C;
-  --accent-hover: #D14D20;
+  --accent: #B83A12;
+  --accent-hover: #962E0E;
   --accent-10: rgba(232, 93, 44, 0.10);
-  --success: #10B981;
+  --success: #047857;
   --success-10: rgba(16, 185, 129, 0.10);
   --warning: #F59E0B;
   --warning-10: rgba(245, 158, 11, 0.10);
@@ -55,6 +55,10 @@ body {
 }
 img { max-width: 100%; height: auto; display: block; }
 a { color: inherit; text-decoration: none; }
+button:focus-visible, a:focus-visible, input:focus-visible, summary:focus-visible {
+  outline: 3px solid #F4B740;
+  outline-offset: 3px;
+}
 
 .container {
   width: min(var(--container), calc(100% - 48px));
@@ -111,8 +115,13 @@ a { color: inherit; text-decoration: none; }
 .nav__cta:hover { background: var(--accent-hover); transform: translateY(-1px); }
 
 @media (max-width: 720px) {
-  .nav__links { display: none; }
-  .nav__cta { display: none; }
+  .container { width: min(var(--container), calc(100% - 28px)); }
+  .nav__inner { height: 60px; gap: 12px; }
+  .nav__logo { font-size: 16px; }
+  .nav__links { display: flex; gap: 12px; overflow-x: auto; scrollbar-width: none; }
+  .nav__links::-webkit-scrollbar { display: none; }
+  .nav__link { font-size: 12px; white-space: nowrap; color: var(--ink); }
+  .nav__link[href^="https://github.com"], .nav__cta { display: none; }
 }
 
 /* Hero */
@@ -325,6 +334,8 @@ a { color: inherit; text-decoration: none; }
   grid-template-columns: repeat(4, 1fr);
   gap: 16px;
 }
+.metrics--proof { grid-template-columns: repeat(5, 1fr); }
+@media (max-width: 1100px) { .metrics--proof { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 900px) { .metrics { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 520px) { .metrics { grid-template-columns: 1fr; } }
 .metric {
@@ -343,7 +354,7 @@ a { color: inherit; text-decoration: none; }
   color: var(--ink);
   line-height: 1;
 }
-.metric--success .metric__value { color: var(--success); }
+.metric--success .metric__value { color: #047857; }
 .metric__label { font-size: 14px; color: var(--muted); }
 
 /* Links strip */
@@ -393,7 +404,8 @@ a { color: inherit; text-decoration: none; }
   border-radius: var(--radius-md);
   border: 1px solid var(--border);
   box-shadow: var(--shadow-sm);
-  overflow: hidden;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .table {
   width: 100%;
@@ -442,6 +454,7 @@ a { color: inherit; text-decoration: none; }
 }
 .filter:hover { border-color: var(--border-strong); }
 .filter.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.filter-status { margin: -18px 0 24px; color: var(--muted); font-size: 14px; }
 
 /* Case compare mini */
 .case-compare {
@@ -697,6 +710,13 @@ a { color: inherit; text-decoration: none; }
 .badge--warn { background: var(--warning-10); color: #B45309; }
 .badge--good { background: var(--success-10); color: #047857; }
 .badge--bad { background: var(--error-10); color: #B91C1C; }
+
+@media (max-width: 640px) {
+  .hero { padding: 64px 0 52px; }
+  .section { padding: 56px 0; }
+  .table { min-width: 760px; }
+  .footer__links { flex-wrap: wrap; gap: 12px 18px; }
+}
 
 /* =====================================================================
    PREMIUM LAYER — 精致层：氛围、动画、PPT 展示容器与幻灯片模板
