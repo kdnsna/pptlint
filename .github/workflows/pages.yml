@@ -25,6 +25,8 @@ jobs:
         with:
           python-version: "3.12"
       - name: Verify generated case lab
+        env:
+          PYTHONPATH: src
         run: |
           python tools/build_case_lab.py --check
           python tools/check_public_proof.py
