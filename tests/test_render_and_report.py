@@ -150,7 +150,7 @@ def test_report_explains_the_safe_repair_path_for_each_mode() -> None:
     cases = {
         "privacy.speaker-notes": "PPTLint 可以清理副本",
         "readability.small-font": "我自己在 PowerPoint 里改",
-        "editability.full-slide-image": "复制给 Ultimate 优化",
+        "editability.full-slide-image": "复制给助手分析",
         "privacy.hidden-slide": "需要你先确认，不建议自动修改",
     }
 

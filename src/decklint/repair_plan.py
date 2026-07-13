@@ -150,7 +150,7 @@ def render_repair_brief(plan: dict[str, object], *, adapter: str, language: str)
         raise ValueError("Repair plan tasks must be an array")
     adapter_intro = {
         "generic-agent": "请在独立副本中处理以下交付问题。" if zh else "Repair the following delivery issues in a separate copy.",
-        "ultimate-ppt-master": "请使用 Ultimate PPT Master 重建或重排需要的页面，并保留可编辑对象。" if zh else "Use Ultimate PPT Master to rebuild or reflow the required slides while preserving editable objects.",
+        "ultimate-ppt-master": "请先给出命中页的 PowerPoint/WPS 人工调整步骤；只有存在原生、保真的对象级编辑能力时才修改文件，禁止整份导入后重新导出。" if zh else "Provide manual PowerPoint steps first. Modify the file only through a native package-preserving object editor; never import and re-export the whole deck for a local repair.",
         "powerpoint-copilot": "请在 PowerPoint 的独立副本中按下列任务辅助修改；涉及隐私或删除的任务先让我确认。" if zh else "Assist with these tasks in a separate PowerPoint copy; ask before privacy or deletion decisions.",
         "powerpoint-manual": "请在 PowerPoint 中按页码逐项处理，每完成一项就保存独立副本。" if zh else "Handle each task in PowerPoint by slide number and keep a separate copy.",
     }[adapter]
@@ -197,7 +197,7 @@ def render_repair_brief(plan: dict[str, object], *, adapter: str, language: str)
             f"pptlint check {source.get('name', 'presentation.pptx')} --scenario {source.get('scenario', 'present')} --output pptlint-after",
             "```",
             "",
-            "只有复检报告能确认任务是否真正完成。" if zh else "Only the verification report can confirm whether the tasks are complete.",
+            "复检报告只能确认规则变化；仍需在 PowerPoint/WPS 中查看修改页，确认没有黑底、缺字、丢链接或对象位移。" if zh else "The verification report confirms rule changes only. Inspect every changed slide in PowerPoint and reject black backgrounds, missing content, lost links, or unintended movement.",
         ]
     )
     return "\n".join(lines) + "\n"

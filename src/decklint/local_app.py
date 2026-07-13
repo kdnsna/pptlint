@@ -49,6 +49,12 @@ ULTIMATE_VISUAL_RULES = {
     "policy.color-not-allowed",
 }
 
+# Existing decks must be edited through a native, package-preserving PowerPoint
+# path.  The current Ultimate handoff can prepare a repair plan, but its
+# full-deck import/export route is not safe enough to mutate a real customer
+# file without changing masters, transparency, links, or untouched objects.
+ULTIMATE_NATIVE_REPAIR_AVAILABLE = False
+
 
 def _safe_filename(value: str) -> str:
     name = Path(value.replace("\\", "/")).name
@@ -111,6 +117,17 @@ def _bridge_json(path: str, *, payload: dict[str, object] | None = None) -> dict
 
 
 def _ultimate_eligible(task: dict[str, object]) -> bool:
+    location = task.get("location")
+    return ULTIMATE_NATIVE_REPAIR_AVAILABLE and (
+        task.get("ruleId") in ULTIMATE_VISUAL_RULES
+        and task.get("repairMode") in {"guided-powerpoint", "agent-rebuild"}
+        and "ultimate-ppt-master" in task.get("recommendedExecutors", [])
+        and isinstance(location, dict)
+        and isinstance(location.get("slideIndex"), int)
+    )
+
+
+def _ultimate_plan_eligible(task: dict[str, object]) -> bool:
     location = task.get("location")
     return (
         task.get("ruleId") in ULTIMATE_VISUAL_RULES
@@ -329,6 +346,7 @@ def _report_response(session: AppSession, deck_id: str, record: DeckRecord) -> d
                     "risk": task.get("risk"),
                     "steps": task.get("steps", []),
                     "ultimateEligible": _ultimate_eligible(task),
+                    "ultimatePlanEligible": _ultimate_plan_eligible(task),
                 }
             )
             operation = operation_by_rule.get(str(task.get("ruleId", "")))
@@ -362,32 +380,32 @@ def _html(token: str) -> str:
 :root{--ink:#0a1628;--muted:#657083;--paper:#f4f1eb;--panel:#fff;--accent:#e85d2c;--green:#0d8b63;--amber:#b66a09;--red:#c3382b;--line:#dfe2e7}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.65 "PingFang SC","Microsoft YaHei",system-ui,sans-serif}button,input,select{font:inherit}.shell{width:min(1240px,calc(100% - 32px));margin:auto}.nav{display:flex;justify-content:space-between;align-items:center;padding:20px 0}.brand{font:900 17px/1 ui-monospace,monospace;letter-spacing:.14em}.privacy{color:var(--muted);font-size:13px}.hero{display:grid;grid-template-columns:1.2fr .8fr;gap:28px;padding:52px 0 36px}.eyebrow{font:800 12px/1 ui-monospace,monospace;letter-spacing:.13em;color:var(--accent)}h1{font-size:clamp(42px,6.2vw,72px);line-height:.98;letter-spacing:-.055em;margin:14px 0 22px}.lead{font-size:18px;color:var(--muted);max-width:720px}.trust{align-self:end;background:var(--ink);color:white;border-radius:24px;padding:26px;box-shadow:0 24px 70px #0a16282a}.trust strong{display:block;font-size:28px}.trust span{display:block;color:#c6cfdd;margin-top:8px}.steps{display:grid;grid-template-columns:minmax(280px,.9fr) minmax(390px,1.35fr) minmax(280px,.9fr);gap:16px;margin:18px 0 70px;align-items:start}.card{min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:24px;box-shadow:0 14px 40px #0a16280c}.card h2{font-size:24px;margin:8px 0}.card>p{color:var(--muted)}.num{font:800 12px ui-monospace,monospace;color:var(--accent)}.drop{display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;min-height:136px;border:2px dashed #aeb6c2;border-radius:16px;padding:28px 18px;text-align:center;background:#fafbfc;color:var(--ink);cursor:pointer;transition:.2s}.drop.drag{border-color:var(--accent);background:#fff4ee}.drop input{display:none}.drop b{display:block;width:100%;color:var(--ink);font-size:18px}.drop span{display:block;width:100%;color:var(--muted);font-size:13px}.select{display:block;width:100%;border:1px solid #ccd2da;border-radius:10px;padding:10px 12px;margin:14px 0;background:white}.result{display:none;margin-top:22px}.result.show{display:block}.status{display:flex;gap:12px;align-items:center;padding:16px;border-radius:14px;background:#edf7f3}.status.blocked{background:#fff0ed}.status.review{background:#fff6e8}.status b{font-size:20px}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}.metric{background:#f4f6f8;padding:12px;border-radius:10px}.metric strong{display:block;font-size:22px}.tasks{max-height:580px;overflow:auto;border-top:1px solid #e2e5e9}.task{border-bottom:1px solid #e2e5e9}.task summary{display:grid;grid-template-columns:auto 1fr;gap:10px;padding:14px 2px;cursor:pointer;list-style:none}.task summary::-webkit-details-marker{display:none}.task summary:before{content:"+";display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:#eef1f5;font-weight:900}.task[open] summary:before{content:"−"}.task-title b{display:block}.task-title small{color:var(--muted)}.task-body{padding:0 2px 16px 32px}.task-body p{margin:4px 0 8px}.task-body ol{margin:6px 0;padding-left:20px;color:var(--muted)}.task-route{display:flex;align-items:flex-start;gap:8px;background:#f5f6f8;border-radius:10px;padding:9px 10px;margin-top:10px}.task-route input{margin-top:5px}.pill{display:inline-block;border:1px solid #cdd3db;border-radius:99px;padding:2px 8px;font-size:11px;margin:5px 4px 0 0}.choice{border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}.choice strong{display:block;font-size:17px}.choice p{margin:4px 0;color:var(--muted)}.choice.recommended{border-color:#9fb7ff;background:#f5f7ff}.choice-tag{font:800 10px ui-monospace,monospace;color:#3557c8}.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:12px}.btn{border:0;border-radius:10px;padding:11px 14px;font-weight:750;cursor:pointer;background:var(--ink);color:white;text-decoration:none}.btn.accent{background:var(--accent)}.btn.alt{background:white;color:var(--ink);border:1px solid #b8c0cb}.btn:disabled{opacity:.38;cursor:not-allowed}.checks{display:grid;gap:8px;margin:10px 0}.checks label{display:flex;gap:8px;align-items:center;background:#f5f6f8;padding:9px 10px;border-radius:9px}.subhead{margin:20px 0 6px;font-size:13px}.message{margin-top:12px;padding:12px;border-left:4px solid var(--green);background:#edf7f3;display:none;overflow-wrap:anywhere}.message.show{display:block}.message.error{border-color:var(--red);background:#fff0ed}.message code{display:block;margin-top:8px;padding:8px;background:white;white-space:pre-wrap}.downloads{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.downloads a{color:#1457a6}.platform-note{font-size:12px;color:var(--muted);margin-top:10px}.footer{padding:24px 0 54px;color:var(--muted);font-size:13px}.spinner{opacity:.6;pointer-events:none}@media(max-width:1000px){.steps{grid-template-columns:1fr 1fr}.steps .card:nth-child(2){grid-column:span 1}.steps .card:nth-child(3){grid-column:1/-1}}@media(max-width:760px){.hero,.steps{grid-template-columns:1fr}.steps .card:nth-child(3){grid-column:auto}.trust{align-self:auto}}@media(max-width:430px){.shell{width:min(100% - 22px,1240px)}.nav{align-items:flex-start;gap:10px}.brand{font-size:14px;white-space:nowrap}.privacy{max-width:160px;text-align:right}.hero{padding-top:28px}h1{font-size:40px}.card{padding:18px}.metrics{grid-template-columns:1fr}.actions{display:grid}.btn{text-align:center;width:100%}}
 </style></head><body><div class="shell">
 <nav class="nav"><div class="brand">PPTLINT / LOCAL</div><div class="privacy">只运行在本机 · 不上传 · 不调用模型</div></nav>
-<header class="hero"><div><span class="eyebrow">POWERPOINT 发出前的最后一关</span><h1>把难改的页点出来，<br>再把它真正改好。</h1><p class="lead">先看哪里影响阅读和交付。你可以照着 PowerPoint 步骤自己改，也可以只把命中页交给 Ultimate PPT Master 优化；原文、页数和其他页面默认锁定。</p></div><aside class="trust"><strong>先看清，再动手</strong><span>源文件永远不动。任何清理或优化都生成独立副本，完成后仍由 PPTLint 复检。</span></aside></header>
+<header class="hero"><div><span class="eyebrow">POWERPOINT 发出前的最后一关</span><h1>把难改的页点出来，<br>再把它稳妥改好。</h1><p class="lead">先看哪里影响阅读和交付，再按页面给出的 PowerPoint 步骤处理。现阶段不再用整份重导出的方式自动改真实 PPT，避免母版、透明背景、组合对象和链接被破坏。</p></div><aside class="trust"><strong>不破坏，比自动更重要</strong><span>源文件永远不动。PPTLint 只自动执行不会重排画面的安全清理；视觉修改先给出明确人工步骤。</span></aside></header>
 <main class="steps">
 <section class="card" id="check-card"><span class="num">01 · 找到难改的页</span><h2>拖入要发的 PPT</h2><select class="select" id="scenario" aria-label="选择 PPT 使用场景"><option value="present">会议室汇报</option><option value="screen">电脑屏幕阅读</option><option value="document">文档型 PPT</option></select><label class="drop" id="check-drop" role="button" tabindex="0"><input type="file" accept=".pptx"><b>点击或拖入 .pptx</b><span>本地检查，文件不会离开这台电脑</span></label><div class="result" id="check-result" aria-live="polite"></div></section>
-<section class="card"><span class="num">02 · 选择怎么改</span><h2>自己改，或一键优化</h2><div class="choice"><strong>A · 自己在 PowerPoint 里改</strong><p>展开左侧每项问题，按页码、目标和具体菜单步骤逐项处理。</p><div class="platform-note">步骤以 PowerPoint 桌面版为主；WPS 中可在“开始 / 设计 / 图片工具”的同名命令中完成。</div></div><div class="choice recommended"><span class="choice-tag">推荐 · 只改命中页</span><strong>B · 交给 Ultimate 优化</strong><p>保留全部原文、数字、页数和未命中页面，只优化已勾选的可处理页面。</p><div class="actions"><button class="btn accent" id="ultimate-btn" disabled>优化已选 0 项</button><button class="btn alt" id="copy-btn" disabled>复制完整任务</button></div></div><h3 class="subhead">可安全清理的隐私内容</h3><div class="checks" id="cleanup-checks"><span style="color:var(--muted)">先完成第一步。</span></div><button class="btn alt" id="cleanup-btn" disabled>生成清理副本</button><div class="message" id="action-message" aria-live="polite"></div></section>
-<section class="card"><span class="num">03 · 证明真的改好</span><h2>拖入修改后的 PPT</h2><p>复检会告诉你哪些问题已解决、哪些仍存在，以及是否因为修改产生新问题。</p><label class="drop" id="verify-drop" role="button" tabindex="0"><input type="file" accept=".pptx"><b>点击或拖入修改后副本</b><span>只有复检通过，才会生成 PPTLint Verified 凭证</span></label><div class="result" id="verify-result" aria-live="polite"></div></section>
+<section class="card"><span class="num">02 · 选择怎么改</span><h2>优先在 PowerPoint 里改</h2><div class="choice recommended"><span class="choice-tag">推荐 · 最稳妥</span><strong>A · 按命中页人工调整</strong><p>展开左侧每项问题，按页码、目标和具体菜单步骤处理，不重建整份文件。</p><div class="platform-note">步骤以 PowerPoint 桌面版为主；WPS 中可在“开始 / 设计 / 图片工具”的同名命令中完成。</div></div><div class="choice"><strong>B · 复制给助手分析</strong><p>可复制完整任务，让助手进一步给建议；在原生保真编辑链路完成前，不再承诺一键生成修改版。</p><div class="actions"><button class="btn accent" id="ultimate-btn" disabled>自动改文件暂不可用</button><button class="btn alt" id="copy-btn" disabled>复制完整任务</button></div></div><h3 class="subhead">可安全清理的隐私内容</h3><div class="checks" id="cleanup-checks"><span style="color:var(--muted)">先完成第一步。</span></div><button class="btn alt" id="cleanup-btn" disabled>生成清理副本</button><div class="message" id="action-message" aria-live="polite"></div></section>
+<section class="card"><span class="num">03 · 规则复检 + 画面确认</span><h2>先目检，再拖入副本</h2><p>先在 PowerPoint/WPS 中查看每个修改页；PPTLint 复检只负责规则变化，不能代替画面验收。</p><div class="checks"><label><input type="checkbox" id="visual-confirm">我已确认修改页没有黑底、缺字、丢链接、错位或异常换行</label></div><label class="drop" id="verify-drop" role="button" tabindex="0"><input type="file" accept=".pptx"><b>点击或拖入修改后副本</b><span>规则复检与人工画面确认都完成后，才生成 Verified 凭证</span></label><div class="result" id="verify-result" aria-live="polite"></div></section>
 </main><footer class="footer">PPTLint __VERSION__ · 会话关闭后自动删除临时文件 · 无统计 · 无遥测</footer></div>
 <script>
 const TOKEN=__TOKEN__;const state={deck:null};
 const opLabels={'clear-personal-metadata':'清除作者和最后编辑者信息','remove-comments':'移除批注','remove-speaker-notes':'移除讲者备注'};
-const modeLabels={'cleanup-copy':'PPTLint 可清理副本','guided-powerpoint':'适合自己调整','agent-rebuild':'适合 Ultimate 优化','human-decision':'需要你先确认'};
+const modeLabels={'cleanup-copy':'PPTLint 可清理副本','guided-powerpoint':'适合自己调整','agent-rebuild':'建议先人工调整','human-decision':'需要你先确认'};
 function auth(){return{'X-PPTLint-Token':TOKEN}}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function downloads(items){return '<div class="downloads">'+(items||[]).map(x=>`<a href="${esc(x.url)}">${esc(x.label)}</a>`).join('')+'</div>'}
 function wireDrop(id,fn){const box=document.getElementById(id),input=box.querySelector('input');box.addEventListener('click',()=>input.click());box.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();input.click()}});input.addEventListener('change',()=>input.files[0]&&fn(input.files[0]));['dragenter','dragover'].forEach(e=>box.addEventListener(e,x=>{x.preventDefault();box.classList.add('drag')}));['dragleave','drop'].forEach(e=>box.addEventListener(e,x=>{x.preventDefault();box.classList.remove('drag')}));box.addEventListener('drop',e=>e.dataTransfer.files[0]&&fn(e.dataTransfer.files[0]))}
 async function api(path,opt={}){opt.headers={...(opt.headers||{}),...auth()};const r=await fetch(path,opt);const data=await r.json();if(!r.ok)throw new Error(data.error||'运行失败');return data}
 async function check(file){const card=document.getElementById('check-card');card.classList.add('spinner');try{const scenario=document.getElementById('scenario').value;const data=await api(`/api/check?filename=${encodeURIComponent(file.name)}&scenario=${scenario}`,{method:'POST',headers:{'Content-Type':'application/vnd.openxmlformats-officedocument.presentationml.presentation'},body:file});state.deck=data;renderCheck(data);renderActions(data)}catch(e){showError('check-result',e.message)}finally{card.classList.remove('spinner')}}
-function taskMarkup(t){const loc=t.slideIndex?`第 ${t.slideIndex} 页`:'整个文件',eligible=t.ultimateEligible;return `<details class="task"><summary><span></span><span class="task-title"><b>${loc} · ${esc(t.consequence)}</b><small>${esc(modeLabels[t.repairMode]||t.repairMode)} · 风险 ${esc(t.risk)}</small></span></summary><div class="task-body"><b>希望改成什么样</b><p>${esc(t.target)}</p><b>自己在 PowerPoint 里这样改</b><ol>${(t.steps||[]).map(step=>`<li>${esc(step)}</li>`).join('')}</ol><label class="task-route">${eligible?`<input class="ultimate-task" type="checkbox" value="${esc(t.taskId)}" data-slide="${esc(t.slideIndex)}" checked>`:'<input type="checkbox" disabled>'}<span><b>${eligible?'同时交给 Ultimate 优化这一页':'这一项需要人工确认或由 PPTLint 清理'}</b><small>${eligible?'只改命中页，原文和页数保持不变。':'不会被一键优化擅自处理。'}</small></span></label></div></details>`}
-function renderCheck(d){const r=d.readiness||{},cls=r.status||'review',label={ready:'可以交付',review:'发送前再看一眼',blocked:'先处理再发送'}[cls]||'需要检查',tasks=d.tasks||[],eligiblePages=new Set(tasks.filter(t=>t.ultimateEligible).map(t=>t.slideIndex)).size;document.getElementById('check-result').innerHTML=`<div class="status ${cls}"><div><b>${label}</b><div>${tasks.length} 项处理任务，逐项展开即可照着改</div></div></div><div class="metrics"><div class="metric"><span>辅助分数</span><strong>${d.score}</strong></div><div class="metric"><span>可一键优化页</span><strong>${eligiblePages}</strong></div><div class="metric"><span>需你判断</span><strong>${d.modeCounts['human-decision']||0}</strong></div></div><div class="tasks">${tasks.map(taskMarkup).join('')}</div>${downloads(d.downloads)}`;document.getElementById('check-result').classList.add('show');document.querySelectorAll('.ultimate-task').forEach(item=>item.addEventListener('change',updateUltimateCount));updateUltimateCount()}
+function taskMarkup(t){const loc=t.slideIndex?`第 ${t.slideIndex} 页`:'整个文件',plan=t.ultimatePlanEligible;return `<details class="task"><summary><span></span><span class="task-title"><b>${loc} · ${esc(t.consequence)}</b><small>${esc(modeLabels[t.repairMode]||t.repairMode)} · 风险 ${esc(t.risk)}</small></span></summary><div class="task-body"><b>希望改成什么样</b><p>${esc(t.target)}</p><b>自己在 PowerPoint 里这样改</b><ol>${(t.steps||[]).map(step=>`<li>${esc(step)}</li>`).join('')}</ol><div class="task-route"><span><b>${plan?'可复制给助手继续分析':'这一项需要人工确认或由 PPTLint 清理'}</b><small>${plan?'助手只能给定向建议；当前不会自动重导出整份 PPT。':'不会被自动处理。'}</small></span></div></div></details>`}
+function renderCheck(d){const r=d.readiness||{},cls=r.status||'review',label={ready:'可以交付',review:'发送前再看一眼',blocked:'先处理再发送'}[cls]||'需要检查',tasks=d.tasks||[],guidedPages=new Set(tasks.filter(t=>t.ultimatePlanEligible).map(t=>t.slideIndex)).size;document.getElementById('check-result').innerHTML=`<div class="status ${cls}"><div><b>${label}</b><div>${tasks.length} 项处理任务，逐项展开即可照着改</div></div></div><div class="metrics"><div class="metric"><span>辅助分数</span><strong>${d.score}</strong></div><div class="metric"><span>有人工步骤的页</span><strong>${guidedPages}</strong></div><div class="metric"><span>需你判断</span><strong>${d.modeCounts['human-decision']||0}</strong></div></div><div class="tasks">${tasks.map(taskMarkup).join('')}</div>${downloads(d.downloads)}`;document.getElementById('check-result').classList.add('show');updateUltimateCount()}
 function renderActions(d){const box=document.getElementById('cleanup-checks'),ops=d.cleanupOperations||[];box.innerHTML=ops.length?ops.map(op=>`<label><input type="checkbox" value="${op}">${opLabels[op]}</label>`).join(''):'<span style="color:var(--muted)">没有可由 PPTLint 自动清理的项目。</span>';document.getElementById('cleanup-btn').disabled=!ops.length;document.getElementById('copy-btn').disabled=false;updateUltimateCount()}
 function selectedUltimateTasks(){return [...document.querySelectorAll('.ultimate-task:checked')].map(item=>item.value)}
-function updateUltimateCount(){const items=[...document.querySelectorAll('.ultimate-task:checked')],count=items.length,pages=new Set(items.map(item=>item.dataset.slide)).size,button=document.getElementById('ultimate-btn');button.disabled=!state.deck||!count;button.textContent=`优化已选 ${pages} 页 · ${count} 项`}
+function updateUltimateCount(){const button=document.getElementById('ultimate-btn');button.disabled=true;button.textContent='自动改文件暂不可用'}
 function showMessage(text,html=false,error=false){const el=document.getElementById('action-message');el[html?'innerHTML':'textContent']=text;el.classList.toggle('error',error);el.classList.add('show')}
 async function cleanup(){const ops=[...document.querySelectorAll('#cleanup-checks input:checked')].map(x=>x.value);if(!ops.length){showMessage('请先勾选至少一项。',false,true);return}try{const data=await api('/api/fix',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({deckId:state.deck.deckId,operations:ops})});showMessage(`${data.passed?'清理并复检完成':'副本已生成，但仍有需处理的问题。'}${downloads(data.downloads)}`,true)}catch(e){showMessage(e.message,false,true)}}
 async function copyBrief(){await navigator.clipboard.writeText(state.deck.agentBrief);document.getElementById('copy-btn').textContent='已复制完整任务'}
 async function optimize(){const button=document.getElementById('ultimate-btn'),taskIds=selectedUltimateTasks();if(!taskIds.length)return;button.disabled=true;button.textContent='正在准备本地优化…';try{const data=await api('/api/ultimate-handoff',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({deckId:state.deck.deckId,taskIds})});if(!data.launched&&data.command){try{await navigator.clipboard.writeText(data.command)}catch{}}showMessage(data.launched?`已启动 Codex，只处理 ${data.taskCount} 项命中页。项目保存在：<code>${esc(data.projectPath)}</code>`:`Ultimate 项目已准备好，启动命令已复制。<code>${esc(data.command||'')}</code>`,true)}catch(e){showMessage(e.message,false,true)}finally{updateUltimateCount()}}
-async function verify(file){if(!state.deck){showError('verify-result','请先检查原 PPT。');return}try{const d=await api(`/api/verify?filename=${encodeURIComponent(file.name)}&deckId=${encodeURIComponent(state.deck.deckId)}`,{method:'POST',headers:{'Content-Type':'application/vnd.openxmlformats-officedocument.presentationml.presentation'},body:file});const label=d.passed?'复检通过 · PPTLint Verified':'复检未通过';document.getElementById('verify-result').innerHTML=`<div class="status ${d.passed?'':'review'}"><div><b>${label}</b><div>已完成 ${d.completed} · 仍存在 ${d.remaining} · 无法确认 ${d.unable} · 回归 ${d.regressions}</div></div></div>${downloads(d.downloads)}`;document.getElementById('verify-result').classList.add('show')}catch(e){showError('verify-result',e.message)}}
+async function verify(file){if(!state.deck){showError('verify-result','请先检查原 PPT。');return}const confirmed=document.getElementById('visual-confirm').checked;if(!confirmed){showError('verify-result','请先在 PowerPoint/WPS 中目检修改页，并勾选画面确认。');return}try{const d=await api(`/api/verify?filename=${encodeURIComponent(file.name)}&deckId=${encodeURIComponent(state.deck.deckId)}&visualConfirmed=true`,{method:'POST',headers:{'Content-Type':'application/vnd.openxmlformats-officedocument.presentationml.presentation'},body:file});const label=d.passed?'复检通过 · PPTLint Verified':d.automatedPassed?'规则已通过，仍缺画面确认':'复检未通过';document.getElementById('verify-result').innerHTML=`<div class="status ${d.passed?'':'review'}"><div><b>${label}</b><div>已完成 ${d.completed} · 仍存在 ${d.remaining} · 无法确认 ${d.unable} · 回归 ${d.regressions}</div></div></div>${downloads(d.downloads)}`;document.getElementById('verify-result').classList.add('show')}catch(e){showError('verify-result',e.message)}}
 function showError(id,msg){const el=document.getElementById(id);el.innerHTML=`<div class="status blocked"><b>${esc(msg)}</b></div>`;el.classList.add('show')}
 wireDrop('check-drop',check);wireDrop('verify-drop',verify);document.getElementById('cleanup-btn').addEventListener('click',cleanup);document.getElementById('copy-btn').addEventListener('click',copyBrief);document.getElementById('ultimate-btn').addEventListener('click',optimize);
 </script></body></html>'''
@@ -527,7 +545,10 @@ class _Handler(BaseHTTPRequestHandler):
         plan_path = self.server.session.artifacts / f"{deck_id}-repair-plan.json"
         brief_path = self.server.session.artifacts / f"{deck_id}-agent-brief.md"
         write_repair_plan(plan_path, plan)
-        brief_path.write_text(render_repair_brief(plan, adapter="generic-agent", language="zh-CN"), encoding="utf-8")
+        brief_path.write_text(
+            render_repair_brief(plan, adapter="powerpoint-manual", language="zh-CN"),
+            encoding="utf-8",
+        )
         record = DeckRecord(source, scenario, report, report_stem, plan, plan_path, brief_path)
         self.server.session.decks[deck_id] = record
         self._json(_report_response(self.server.session, deck_id, record))
@@ -577,6 +598,11 @@ class _Handler(BaseHTTPRequestHandler):
         self._json({"passed": passed, "downloads": [_download_item(self.server.session, output, "清理后 PPTX"), _download_item(self.server.session, receipt_path, "清理回执"), _download_item(self.server.session, comparison_paths[0], "清理前后对比") ]})
 
     def _ultimate_handoff(self) -> None:
+        if not ULTIMATE_NATIVE_REPAIR_AVAILABLE:
+            raise ValueError(
+                "已暂停自动修改真实 PPT：当前整份重导出链路可能破坏母版、透明背景、组合对象和链接。"
+                "请使用报告中的 PowerPoint 步骤，或复制完整任务让助手给出定向建议。"
+            )
         body = json.loads(self._body())
         if not isinstance(body, dict):
             raise ValueError("优化请求必须是 JSON 对象。")
@@ -616,6 +642,7 @@ class _Handler(BaseHTTPRequestHandler):
 
     def _verify(self, parsed) -> None:
         query = parse_qs(parsed.query)
+        visual_confirmed = query.get("visualConfirmed", [""])[0].lower() == "true"
         deck_id = query.get("deckId", [""])[0]
         record = self.server.session.decks.get(deck_id)
         if record is None:
@@ -638,7 +665,8 @@ class _Handler(BaseHTTPRequestHandler):
         verification_path = write_repair_verification(self.server.session.artifacts / f"{deck_id}-{run_id}-verification.json", verification)
         files = [Path(f"{record.report_stem}.html"), Path(f"{record.report_stem}.json"), record.plan_path, record.brief_path, Path(f"{after_stem}.html"), Path(f"{after_stem}.json"), *comparison_paths, verification_path]
         downloads = [_download_item(self.server.session, comparison_paths[0], "完整前后对比"), _download_item(self.server.session, verification_path, "修复任务验证")]
-        if verification["passed"]:
+        passed = bool(verification["passed"]) and visual_confirmed
+        if passed:
             credential_path = self.server.session.artifacts / f"{deck_id}-{run_id}-pptlint-verified.json"
             credential = {"schemaVersion": "pptlint-verified/v1", "toolVersion": __version__, "status": "verified", "sourceSha256": record.plan["source"]["sha256"], "outputSha256": after["file"]["sha256"], "verificationSha256": _verification_hash(verification_path), "proof": {"comparison": comparison_paths[1].name, "verification": verification_path.name}}
             credential_path.write_text(json.dumps(credential, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")
@@ -651,7 +679,7 @@ class _Handler(BaseHTTPRequestHandler):
             for path in files:
                 archive.write(path, arcname=path.name)
         downloads.append(_download_item(self.server.session, pack, "完整 Proof Pack"))
-        self._json({"passed": verification["passed"], "completed": len(verification["completedTaskIds"]), "remaining": len(verification["remainingTaskIds"]), "unable": len(verification["unableToConfirmTaskIds"]), "regressions": len(verification["regressions"]), "downloads": downloads})
+        self._json({"passed": passed, "automatedPassed": bool(verification["passed"]), "visualReviewRequired": not visual_confirmed, "completed": len(verification["completedTaskIds"]), "remaining": len(verification["remainingTaskIds"]), "unable": len(verification["unableToConfirmTaskIds"]), "regressions": len(verification["regressions"]), "downloads": downloads})
 
 
 def create_app_server(port: int = 0) -> tuple[_Server, AppSession, str]:

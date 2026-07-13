@@ -73,8 +73,9 @@ def test_app_binds_only_loopback_and_serves_a_self_contained_chinese_ui() -> Non
         markup = body.decode("utf-8")
         assert status == 200
         assert "把难改的页点出来" in markup
-        assert "自己在 PowerPoint 里改" in markup
-        assert "交给 Ultimate 优化" in markup
+        assert "优先在 PowerPoint 里改" in markup
+        assert "自动改文件暂不可用" in markup
+        assert "不再用整份重导出的方式" in markup
         assert "PPTLint Verified" in markup
         assert "不上传" in markup
         assert markup.count('role="button" tabindex="0"') == 2
@@ -86,7 +87,7 @@ def test_app_binds_only_loopback_and_serves_a_self_contained_chinese_ui() -> Non
     assert not root.exists()
 
 
-def test_app_hands_only_selected_eligible_tasks_to_ultimate(tmp_path: Path, monkeypatch) -> None:
+def test_app_blocks_full_deck_reexport_handoff_until_native_repair_exists(tmp_path: Path, monkeypatch) -> None:
     source = write_pptx(tmp_path / "needs-polish.pptx", slides=[slide_xml(body_size=1000)])
     bridge_calls: list[tuple[str, dict[str, object] | None]] = []
 
@@ -117,23 +118,19 @@ def test_app_hands_only_selected_eligible_tasks_to_ultimate(tmp_path: Path, monk
         )
         assert status == 200
         checked = json.loads(body)
-        eligible = [task for task in checked["tasks"] if task["ultimateEligible"]]
-        assert eligible
+        planned = [task for task in checked["tasks"] if task["ultimatePlanEligible"]]
+        assert planned
+        assert all(task["ultimateEligible"] is False for task in checked["tasks"])
         payload = json.dumps(
-            {"deckId": checked["deckId"], "taskIds": [eligible[0]["taskId"]]}
+            {"deckId": checked["deckId"], "taskIds": [planned[0]["taskId"]]}
         ).encode("utf-8")
         status, body, _ = client.request(
             "POST", "/api/ultimate-handoff", payload, content_type="application/json"
         )
         result = json.loads(body)
-        assert status == 200
-        assert result["launched"] is True
-        assert result["taskCount"] == 1
-        assert [path for path, _ in bridge_calls] == [
-            "/health",
-            "/handoff",
-            "/agent/launch",
-        ]
+        assert status == 400
+        assert "已暂停自动修改真实 PPT" in result["error"]
+        assert bridge_calls == []
     finally:
         _stop(server, session, thread)
 
@@ -235,8 +232,21 @@ def test_app_generates_verified_credential_only_after_a_passing_recheck(tmp_path
             source.read_bytes(),
         )
         assert status == 200
+        unconfirmed = json.loads(body)
+        assert unconfirmed["automatedPassed"] is True
+        assert unconfirmed["passed"] is False
+        assert unconfirmed["visualReviewRequired"] is True
+        assert not any("pptlint-verified" in item["name"] for item in unconfirmed["downloads"])
+
+        status, body, _ = client.request(
+            "POST",
+            f"/api/verify?filename=ready-after.pptx&deckId={checked['deckId']}&visualConfirmed=true",
+            source.read_bytes(),
+        )
+        assert status == 200
         verified = json.loads(body)
         assert verified["passed"] is True
+        assert verified["visualReviewRequired"] is False
         names = {item["name"] for item in verified["downloads"]}
         assert any(name.endswith("pptlint-verified.json") for name in names)
         assert any(name.endswith("pptlint-verified.svg") for name in names)

@@ -4,6 +4,9 @@ This file separates versions that were actually published from internal developm
 
 ## Unreleased
 
+- Pause full-deck Ultimate re-export for real existing-PPTX repairs after real-file testing exposed broken transparency, missing visible objects, and lost links. Keep manual PowerPoint steps and task-copy guidance available until a native package-preserving edit path exists.
+- Require an explicit PowerPoint/WPS visual-review attestation before issuing a Verified credential; rule counts and text checks alone no longer qualify as proof of a successful visual repair.
+
 - Ignore explicit ZIP directory entries when validating OOXML content types; older PowerPoint files can contain these harmless entries and must not be capped as critically damaged.
 - Keep one-click Ultimate repair limited to page-scoped visual tasks, show selected page and task counts, and leave accessibility, metadata, external-link, and deck-level decisions on the manual path.
 - Turn every local-app finding into a visible outcome plus concrete PowerPoint desktop steps instead of hiding the useful guidance in downloaded reports.

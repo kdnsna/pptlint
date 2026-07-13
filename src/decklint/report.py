@@ -259,7 +259,7 @@ def _repair_controls(finding: dict[str, object], *, zh: bool) -> str:
     )
     copy_button = (
         f'<button type="button" class="repair-copy" data-copy="{_escape(brief)}">'
-        f'{"复制给 Ultimate 优化" if zh and "ultimate-ppt-master" in recipe.executors else "复制给助手处理" if zh else "Copy for an assistant"}</button>'
+        f'{"复制给助手分析" if zh else "Copy for an assistant"}</button>'
     )
     label = {
         "cleanup-copy": "PPTLint 可以清理副本" if zh else "PPTLint can clean a copy",
