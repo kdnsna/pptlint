@@ -14,6 +14,32 @@ PPTLint is a local `.pptx` delivery preflight tool. It checks the file without u
 uvx pptlint check output.pptx --scenario present
 ```
 
+### What is `uvx`? What if it is not installed?
+
+`uvx` is **not a protocol or a PPTLint command**. It is the tool runner included with [Astral uv](https://docs.astral.sh/uv/guides/tools/). It downloads and runs PPTLint in a temporary isolated environment, so a machine without `uv` will not have `uvx`. The first run requires network access.
+
+Run `uvx --version` to check. If the command is missing, either [install uv](https://docs.astral.sh/uv/getting-started/installation/) or use an existing Python 3.10+ environment:
+
+macOS / Linux:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pptlint
+pptlint check output.pptx --scenario present
+```
+
+Windows PowerShell:
+
+```powershell
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pptlint
+pptlint check output.pptx --scenario present
+```
+
+With the Python installation, replace `uvx pptlint` with `pptlint` in the commands below, and replace `uvx --refresh pptlint app` with `pptlint app`.
+
 For the local drag-and-drop workflow:
 
 ```bash
