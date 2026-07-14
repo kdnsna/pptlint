@@ -108,7 +108,7 @@ Complex layout, hidden-slide, external-link, and image-only-slide decisions rema
     artifact-name: pptlint-report
 ```
 
-Use a full tag such as `kdnsna/pptlint@v1.3.1` when you need an immutable version reference.
+Use a full tag such as `kdnsna/pptlint@v1.3.2` when you need an immutable version reference.
 
 ## Security boundary
 

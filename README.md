@@ -199,7 +199,7 @@ uvx pptlint doctor
     artifact-name: pptlint-report
 ```
 
-Action 会上传 HTML、JSON 和修复计划。固定生产环境也可以锁定完整版本标签，例如 `kdnsna/pptlint@v1.3.1`。
+Action 会上传 HTML、JSON 和修复计划。固定生产环境也可以锁定完整版本标签，例如 `kdnsna/pptlint@v1.3.2`。
 
 ## 参与项目
 

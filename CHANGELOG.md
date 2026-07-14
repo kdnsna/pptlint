@@ -2,19 +2,18 @@
 
 This file separates versions that were actually published from internal development milestones that never had a PyPI release or Git tag.
 
-## Unreleased
-
-- Pause full-deck Ultimate re-export for real existing-PPTX repairs after real-file testing exposed broken transparency, missing visible objects, and lost links. Keep manual PowerPoint steps and task-copy guidance available until a native package-preserving edit path exists.
-- Require an explicit PowerPoint/WPS visual-review attestation before issuing a Verified credential; rule counts and text checks alone no longer qualify as proof of a successful visual repair.
-
-- Ignore explicit ZIP directory entries when validating OOXML content types; older PowerPoint files can contain these harmless entries and must not be capped as critically damaged.
-- Keep one-click Ultimate repair limited to page-scoped visual tasks, show selected page and task counts, and leave accessibility, metadata, external-link, and deck-level decisions on the manual path.
-- Turn every local-app finding into a visible outcome plus concrete PowerPoint desktop steps instead of hiding the useful guidance in downloaded reports.
-- Let users choose between manual adjustment and targeted Ultimate PPT Master repair while locking exact text, numbers, slide count, order, and all unselected slides.
-- Reuse the existing loopback Ultimate Bridge and Agent launch contracts; fall back to a copyable command when the Bridge or auto-launch is unavailable.
-- Improve desktop/mobile hierarchy and report wrapping without changing checking rules, CLI commands, or published JSON schemas.
-
 ## Published releases
+
+### 1.3.2 — 2026-07-14
+
+- Refocus the local delivery desk on finding difficult pages, explaining the desired result, giving concrete PowerPoint steps, and rechecking the output; remove the unavailable automatic-edit entry from the interface.
+- Preserve the current checked deck across refreshes, report-link visits, and browser back navigation while keeping uploaded files inside the temporary local session.
+- Group repeated same-page, same-rule tasks into one readable card with an occurrence count, while retaining every detailed finding in the complete report and repair plan.
+- Keep automatic changes limited to explicitly selected privacy-cleanup copies, label high-risk layout, table, screenshot, and external-link work as manual, and require PowerPoint/WPS visual attestation before Verified.
+- Add a private-source-safe 20-case guidance evaluation: all 14 lint-detectable cases include location, route, manual steps, and recheck guidance; all 6 instruction-only content edits remain explicitly outside the checker contract; false automation promises remain zero.
+- Document what `uvx` is, how it installs tools into an isolated temporary environment, and the equivalent Python virtual-environment fallback for users who do not have `uv` installed.
+- Ignore harmless explicit ZIP directory entries in older OOXML packages and pause unsafe full-deck re-export of existing presentations after real-file validation exposed visual and link regressions.
+- Keep `pptlint-report/v2`, `pptlint-repair-plan/v1`, CLI commands, cleanup operations, and the loopback Bridge compatibility contract unchanged.
 
 ### 1.3.1 — 2026-07-13
 

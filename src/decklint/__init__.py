@@ -1,3 +1,3 @@
 """PPTLint core package with DeckLint compatibility imports."""
 
-__version__ = "1.3.1"
+__version__ = "1.3.2"

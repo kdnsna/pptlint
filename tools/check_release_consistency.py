@@ -41,7 +41,7 @@ def main() -> int:
         or len(proof["persistent"]) != 21
         or len(proof["new"]) != 3
     ):
-        raise SystemExit("Committed Proof metrics do not match the v1.3.1 release contract")
+        raise SystemExit("Committed Proof metrics do not match the public release contract")
     return 0
 
 

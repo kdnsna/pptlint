@@ -1,6 +1,6 @@
 # Ultimate PPT Master × PPTLint Proof Loop
 
-这是使用 PPTLint 1.3.1 重新生成的公开真实案例，不是手工修改的演示数据。
+这是使用 PPTLint 1.3.2 重新生成的公开真实案例，不是手工修改的演示数据。
 
 | 指标 | Before | After | 变化 |
 |---|---:|---:|---:|

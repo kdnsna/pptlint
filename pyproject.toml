@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "pptlint"
-version = "1.3.1"
+version = "1.3.2"
 description = "Local PowerPoint preflight, explicit cleanup copies, and repair verification."
 readme = "README.md"
 requires-python = ">=3.10"
