@@ -72,10 +72,19 @@ def test_app_binds_only_loopback_and_serves_a_self_contained_chinese_ui() -> Non
         status, body, headers = client.request("GET", client.root_path)
         markup = body.decode("utf-8")
         assert status == 200
-        assert "把难改的页点出来" in markup
-        assert "优先在 PowerPoint 里改" in markup
-        assert "自动改文件暂不可用" in markup
-        assert "不再用整份重导出的方式" in markup
+        assert "找到难改的页面" in markup
+        assert "优先按命中页处理" in markup
+        assert "自动改文件暂不可用" not in markup
+        assert "不会把整份真实 PPT 重导出来" in markup
+        assert "待处理页面" in markup
+        assert "可安全清理" in markup
+        assert "需要判断" in markup
+        assert "groupTasks" in markup and "pageGroupMarkup" in markup
+        assert "没有可由 PPTLint 自动清理的项目。" in markup
+        assert "等待检查结果。" in markup
+        assert "解析文件 → 检查风险 → 生成调整步骤" in markup
+        assert "MAX_UPLOAD_BYTES=209715200" in markup
+        assert "WPS 的入口名称和位置可能不同" in markup
         assert "PPTLint Verified" in markup
         assert "不上传" in markup
         assert markup.count('role="button" tabindex="0"') == 2

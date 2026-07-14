@@ -1,0 +1,70 @@
+{
+  "schemaVersion": "pptlint-edit-eval-sources/v1",
+  "sources": [
+    {
+      "id": "business-01",
+      "type": "private-pptx",
+      "locatorEnv": "PPTLINT_EDIT_SOURCE_BUSINESS_01",
+      "sha256": "23cc9aad32667705eb30c41f8faf6ef3b42aa15654a2b8d79114a61e10c1e056",
+      "slides": 9,
+      "distribution": "private-do-not-commit"
+    },
+    {
+      "id": "business-02",
+      "type": "private-pptx",
+      "locatorEnv": "PPTLINT_EDIT_SOURCE_BUSINESS_02",
+      "sha256": "764479883b63a23198c4f2487a8e6c1e673c5bba7b554423cea584d851e57291",
+      "slides": 17,
+      "distribution": "private-do-not-commit"
+    },
+    {
+      "id": "business-03",
+      "type": "private-pptx",
+      "locatorEnv": "PPTLINT_EDIT_SOURCE_BUSINESS_03",
+      "sha256": "50f60d46f660248da32099e9a724154cc2c86d5f05137d26264b57a7ba54e7bc",
+      "slides": 18,
+      "distribution": "private-do-not-commit"
+    },
+    {
+      "id": "business-04",
+      "type": "private-pptx",
+      "locatorEnv": "PPTLINT_EDIT_SOURCE_BUSINESS_04",
+      "sha256": "efedacf3dcfc733df71b4b607cfb9841f631a167c877ea689efe358f6757c811",
+      "slides": 15,
+      "distribution": "private-do-not-commit"
+    },
+    {
+      "id": "business-05",
+      "type": "private-pptx",
+      "locatorEnv": "PPTLINT_EDIT_SOURCE_BUSINESS_05",
+      "sha256": "f89fad0e85469e3c1b89b9cec239d774f1d83b26bb4801905c60d678de860814",
+      "slides": 27,
+      "distribution": "private-do-not-commit"
+    },
+    {
+      "id": "business-06",
+      "type": "private-pptx",
+      "locatorEnv": "PPTLINT_EDIT_SOURCE_BUSINESS_06",
+      "sha256": "5a47b8bcf43f80e7ce484a609ba37a93ede14c7a650bf623b60153dcf250eb71",
+      "slides": 25,
+      "distribution": "private-do-not-commit"
+    },
+    {
+      "id": "paper-ppt-eval",
+      "type": "public-web",
+      "url": "https://arxiv.org/abs/2606.31154",
+      "title": "PPT-Eval: A Benchmark for Computer-Use Agents on PowerPoint Tasks",
+      "retrievedAt": "2026-07-14",
+      "distribution": "link-only"
+    },
+    {
+      "id": "article-social-card",
+      "type": "public-web",
+      "url": "https://chinajob.mohrss.gov.cn/c/2025-03-27/428837.shtml",
+      "title": "小卡片服务大民生——社保卡‘一卡通’建设按下‘快进键’",
+      "publisher": "人力资源和社会保障部",
+      "retrievedAt": "2026-07-14",
+      "distribution": "link-only"
+    }
+  ]
+}

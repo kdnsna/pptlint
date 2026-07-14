@@ -1,0 +1,564 @@
+{
+  "cases": [
+    {
+      "caseId": "business-01-cover-date",
+      "durationSeconds": 0.1659,
+      "falseAutomationPromise": false,
+      "hasLocation": null,
+      "hasManualSteps": null,
+      "hasVerificationStep": null,
+      "operationClass": "atomic-text-update",
+      "passed": true,
+      "routeCorrect": null,
+      "scopeClass": "instruction-only",
+      "sourceId": "business-01",
+      "targetDetected": null
+    },
+    {
+      "caseId": "business-01-overlap-fix",
+      "durationSeconds": 0.1659,
+      "falseAutomationPromise": false,
+      "hasLocation": true,
+      "hasManualSteps": true,
+      "hasVerificationStep": true,
+      "matchedTaskCount": 1,
+      "operationClass": "local-layout-repair",
+      "passed": true,
+      "repairModes": [
+        "agent-rebuild"
+      ],
+      "routeCorrect": true,
+      "scopeClass": "lint-detectable",
+      "sourceId": "business-01",
+      "targetChecks": [
+        {
+          "found": 1,
+          "minimum": 1,
+          "passed": true,
+          "ruleId": "readability.text-overlap",
+          "slides": [
+            7
+          ]
+        }
+      ],
+      "targetDetected": true
+    },
+    {
+      "caseId": "business-01-support-readability",
+      "durationSeconds": 0.1659,
+      "falseAutomationPromise": false,
+      "hasLocation": true,
+      "hasManualSteps": true,
+      "hasVerificationStep": true,
+      "matchedTaskCount": 2,
+      "operationClass": "single-slide-readability",
+      "passed": true,
+      "repairModes": [
+        "guided-powerpoint"
+      ],
+      "routeCorrect": true,
+      "scopeClass": "lint-detectable",
+      "sourceId": "business-01",
+      "targetChecks": [
+        {
+          "found": 1,
+          "minimum": 1,
+          "passed": true,
+          "ruleId": "readability.small-font",
+          "slides": [
+            8
+          ]
+        },
+        {
+          "found": 1,
+          "minimum": 1,
+          "passed": true,
+          "ruleId": "accessibility.missing-title",
+          "slides": [
+            8
+          ]
+        }
+      ],
+      "targetDetected": true
+    },
+    {
+      "caseId": "business-02-offcanvas-overview",
+      "durationSeconds": 0.3228,
+      "falseAutomationPromise": false,
+      "hasLocation": true,
+      "hasManualSteps": true,
+      "hasVerificationStep": true,
+      "matchedTaskCount": 1,
+      "operationClass": "off-canvas-repair",
+      "passed": true,
+      "repairModes": [
+        "agent-rebuild"
+      ],
+      "routeCorrect": true,
+      "scopeClass": "lint-detectable",
+      "sourceId": "business-02",
+      "targetChecks": [
+        {
+          "found": 1,
+          "minimum": 1,
+          "passed": true,
+          "ruleId": "readability.off-canvas-text",
+          "slides": [
+            2
+          ]
+        }
+      ],
+      "targetDetected": true
+    },
+    {
+      "caseId": "business-02-marketing-screenshot",
+      "durationSeconds": 0.3228,
+      "falseAutomationPromise": false,
+      "hasLocation": true,
+      "hasManualSteps": true,
+      "hasVerificationStep": true,
+      "matchedTaskCount": 4,
+      "operationClass": "screenshot-annotation-repair",
+      "passed": true,
+      "repairModes": [
+        "agent-rebuild",
+        "guided-powerpoint"
+      ],
+      "routeCorrect": true,
+      "scopeClass": "lint-detectable",
+      "sourceId": "business-02",
+      "targetChecks": [
+        {
+          "found": 1,
+          "minimum": 1,
+          "passed": true,
+          "ruleId": "readability.off-canvas-text",
+          "slides": [
+            11
+          ]
+        },
+        {
+          "found": 3,
+          "minimum": 1,
+          "passed": true,
+          "ruleId": "readability.small-font",
+          "slides": [
+            11
+          ]
+        }
+      ],
+      "targetDetected": true
+    },
+    {
+      "caseId": "business-02-pension-example",
+      "durationSeconds": 0.3228,
+      "falseAutomationPromise": false,
+      "hasLocation": true,
+      "hasManualSteps": true,
+      "hasVerificationStep": true,
+      "matchedTaskCount": 1,
+      "operationClass": "dense-screenshot-layout",
+      "passed": true,
+      "repairModes": [
+        "agent-rebuild"
+      ],
+      "routeCorrect": true,
+      "scopeClass": "lint-detectable",
+      "sourceId": "business-02",
+      "targetChecks": [
+        {
+          "found": 1,
+          "minimum": 1,
+          "passed": true,
+          "ruleId": "readability.text-overlap",
+          "slides": [
+            12
+          ]
+        }
+      ],
+      "targetDetected": true
+    },
+    {
+      "caseId": "business-03-cover-date",
+      "durationSeconds": 0.2939,
+      "falseAutomationPromise": false,
+      "hasLocation": null,
+      "hasManualSteps": null,
+      "hasVerificationStep": null,
+      "operationClass": "atomic-text-update",
+      "passed": true,
+      "routeCorrect": null,
+      "scopeClass": "instruction-only",
+      "sourceId": "business-03",
+      "targetDetected": null
+    },
+    {
+      "caseId": "business-03-progress-table",
+      "durationSeconds": 0.2939,
+      "falseAutomationPromise": false,
+      "hasLocation": true,
+      "hasManualSteps": true,
+      "hasVerificationStep": true,
+      "matchedTaskCount": 1,
+      "operationClass": "table-and-label-repair",
+      "passed": true,
+      "repairModes": [
+        "agent-rebuild"
+      ],
+      "routeCorrect": true,
+      "scopeClass": "lint-detectable",
+      "sourceId": "business-03",
+      "targetChecks": [
+        {
+          "found": 1,
+          "minimum": 1,
+          "passed": true,
+          "ruleId": "readability.off-canvas-text",
+          "slides": [
+            9
+          ]
+        }
+      ],
+      "targetDetected": true
+    },
+    {
+      "caseId": "business-03-campus-overlap",
+      "durationSeconds": 0.2939,
+      "falseAutomationPromise": false,
+      "hasLocation": true,
+      "hasManualSteps": true,
+      "hasVerificationStep": true,
+      "matchedTaskCount": 1,
+      "operationClass": "local-layout-repair",
+      "passed": true,
+      "repairModes": [
+        "agent-rebuild"
+      ],
+      "routeCorrect": true,
+      "scopeClass": "lint-detectable",
+      "sourceId": "business-03",
+      "targetChecks": [
+        {
+          "found": 1,
+          "minimum": 1,
+          "passed": true,
+          "ruleId": "readability.text-overlap",
+          "slides": [
+            14
+          ]
+        }
+      ],
+      "targetDetected": true
+    },
+    {
+      "caseId": "business-04-cover-date",
+      "durationSeconds": 0.2913,
+      "falseAutomationPromise": false,
+      "hasLocation": null,
+      "hasManualSteps": null,
+      "hasVerificationStep": null,
+      "operationClass": "atomic-text-update",
+      "passed": true,
+      "routeCorrect": null,
+      "scopeClass": "instruction-only",
+      "sourceId": "business-04",
+      "targetDetected": null
+    },
+    {
+      "caseId": "business-04-new-card-table",
+      "durationSeconds": 0.2913,
+      "falseAutomationPromise": false,
+      "hasLocation": true,
+      "hasManualSteps": true,
+      "hasVerificationStep": true,
+      "matchedTaskCount": 1,
+      "operationClass": "native-table-repair",
+      "passed": true,
+      "repairModes": [
+        "agent-rebuild"
+      ],
+      "routeCorrect": true,
+      "scopeClass": "lint-detectable",
+      "sourceId": "business-04",
+      "targetChecks": [
+        {
+          "found": 1,
+          "minimum": 1,
+          "passed": true,
+          "ruleId": "readability.off-canvas-text",
+          "slides": [
+            4
+          ]
+        }
+      ],
+      "targetDetected": true
+    },
+    {
+      "caseId": "business-04-payroll-density",
+      "durationSeconds": 0.2913,
+      "falseAutomationPromise": false,
+      "hasLocation": true,
+      "hasManualSteps": true,
+      "hasVerificationStep": true,
+      "matchedTaskCount": 1,
+      "operationClass": "dense-data-readability",
+      "passed": true,
+      "repairModes": [
+        "agent-rebuild"
+      ],
+      "routeCorrect": true,
+      "scopeClass": "lint-detectable",
+      "sourceId": "business-04",
+      "targetChecks": [
+        {
+          "found": 1,
+          "minimum": 1,
+          "passed": true,
+          "ruleId": "readability.dense-text",
+          "slides": [
+            6
+          ]
+        }
+      ],
+      "targetDetected": true
+    },
+    {
+      "caseId": "business-05-cover-date",
+      "durationSeconds": 0.4488,
+      "falseAutomationPromise": false,
+      "hasLocation": null,
+      "hasManualSteps": null,
+      "hasVerificationStep": null,
+      "operationClass": "atomic-text-update",
+      "passed": true,
+      "routeCorrect": null,
+      "scopeClass": "instruction-only",
+      "sourceId": "business-05",
+      "targetDetected": null
+    },
+    {
+      "caseId": "business-05-flow-overflow",
+      "durationSeconds": 0.4488,
+      "falseAutomationPromise": false,
+      "hasLocation": true,
+      "hasManualSteps": true,
+      "hasVerificationStep": true,
+      "matchedTaskCount": 2,
+      "operationClass": "multi-slide-screenshot-flow",
+      "passed": true,
+      "repairModes": [
+        "agent-rebuild"
+      ],
+      "routeCorrect": true,
+      "scopeClass": "lint-detectable",
+      "sourceId": "business-05",
+      "targetChecks": [
+        {
+          "found": 2,
+          "minimum": 2,
+          "passed": true,
+          "ruleId": "readability.off-canvas-text",
+          "slides": [
+            16,
+            17
+          ]
+        }
+      ],
+      "targetDetected": true
+    },
+    {
+      "caseId": "business-05-remove-notes",
+      "durationSeconds": 0.4488,
+      "falseAutomationPromise": false,
+      "hasLocation": true,
+      "hasManualSteps": true,
+      "hasVerificationStep": true,
+      "matchedTaskCount": 2,
+      "operationClass": "privacy-cleanup",
+      "passed": true,
+      "repairModes": [
+        "cleanup-copy"
+      ],
+      "routeCorrect": true,
+      "scopeClass": "lint-detectable",
+      "sourceId": "business-05",
+      "targetChecks": [
+        {
+          "found": 2,
+          "minimum": 2,
+          "passed": true,
+          "ruleId": "privacy.speaker-notes",
+          "slides": null
+        }
+      ],
+      "targetDetected": true
+    },
+    {
+      "caseId": "business-05-contact-redaction",
+      "durationSeconds": 0.4488,
+      "falseAutomationPromise": false,
+      "hasLocation": null,
+      "hasManualSteps": null,
+      "hasVerificationStep": null,
+      "operationClass": "visible-privacy-redaction",
+      "passed": true,
+      "routeCorrect": null,
+      "scopeClass": "instruction-only",
+      "sourceId": "business-05",
+      "targetDetected": null
+    },
+    {
+      "caseId": "business-06-cover-date",
+      "durationSeconds": 0.4603,
+      "falseAutomationPromise": false,
+      "hasLocation": null,
+      "hasManualSteps": null,
+      "hasVerificationStep": null,
+      "operationClass": "atomic-text-update",
+      "passed": true,
+      "routeCorrect": null,
+      "scopeClass": "instruction-only",
+      "sourceId": "business-06",
+      "targetDetected": null
+    },
+    {
+      "caseId": "business-06-remove-external-link",
+      "durationSeconds": 0.4603,
+      "falseAutomationPromise": false,
+      "hasLocation": true,
+      "hasManualSteps": true,
+      "hasVerificationStep": true,
+      "matchedTaskCount": 1,
+      "operationClass": "package-relationship-cleanup",
+      "passed": true,
+      "repairModes": [
+        "human-decision"
+      ],
+      "routeCorrect": true,
+      "scopeClass": "lint-detectable",
+      "sourceId": "business-06",
+      "targetChecks": [
+        {
+          "found": 1,
+          "minimum": 1,
+          "passed": true,
+          "ruleId": "privacy.external-relationship",
+          "slides": null
+        }
+      ],
+      "targetDetected": true
+    },
+    {
+      "caseId": "business-06-product-strategy",
+      "durationSeconds": 0.4603,
+      "falseAutomationPromise": false,
+      "hasLocation": true,
+      "hasManualSteps": true,
+      "hasVerificationStep": true,
+      "matchedTaskCount": 1,
+      "operationClass": "off-canvas-and-hierarchy",
+      "passed": true,
+      "repairModes": [
+        "agent-rebuild"
+      ],
+      "routeCorrect": true,
+      "scopeClass": "lint-detectable",
+      "sourceId": "business-06",
+      "targetChecks": [
+        {
+          "found": 1,
+          "minimum": 1,
+          "passed": true,
+          "ruleId": "readability.off-canvas-text",
+          "slides": [
+            14
+          ]
+        }
+      ],
+      "targetDetected": true
+    },
+    {
+      "caseId": "business-06-next-actions-overlap",
+      "durationSeconds": 0.4603,
+      "falseAutomationPromise": false,
+      "hasLocation": true,
+      "hasManualSteps": true,
+      "hasVerificationStep": true,
+      "matchedTaskCount": 3,
+      "operationClass": "multi-overlap-action-page",
+      "passed": true,
+      "repairModes": [
+        "agent-rebuild"
+      ],
+      "routeCorrect": true,
+      "scopeClass": "lint-detectable",
+      "sourceId": "business-06",
+      "targetChecks": [
+        {
+          "found": 3,
+          "minimum": 3,
+          "passed": true,
+          "ruleId": "readability.text-overlap",
+          "slides": [
+            23
+          ]
+        }
+      ],
+      "targetDetected": true
+    }
+  ],
+  "passed": true,
+  "schemaVersion": "pptlint-guidance-eval/v1",
+  "sourceRuns": [
+    {
+      "durationSeconds": 0.1659,
+      "passed": true,
+      "sha256": "23cc9aad32667705eb30c41f8faf6ef3b42aa15654a2b8d79114a61e10c1e056",
+      "slides": 9,
+      "sourceId": "business-01"
+    },
+    {
+      "durationSeconds": 0.3228,
+      "passed": true,
+      "sha256": "764479883b63a23198c4f2487a8e6c1e673c5bba7b554423cea584d851e57291",
+      "slides": 17,
+      "sourceId": "business-02"
+    },
+    {
+      "durationSeconds": 0.2939,
+      "passed": true,
+      "sha256": "50f60d46f660248da32099e9a724154cc2c86d5f05137d26264b57a7ba54e7bc",
+      "slides": 18,
+      "sourceId": "business-03"
+    },
+    {
+      "durationSeconds": 0.2913,
+      "passed": true,
+      "sha256": "efedacf3dcfc733df71b4b607cfb9841f631a167c877ea689efe358f6757c811",
+      "slides": 15,
+      "sourceId": "business-04"
+    },
+    {
+      "durationSeconds": 0.4488,
+      "passed": true,
+      "sha256": "f89fad0e85469e3c1b89b9cec239d774f1d83b26bb4801905c60d678de860814",
+      "slides": 27,
+      "sourceId": "business-05"
+    },
+    {
+      "durationSeconds": 0.4603,
+      "passed": true,
+      "sha256": "5a47b8bcf43f80e7ce484a609ba37a93ede14c7a650bf623b60153dcf250eb71",
+      "slides": 25,
+      "sourceId": "business-06"
+    }
+  ],
+  "summary": {
+    "businessCases": 20,
+    "falseAutomationPromises": 0,
+    "guidancePassed": 20,
+    "instructionOnly": 6,
+    "lintDetectable": 14,
+    "targetDetected": 14
+  }
+}

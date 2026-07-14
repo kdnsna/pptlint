@@ -1,0 +1,197 @@
+{
+  "runs": [
+    {
+      "caseId": "business-01-cover-date",
+      "mode": "edit",
+      "runId": "business-01-cover-date",
+      "sourceId": "business-01",
+      "status": "pending",
+      "track": "business-edit"
+    },
+    {
+      "caseId": "business-01-overlap-fix",
+      "mode": "edit",
+      "runId": "business-01-overlap-fix",
+      "sourceId": "business-01",
+      "status": "pending",
+      "track": "business-edit"
+    },
+    {
+      "caseId": "business-01-support-readability",
+      "mode": "edit",
+      "runId": "business-01-support-readability",
+      "sourceId": "business-01",
+      "status": "pending",
+      "track": "business-edit"
+    },
+    {
+      "caseId": "business-02-offcanvas-overview",
+      "mode": "edit",
+      "runId": "business-02-offcanvas-overview",
+      "sourceId": "business-02",
+      "status": "pending",
+      "track": "business-edit"
+    },
+    {
+      "caseId": "business-02-marketing-screenshot",
+      "mode": "edit",
+      "runId": "business-02-marketing-screenshot",
+      "sourceId": "business-02",
+      "status": "pending",
+      "track": "business-edit"
+    },
+    {
+      "caseId": "business-02-pension-example",
+      "mode": "edit",
+      "runId": "business-02-pension-example",
+      "sourceId": "business-02",
+      "status": "pending",
+      "track": "business-edit"
+    },
+    {
+      "caseId": "business-03-cover-date",
+      "mode": "edit",
+      "runId": "business-03-cover-date",
+      "sourceId": "business-03",
+      "status": "pending",
+      "track": "business-edit"
+    },
+    {
+      "caseId": "business-03-progress-table",
+      "mode": "edit",
+      "runId": "business-03-progress-table",
+      "sourceId": "business-03",
+      "status": "pending",
+      "track": "business-edit"
+    },
+    {
+      "caseId": "business-03-campus-overlap",
+      "mode": "edit",
+      "runId": "business-03-campus-overlap",
+      "sourceId": "business-03",
+      "status": "pending",
+      "track": "business-edit"
+    },
+    {
+      "caseId": "business-04-cover-date",
+      "mode": "edit",
+      "runId": "business-04-cover-date",
+      "sourceId": "business-04",
+      "status": "pending",
+      "track": "business-edit"
+    },
+    {
+      "caseId": "business-04-new-card-table",
+      "mode": "edit",
+      "runId": "business-04-new-card-table",
+      "sourceId": "business-04",
+      "status": "pending",
+      "track": "business-edit"
+    },
+    {
+      "caseId": "business-04-payroll-density",
+      "mode": "edit",
+      "runId": "business-04-payroll-density",
+      "sourceId": "business-04",
+      "status": "pending",
+      "track": "business-edit"
+    },
+    {
+      "caseId": "business-05-cover-date",
+      "mode": "edit",
+      "runId": "business-05-cover-date",
+      "sourceId": "business-05",
+      "status": "pending",
+      "track": "business-edit"
+    },
+    {
+      "caseId": "business-05-flow-overflow",
+      "mode": "edit",
+      "runId": "business-05-flow-overflow",
+      "sourceId": "business-05",
+      "status": "pending",
+      "track": "business-edit"
+    },
+    {
+      "caseId": "business-05-remove-notes",
+      "mode": "edit",
+      "runId": "business-05-remove-notes",
+      "sourceId": "business-05",
+      "status": "pending",
+      "track": "business-edit"
+    },
+    {
+      "caseId": "business-05-contact-redaction",
+      "mode": "edit",
+      "runId": "business-05-contact-redaction",
+      "sourceId": "business-05",
+      "status": "pending",
+      "track": "business-edit"
+    },
+    {
+      "caseId": "business-06-cover-date",
+      "mode": "edit",
+      "runId": "business-06-cover-date",
+      "sourceId": "business-06",
+      "status": "pending",
+      "track": "business-edit"
+    },
+    {
+      "caseId": "business-06-remove-external-link",
+      "mode": "edit",
+      "runId": "business-06-remove-external-link",
+      "sourceId": "business-06",
+      "status": "pending",
+      "track": "business-edit"
+    },
+    {
+      "caseId": "business-06-product-strategy",
+      "mode": "edit",
+      "runId": "business-06-product-strategy",
+      "sourceId": "business-06",
+      "status": "pending",
+      "track": "business-edit"
+    },
+    {
+      "caseId": "business-06-next-actions-overlap",
+      "mode": "edit",
+      "runId": "business-06-next-actions-overlap",
+      "sourceId": "business-06",
+      "status": "pending",
+      "track": "business-edit"
+    },
+    {
+      "caseId": "paper-ppt-eval-create",
+      "mode": "source-grounded-authoring",
+      "runId": "paper-ppt-eval-create",
+      "sourceId": "paper-ppt-eval",
+      "status": "pending",
+      "track": "paper-to-deck"
+    },
+    {
+      "caseId": "paper-ppt-eval-revise",
+      "dependsOn": "paper-ppt-eval-create",
+      "mode": "source-grounded-revision",
+      "runId": "paper-ppt-eval-revise",
+      "status": "pending",
+      "track": "paper-to-deck"
+    },
+    {
+      "caseId": "article-social-card-create",
+      "mode": "source-grounded-authoring",
+      "runId": "article-social-card-create",
+      "sourceId": "article-social-card",
+      "status": "pending",
+      "track": "article-to-deck"
+    },
+    {
+      "caseId": "article-social-card-revise",
+      "dependsOn": "article-social-card-create",
+      "mode": "source-grounded-revision",
+      "runId": "article-social-card-revise",
+      "status": "pending",
+      "track": "article-to-deck"
+    }
+  ],
+  "schemaVersion": "pptlint-edit-eval-plan/v1"
+}

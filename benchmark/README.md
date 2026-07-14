@@ -30,3 +30,9 @@ PYTHONPATH=src python tools/benchmark.py record ppt-master--qbr-cn--01 \
 ```
 
 Results are not published until the run manifest, hashes, report and PPTX have been reviewed. Pending runs are not counted as evidence.
+
+## Real-world editing evaluation
+
+The generation comparison above does not answer whether a tool can safely improve an existing business deck. The separate [`editing/`](editing/) suite covers fixed-source local edits, screenshot and native-table repairs, privacy cleanup, source-grounded authoring, and second-round revision.
+
+Its private business inputs are never committed. Cases bind to anonymized source aliases and hashes, and the evaluator blocks unexpected changes to non-target slides instead of rewarding whole-deck regeneration.

@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kdnsna.github.io/pptlint/schemas/edit-eval-v1.json",
+  "title": "PPTLint editing evaluation suite",
+  "type": "object",
+  "required": ["schemaVersion", "title", "cases"],
+  "properties": {
+    "schemaVersion": {"const": "pptlint-edit-eval/v1"},
+    "title": {"type": "string", "minLength": 1},
+    "scoreModel": {"type": "object"},
+    "cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/case"}
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "case": {
+      "type": "object",
+      "required": ["id", "title", "track", "mode", "difficulty", "instruction", "manualAdjustment", "productAction", "acceptance", "humanReview", "failureConditions"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$"},
+        "title": {"type": "string", "minLength": 1},
+        "track": {"enum": ["business-edit", "paper-to-deck", "article-to-deck"]},
+        "mode": {"enum": ["edit", "source-grounded-authoring", "source-grounded-revision"]},
+        "sourceId": {"type": "string"},
+        "dependsOn": {"type": "string"},
+        "difficulty": {"type": "integer", "minimum": 1, "maximum": 4},
+        "operationClass": {"type": "string"},
+        "instruction": {"type": "string", "minLength": 1},
+        "manualAdjustment": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "productAction": {
+          "type": "object",
+          "required": ["label", "scope"],
+          "properties": {
+            "label": {"type": "string"},
+            "scope": {"type": "string"},
+            "previewRequired": {"type": "boolean"}
+          },
+          "additionalProperties": false
+        },
+        "acceptance": {
+          "type": "object",
+          "properties": {
+            "allowedSlideChanges": {"type": "array", "items": {"type": "integer", "minimum": 1}, "uniqueItems": true},
+            "preserveSlideCount": {"type": "boolean"},
+            "preserveUntouchedSlides": {"type": "boolean"},
+            "allowPackageOnlyChange": {"type": "boolean"},
+            "requiredText": {"type": "array", "items": {"$ref": "#/$defs/textCheck"}},
+            "forbiddenText": {"type": "array", "items": {"$ref": "#/$defs/textCheck"}},
+            "mustReduceRules": {"type": "array", "items": {"$ref": "#/$defs/ruleReduction"}},
+            "noNewHighConfidenceFindings": {"type": "boolean"},
+            "maxNativeObjectRatioDrop": {"type": "number", "minimum": 0, "maximum": 1},
+            "maxDurationSeconds": {"type": "number", "exclusiveMinimum": 0},
+            "targetSlides": {"type": "array", "items": {"type": "integer", "minimum": 1}},
+            "slideRange": {
+              "type": "object",
+              "required": ["minimum", "maximum"],
+              "properties": {"minimum": {"type": "integer", "minimum": 1}, "maximum": {"type": "integer", "minimum": 1}},
+              "additionalProperties": false
+            },
+            "requiredFacts": {"type": "array", "items": {"type": "string"}},
+            "requiredAttribution": {"type": "array", "items": {"type": "string"}}
+          },
+          "additionalProperties": true
+        },
+        "humanReview": {
+          "type": "object",
+          "required": ["points", "criteria"],
+          "properties": {
+            "points": {"type": "integer", "minimum": 1},
+            "criteria": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+          },
+          "additionalProperties": false
+        },
+        "failureConditions": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    },
+    "textCheck": {
+      "type": "object",
+      "required": ["contains"],
+      "properties": {"slide": {"type": "integer", "minimum": 1}, "contains": {"type": "string", "minLength": 1}},
+      "additionalProperties": false
+    },
+    "ruleReduction": {
+      "type": "object",
+      "required": ["ruleId"],
+      "properties": {
+        "ruleId": {"type": "string", "minLength": 1},
+        "slides": {"type": "array", "items": {"type": "integer", "minimum": 1}, "uniqueItems": true},
+        "minimumReduction": {"type": "integer", "minimum": 1}
+      },
+      "additionalProperties": false
+    }
+  }
+}

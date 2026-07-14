@@ -1,0 +1,117 @@
+{
+  "schemaVersion": "pptlint-edit-eval-baseline/v1",
+  "evaluatedAt": "2026-07-14",
+  "product": {
+    "name": "PPTLint",
+    "version": "1.3.1",
+    "renderer": "libreoffice"
+  },
+  "method": {
+    "cases": 3,
+    "sourceFilesModified": false,
+    "outputMode": "current-product-no-op-when-no-executor",
+    "notes": "The current product may inspect and plan these cases, but its fix command does not execute text or layout changes. The source file was therefore evaluated as the unchanged output instead of substituting an untracked manual edit."
+  },
+  "summary": {
+    "renderSuccess": "3/3",
+    "targetProblemDetected": "2/3",
+    "requestedEditCompleted": "0/3",
+    "hardGatePassed": "0/3",
+    "averageCheckSeconds": 6.46,
+    "result": "blocked"
+  },
+  "cases": [
+    {
+      "caseId": "business-01-cover-date",
+      "sourceId": "business-01",
+      "operationClass": "atomic-text-update",
+      "check": {
+        "seconds": 4.04,
+        "renderSucceeded": true,
+        "reportScore": 90,
+        "readiness": "review",
+        "targetProblemDetected": false,
+        "reason": "A requested date replacement is not a lint finding."
+      },
+      "plan": {
+        "targetTaskCount": 0,
+        "currentProductCanExecute": false
+      },
+      "evaluation": {
+        "status": "blocked",
+        "hardGatePassed": false,
+        "changedSlides": [],
+        "taskEvidence": false,
+        "rawMachineScore": 60,
+        "machineScore": 40,
+        "scoreCapReason": "requested-edit-not-completed"
+      }
+    },
+    {
+      "caseId": "business-04-new-card-table",
+      "sourceId": "business-04",
+      "operationClass": "native-table-repair",
+      "check": {
+        "seconds": 6.01,
+        "renderSucceeded": true,
+        "reportScore": 82,
+        "readiness": "blocked",
+        "targetProblemDetected": true,
+        "targetFindingCount": 1
+      },
+      "plan": {
+        "targetTaskCount": 1,
+        "repairMode": "agent-rebuild",
+        "risk": "high",
+        "currentProductCanExecute": false
+      },
+      "evaluation": {
+        "status": "blocked",
+        "hardGatePassed": false,
+        "changedSlides": [],
+        "targetFindingBefore": 1,
+        "targetFindingAfter": 1,
+        "taskEvidence": false,
+        "rawMachineScore": 60,
+        "machineScore": 40,
+        "scoreCapReason": "requested-edit-not-completed"
+      }
+    },
+    {
+      "caseId": "business-05-flow-overflow",
+      "sourceId": "business-05",
+      "operationClass": "multi-slide-screenshot-flow",
+      "check": {
+        "seconds": 9.34,
+        "renderSucceeded": true,
+        "reportScore": 83,
+        "readiness": "blocked",
+        "targetProblemDetected": true,
+        "targetFindingCount": 2
+      },
+      "plan": {
+        "targetTaskCount": 2,
+        "repairMode": "agent-rebuild",
+        "risk": "high",
+        "currentProductCanExecute": false
+      },
+      "evaluation": {
+        "status": "blocked",
+        "hardGatePassed": false,
+        "changedSlides": [],
+        "targetFindingBefore": 2,
+        "targetFindingAfter": 2,
+        "taskEvidence": false,
+        "rawMachineScore": 60,
+        "machineScore": 40,
+        "scoreCapReason": "requested-edit-not-completed"
+      }
+    }
+  ],
+  "conclusions": [
+    "Inspection and real rendering are fast enough for the representative files.",
+    "The product correctly detects the two delivery defects that are within its lint scope.",
+    "Detection and planning must not be reported as completed modification.",
+    "The current optimization should improve route clarity, manual guidance, and verification without adding an edit executor."
+  ]
+}

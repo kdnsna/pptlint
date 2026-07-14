@@ -1,0 +1,73 @@
+{
+  "schemaVersion": "pptlint-local-app-performance/v1",
+  "evaluatedAt": "2026-07-14",
+  "method": {
+    "endpoint": "/api/check",
+    "runsPerSource": 3,
+    "sources": 6,
+    "totalRuns": 18,
+    "renderer": "wireframe",
+    "includes": [
+      "upload",
+      "parse",
+      "audit",
+      "report",
+      "repair-plan",
+      "response"
+    ],
+    "externalEditorLaunched": false,
+    "networkRequested": false
+  },
+  "summary": {
+    "baselineMedianSeconds": 0.339,
+    "optimizedMedianSeconds": 0.316,
+    "medianChangePercent": -6.8,
+    "baselineMaximumSeconds": 0.478,
+    "optimizedMaximumSeconds": 0.476,
+    "allRunsUnder15Seconds": true
+  },
+  "sources": [
+    {
+      "sourceId": "business-01",
+      "slides": 9,
+      "tasks": 32,
+      "baselineMedianSeconds": 0.153,
+      "optimizedMedianSeconds": 0.153
+    },
+    {
+      "sourceId": "business-02",
+      "slides": 17,
+      "tasks": 70,
+      "baselineMedianSeconds": 0.342,
+      "optimizedMedianSeconds": 0.329
+    },
+    {
+      "sourceId": "business-03",
+      "slides": 18,
+      "tasks": 58,
+      "baselineMedianSeconds": 0.313,
+      "optimizedMedianSeconds": 0.302
+    },
+    {
+      "sourceId": "business-04",
+      "slides": 15,
+      "tasks": 76,
+      "baselineMedianSeconds": 0.297,
+      "optimizedMedianSeconds": 0.291
+    },
+    {
+      "sourceId": "business-05",
+      "slides": 27,
+      "tasks": 55,
+      "baselineMedianSeconds": 0.459,
+      "optimizedMedianSeconds": 0.458
+    },
+    {
+      "sourceId": "business-06",
+      "slides": 25,
+      "tasks": 96,
+      "baselineMedianSeconds": 0.477,
+      "optimizedMedianSeconds": 0.472
+    }
+  ]
+}
