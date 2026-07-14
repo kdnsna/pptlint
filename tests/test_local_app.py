@@ -82,6 +82,11 @@ def test_app_binds_only_loopback_and_serves_a_self_contained_chinese_ui() -> Non
         assert "groupTasks" in markup and "pageGroupMarkup" in markup
         assert "没有可由 PPTLint 自动清理的项目。" in markup
         assert "等待检查结果。" in markup
+        assert 'target="_blank" rel="noopener"' in markup
+        assert "sessionStorage" in markup
+        assert "restoreSession" in markup
+        assert "/api/session?deckId=" in markup
+        assert "这里只记住会话编号" in markup
         assert "解析文件 → 检查风险 → 生成调整步骤" in markup
         assert "MAX_UPLOAD_BYTES=209715200" in markup
         assert "WPS 的入口名称和位置可能不同" in markup
@@ -94,6 +99,32 @@ def test_app_binds_only_loopback_and_serves_a_self_contained_chinese_ui() -> Non
     finally:
         _stop(server, session, thread)
     assert not root.exists()
+
+
+def test_app_restores_a_checked_deck_from_the_current_server_session(tmp_path: Path) -> None:
+    source = write_pptx(tmp_path / "return-safe.pptx", slides=[slide_xml(body_size=1000)])
+    server, session, url, thread = _start()
+    client = LocalClient(url, session.token)
+    try:
+        status, body, _ = client.request(
+            "POST", "/api/check?filename=return-safe.pptx&scenario=present", source.read_bytes()
+        )
+        assert status == 200
+        checked = json.loads(body)
+
+        status, body, _ = client.request("GET", f"/api/session?deckId={checked['deckId']}")
+        assert status == 200
+        restored = json.loads(body)
+        assert restored["deckId"] == checked["deckId"]
+        assert restored["file"]["name"] == "return-safe.pptx"
+        assert restored["tasks"] == checked["tasks"]
+        assert restored["agentBrief"] == checked["agentBrief"]
+        assert len(restored["downloads"]) == 4
+
+        missing, _, _ = client.request("GET", "/api/session?deckId=missing")
+        assert missing == 404
+    finally:
+        _stop(server, session, thread)
 
 
 def test_app_blocks_full_deck_reexport_handoff_until_native_repair_exists(tmp_path: Path, monkeypatch) -> None:
