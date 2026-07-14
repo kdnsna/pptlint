@@ -80,6 +80,10 @@ def test_app_binds_only_loopback_and_serves_a_self_contained_chinese_ui() -> Non
         assert "可安全清理" in markup
         assert "需要判断" in markup
         assert "groupTasks" in markup and "pageGroupMarkup" in markup
+        assert "mergePageTasks" in markup and "occurrenceCount" in markup
+        assert "已合并重复" in markup
+        assert "完整报告保留每一处证据" in markup
+        assert "风险 high" not in markup
         assert "没有可由 PPTLint 自动清理的项目。" in markup
         assert "等待检查结果。" in markup
         assert 'target="_blank" rel="noopener"' in markup
